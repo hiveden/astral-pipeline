@@ -1,0 +1,29 @@
+{
+  "episode_id": "mllogreg07",
+  "source_episode": "e05a-混淆矩阵",
+  "synced_at": "2026-05-08T08:07:44Z",
+  "shots": {
+    "shot04": {
+      "duration_s": 41.633,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 41.643,
+      "duration_diff_ms": 10.0,
+      "file": "shot04.mp4"
+    },
+    "shot05": {
+      "duration_s": 35.767,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 35.788,
+      "duration_diff_ms": 21.0,
+      "file": "shot05.mp4"
+    }
+  }
+}

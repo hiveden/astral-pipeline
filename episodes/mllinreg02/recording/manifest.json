@@ -1,0 +1,18 @@
+{
+  "episode_id": "mllinreg02",
+  "source_episode": "e02-sklearn-API",
+  "synced_at": "2026-05-08T12:32:09Z",
+  "shots": {
+    "shot03": {
+      "duration_s": 142.3,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 142.293,
+      "duration_diff_ms": 7.0,
+      "file": "shot03.mp4"
+    }
+  }
+}

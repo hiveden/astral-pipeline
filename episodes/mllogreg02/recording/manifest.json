@@ -1,0 +1,18 @@
+{
+  "episode_id": "mllogreg02",
+  "source_episode": "e02a-概率基础",
+  "synced_at": "2026-05-08T08:07:43Z",
+  "shots": {
+    "shot04": {
+      "duration_s": 46.667,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 46.7,
+      "duration_diff_ms": 33.0,
+      "file": "shot04.mp4"
+    }
+  }
+}

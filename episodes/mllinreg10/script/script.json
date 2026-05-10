@@ -1,0 +1,73 @@
+{
+  "title": "LR 第 9 期 · 加州房价完整 pipeline · 8 特征实战",
+  "description": "真实案例从加载到评估完整 6 步：fetch_california_housing → train_test_split → StandardScaler → LinearRegression / SGDRegressor → 评估 MSE/MAE/RMSE/R² → 预测新样本。两种解法收敛到同一最优验证 LR 凸优化。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 900,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "上期评估指标讲完 → 加州房价完整 pipeline + 本期预告",
+      "text": "上一期讲完评估指标三件套——单元数据集太抽象，这一期上真实案例：加州房价 8 特征 2 万样本，从加载到评估完整 6 步 pipeline 一站跑通。这一期解决三件事：fetch_california_housing 加载数据 + train_test_split 拆分 + StandardScaler 标准化的预处理三件套，为什么 LR 多元必须做标准化；LinearRegression 走正规方程和 SGDRegressor 走梯度下降两种解法，验证凸优化下殊途同归；MSE / MAE / RMSE / R² 四个指标全部跑出来对外报告。下一期看 LR 的另一面：拟合得太好是好事吗？反直觉的过拟合 U 形现象。",
+      "notes": "~210字。\n[src: 06-boston/01-05]\n\n衔接钩（精确呼应 E08 cta）：\n  E08 cta = '单元数据集太抽象' / '真实案例' / '加州房价' / '完整 pipeline' → E09 hook 全覆盖 ✓\n\ntitle \"LR 第 9 期 · 加州房价 8 特征 pipeline\"\nfigure \"加州地图 + 8 特征图标（MedInc / HouseAge / AveRooms / AveBedrms / Population / AveOccup / Latitude / Longitude）\"\nbody \"E08 三件套已就位 → 本期跑真实数据\"",
+      "text_tts": "上一期讲完评估指标三件套——单元数据集太抽象，这一期上真实案例：加州房价 8 特征 2 万样本，从加载到评估完整 6 步 pipeline 一站跑通。这一期解决三件事：fetch california housing 加载数据 + train test split 拆分 + Standard Scaler 标准化的预处理三件套，为什么 L-R 多元必须做标准化；Linear Regression 走正规方程和 S-G-D Regressor 走梯度下降两种解法，验证凸优化下殊途同归；M-S-E / M-A-E / R-M-S-E / R 平方 四个指标全部跑出来对外报告。下一期看 L-R 的另一面：拟合得太好是好事吗？反直觉的过拟合 U 形现象。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "加州房价数据 · 替代废弃 Boston · 8 特征 2 万样本",
+      "text": "先看数据集背景。机器学习最经典的回归 benchmark 原本是 Boston Housing 波士顿房价 13 特征，但 2022 年 sklearn 已经把它废弃下架——原因是数据集里有种族特征 B 列，相关研究构建时含有种族偏见，sklearn 出于伦理考虑彻底移除。替代品就是加州房价 California Housing：8 个特征、20640 个样本、来自 1990 年加州人口普查。8 个特征分别是：MedInc 区域中位数收入、HouseAge 房龄中位数、AveRooms 平均房间数、AveBedrms 平均卧室数、Population 区域人口、AveOccup 平均住户数、Latitude 纬度、Longitude 经度。标签是房价中位数，单位 10 万美元。一行代码加载：fetch_california_housing 返回 X 和 y。这是 sklearn 当前推荐的回归实战标准数据集——比身高体重 5 个点真实得多。",
+      "notes": "~290字。\n[src: 02-案例背景.md（Boston 废弃 + California 替代）]\n\ntitle \"Boston 已废弃（伦理问题）\"[警告]\nbody \"种族特征 B 列 → sklearn 2022 移除\"\ntitle \"California Housing · sklearn 推荐\"[替代]\nfigure \"8 特征清单：MedInc / HouseAge / AveRooms / AveBedrms / Population / AveOccup / Latitude / Longitude\"\nbody \"shape: (20640, 8) ｜ y = 房价中位数（10万美元）\"\nformula \"X, y = fetch_california_housing(return_X_y=True)\"[加载]",
+      "text_tts": "先看数据集背景。机器学习最经典的回归 benchmark 原本是 Boston Housing 波士顿房价 13 特征，但 2022 年 S-K-learn 已经把它废弃下架——原因是数据集里有种族特征 B 列，相关研究构建时含有种族偏见，S-K-learn 出于伦理考虑彻底移除。替代品就是加州房价 California Housing：8 个特征、20640 个样本、来自 1990 年加州人口普查。8 个特征分别是：MedInc 区域中位数收入、HouseAge 房龄中位数、AveRooms 平均房间数、AveBedrms 平均卧室数、Population 区域人口、AveOccup 平均住户数、Latitude 纬度、Longitude 经度。标签是房价中位数，单位 10 万美元。一行代码加载：fetch california housing 返回 X 和 y。这是 S-K-learn 当前推荐的回归实战标准数据集——比身高体重 5 个点真实得多。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "Step 1-3 · 加载 + train_test_split + StandardScaler",
+      "text": "看 pipeline 前 3 步。第一步加载数据，刚才那行 fetch_california_housing。第二步切分训练测试集，sklearn dot model_selection 里的 train_test_split：传入 X y、test_size 等于 0.2 留 20% 当测试集、random_state 等于 22 固定随机种子保证结果可复现。返回 X_train X_test y_train y_test 4 个数组。第三步标准化——这一步多元 LR 必须做。原因：加州 8 特征量纲悬殊，纬度经度在 30 到 40，AveOccup 在 1 到 5，MedInc 在 0 到 15，Population 在几百到几万——量纲差几个数量级，权重 w 不在同一个尺度上，正规方程的矩阵求逆会出现浮点失真，梯度下降会震荡。StandardScaler 把每个特征减去均值再除以标准差，让所有特征均值 0、方差 1。注意一个工程铁律：fit_transform 只在训练集上做，transform 应用到测试集——不能让测试集信息泄露到训练阶段，这是数据科学的基本纪律。",
+      "notes": "~360字。\n[src: 03-案例分析.md]\n\ntitle \"前 3 步：加载 / 切分 / 标准化\"[流程]\nformula \"from sklearn.model_selection import train_test_split\"\nformula \"X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=22)\"\ntitle \"为什么必须标准化\"[关键]\nfigure \"8 特征量纲对比表：纬度 30-40 / AveOccup 1-5 / MedInc 0-15 / Population 数百-数万\"\nbody \"差几个数量级 → 权重不在同尺度 → 正规方程不稳 / GD 震荡\"\ntitle \"StandardScaler · 训练拟合 / 测试只 transform\"[纪律]\nformula \"scaler = StandardScaler() / X_train_s = scaler.fit_transform(X_train) / X_test_s = scaler.transform(X_test)\"\nquote \"fit_transform 只在训练集 / 测试集 transform → 防泄露\"[铁律]",
+      "text_tts": "看 pipeline 前 3 步。第一步加载数据，刚才那行 fetch california housing。第二步切分训练测试集，S-K-learn dot model selection 里的 train test split：传入 X y、test size 等于 0.2 留 20% 当测试集、random state 等于 22 固定随机种子保证结果可复现。返回 X_train X_test y train y test 4 个数组。第三步标准化——这一步多元 L-R 必须做。原因：加州 8 特征量纲悬殊，纬度经度在 30 到 40，AveOccup 在 1 到 5，MedInc 在 0 到 15，Population 在几百到几万——量纲差几个数量级，权重 w 不在同一个尺度上，正规方程的矩阵求逆会出现浮点失真，梯度下降会震荡。Standard Scaler 把每个特征减去均值再除以标准差，让所有特征均值 0、方差 1。注意一个工程铁律：fit transform 只在训练集上做，transform 应用到测试集——不能让测试集信息泄露到训练阶段，这是数据科学的基本纪律。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "Step 4 · 两种解法 LinearRegression vs SGDRegressor",
+      "text": "第 4 步训练，跑两种解法对比。第一种 LinearRegression 内部走正规方程加 SVD 分解，就是 LR 推导那一期讲的解析解：实例化 fit predict 三行。一行代码出 8 个 coef 加 1 个 intercept——这就是 8 个特征的权重和偏置。第二种 SGDRegressor 内部走随机梯度下降，就是 GD 那一期讲的迭代法：实例化时设 max_iter 等于 1000、learning_rate 等于 'constant'、eta0 等于 0.0001——注意 eta0 必须设小，sklearn 1.8 默认参数在加州数据上会发散，这是个工程坑。其它步骤一样 fit predict。两种解法都跑完，对外预测同一组测试集。直觉上两种方法路径完全不同：一种代数公式一步出解、一种数值迭代慢慢逼近——但因为 LR MSE 是凸函数全局唯一最优，两种路径终点必须一致。这正是凸优化的精髓——不论你怎么走，碗底就是那一个。",
+      "notes": "~360字。\n[src: 05-代码实现.md]\n\ntitle \"两种解法\"[对比]\nformula \"# 方法 1: 正规方程\\nlr = LinearRegression()\\nlr.fit(X_train_s, y_train)\\npred_lr = lr.predict(X_test_s)\"\nformula \"# 方法 2: SGD\\nsgd = SGDRegressor(max_iter=1000, learning_rate='constant', eta0=0.0001, random_state=22)\\nsgd.fit(X_train_s, y_train)\\npred_sgd = sgd.predict(X_test_s)\"\nquote \"⚠ eta0 必须 0.0001 / sklearn 1.8 默认会发散\"[工程坑]\nquote \"凸优化精髓：殊途同归到唯一全局最小\"[金句]",
+      "text_tts": "第 4 步训练，跑两种解法对比。第一种 Linear Regression 内部走正规方程加 S-V-D 分解，就是 L-R 推导那一期讲的解析解：实例化 fit predict 三行。一行代码出 8 个 coefficient 加 1 个 intercept——这就是 8 个特征的权重和偏置。第二种 S-G-D Regressor 内部走随机梯度下降，就是 G-D 那一期讲的迭代法：实例化时设 max iter 等于 1000、learning rate 等于 'constant'、eta0 等于 0.0001——注意 eta0 必须设小，S-K-learn 1.8 默认参数在加州数据上会发散，这是个工程坑。其它步骤一样 fit predict。两种解法都跑完，对外预测同一组测试集。直觉上两种方法路径完全不同：一种代数公式一步出解、一种数值迭代慢慢逼近——但因为 L-R M-S-E 是凸函数全局唯一最优，两种路径终点必须一致。这正是凸优化的精髓——不论你怎么走，碗底就是那一个。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "Step 5-6 · 评估 4 指标 + 预测新样本",
+      "text": "第 5 步评估，把上一期的三件套加 R² 决定系数全跑出来。从 sklearn dot metrics 引入 mean_squared_error、mean_absolute_error、r2_score。两种解法对比实测：正规方程 MSE 等于 0.5075、MAE 等于 0.5267、RMSE 等于 0.7124、R 平方等于 0.6094。SGD 调好 eta0 后：MSE 等于 0.5075、R 平方等于 0.6095——和正规方程一字不差，验证凸优化殊途同归。R 平方 0.6 说明模型解释了 60% 的房价方差——对线性模型 + 8 个特征不算坏，但还有 40% 没解释，留给更复杂的模型或特征工程。第 6 步预测新样本：构造一个新区域的特征向量比如收入中位数 8、房龄 30、其它默认，scaler 一定要先 transform 再喂给 model.predict——返回预测房价中位数。整个 pipeline 6 步 13 行代码搞定，sklearn 工程化就是这么简洁。",
+      "notes": "~360字。\n[src: 04-性能评估.md, 05-代码实现.md]\n\ntitle \"Step 5 · 4 指标实测\"[实测]\nfigure \"实测数字（python sklearn 直跑 · §3.5 复核）：\\n  正规方程: MSE=0.5075 / MAE=0.5267 / RMSE=0.7124 / R²=0.6094\\n  SGD eta0=0.0001: MSE=0.5075 / R²=0.6095（殊途同归）\"\nformula \"from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score\"\nbody \"R² = 0.6094 → 模型解释 60% 房价方差\"\ntitle \"Step 6 · 预测新样本\"\nformula \"x_new = np.array([[8.0, 30.0, ...]])\\nx_new_s = scaler.transform(x_new)\\nmodel.predict(x_new_s)\"\nquote \"6 步 13 行代码 → sklearn 工程化的简洁\"[金句]",
+      "text_tts": "第 5 步评估，把上一期的三件套加 R 平方 决定系数全跑出来。从 S-K-learn dot metrics 引入 mean squared error、mean absolute error、r2_score。两种解法对比实测：正规方程 M-S-E 等于 0.5075、M-A-E 等于 0.5267、R-M-S-E 等于 0.7124、R 平方等于 0.6094。S-G-D 调好 eta0 后：M-S-E 等于 0.5075、R 平方等于 0.6095——和正规方程一字不差，验证凸优化殊途同归。R 平方 0.6 说明模型解释了 60% 的房价方差——对线性模型 + 8 个特征不算坏，但还有 40% 没解释，留给更复杂的模型或特征工程。第 6 步预测新样本：构造一个新区域的特征向量比如收入中位数 8、房龄 30、其它默认，scaler 一定要先 transform 再喂给 model.predict——返回预测房价中位数。整个 pipeline 6 步 13 行代码搞定，S-K-learn 工程化就是这么简洁。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "Demo 录屏 · step slider 1-6 · 6 步代码行高亮 + chart 渐进",
+      "text": "打开 demo 把 6 步流程跑一遍——这个 demo 简化为 1 特征（MedInc 收入中位数）+ 前 500 行加速渲染，所以数字与前面 8 特征全数据集不同，重点看 6 步流程怎么衔接。step slider 拖 1：导入 4 个 sklearn 模块代码行高亮，chart 占位等数据。step 2：fetch_california_housing 加载，散点出现 MedInc 横轴 vs 房价纵轴。step 3：train_test_split 切分 80/20（400 训练 + 100 测试），散点蓝灰分色。step 4：StandardScaler fit_transform，x 轴从原值 [0, 10] 切到 z-score [-2.5, 4]，scaler 只在训练 fit 防数据泄漏。step 5：LR fit，红色拟合线出现，coef = 0.736、intercept = 1.898。step 6：评估 4 指标柱图，MSE = 0.779 / MAE = 0.595 / RMSE = 0.882 / R² = 0.385——单特征版限制下能解释 38% 的房价方差。整段 demo 把'代码 + 数据 + 模型 + 评估'四件事在 6 步里拼成完整流水线。",
+      "notes": "~360字。B demo 录屏段。\n\ndemo: 02-LR/06-boston/demos/california-pipeline.py（端口 2765）\n\n重要语境说明：\n  demo 用单特征 MedInc + 前 500 行（便于 2D 可视化）\n  前面 seg 4/5 用 8 特征全数据集（MSE=0.508, R²=0.609）\n  数字不同因为简化版 → 不可比较，只看 pipeline 流程结构\n  口播开头明确点破：'demo 简化为 1 特征 + 前 500 行...'\n\n实测数字（python 直跑 · random_state=22, test_size=0.2）：\n  train: 400 / test: 100\n  coef = 0.736, intercept = 1.898\n  MSE = 0.779, MAE = 0.595, RMSE = 0.882, R² = 0.385\n\nstates（Playwright 拖 step slider 1→6）:\n  s1: step=1 导入代码行高亮 + chart 占位文字\n  s2: step=2 数据加载 + 散点出现（灰色单色）\n  s3: step=3 train/test 散点蓝灰分色 + x 轴仍是原值\n  s4: step=4 x 轴切 z-score [-2.5, 4]\n  s5: step=5 红色拟合线 + panel 显示 coef/intercept\n  s6: step=6 4 指标评估柱图（MAE/MSE/RMSE/R²）\n\ncue 词:\n  'step slider 拖 1：导入...'             → s1\n  'step 2：fetch_california_housing'      → s2\n  'step 3：train_test_split 切分'         → s3\n  'step 4：StandardScaler'                → s4\n  'step 5：LR fit ... 红色拟合线'         → s5\n  'step 6：评估 4 指标'                   → s6\n\n3.5 复核 TODO（v1 录屏前再跑一次）：\n  [ ] marimo run california-pipeline.py，拖 step 1→6 截图 6 张\n  [ ] 验证 step 5 coef=0.736 / intercept=1.898\n  [ ] 验证 step 6 评估柱图 4 指标数字\n  [ ] 验证 step 4 z-score 切换流畅\n\ntitle \"6 步代码行高亮 + chart 渐进\"[demo]\nfigure \"step 1-6 联动：代码 + chart + panel + 评估柱\"\nquote \"sklearn 6 步 13 行代码搞定加州房价 pipeline\"[金句]",
+      "text_tts": "打开 demo 把 6 步流程跑一遍——这个 demo 简化为 1 特征（MedInc 收入中位数）+ 前 500 行加速渲染，所以数字与前面 8 特征全数据集不同，重点看 6 步流程怎么衔接。step slider 拖 1：导入 4 个 S-K-learn 模块代码行高亮，chart 占位等数据。step 2：fetch california housing 加载，散点出现 MedInc 横轴 vs 房价纵轴。step 3：train test split 切分 80/20（400 训练 + 100 测试），散点蓝灰分色。step 4：Standard Scaler fit transform，x 轴从原值 [0, 10] 切到 z-score [-2.5, 4]，scaler 只在训练 fit 防数据泄漏。step 5：L-R fit，红色拟合线出现，coefficient = 0.736、intercept = 1.898。step 6：评估 4 指标柱图，M-S-E = 0.779 / M-A-E = 0.595 / R-M-S-E = 0.882 / R 平方 = 0.385——单特征版限制下能解释 38% 的房价方差。整段 demo 把'代码 + 数据 + 模型 + 评估'四件事在 6 步里拼成完整流水线。"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "整期收尾 + 推迟项 + 下期预告",
+      "text": "这一期到这。我们解决了 LR 完整工程化三件事：第一，加州房价 8 特征替代废弃的 Boston，pipeline 6 步 fetch + split + scale + fit + predict + evaluate；第二，标准化是多元 LR 必须做的预处理，fit_transform 只在训练集 transform 应用到测试集防泄露；第三，正规方程和 SGD 两种解法在凸优化下收敛到同一最优 MSE 0.5075 R 平方 0.6094。点到没展开的：8 特征里地理位置 Latitude / Longitude 含义留给地理空间分析专题；R 平方 0.6 还有 40% 不能解释，特征工程和非线性模型留给后续章节；SGDRegressor 的工程坑 sklearn 不同版本默认参数差异留给版本兼容专题。下一期看 LR 的另一面——这一期跑出来 R 平方 0.6094 看似不错，但如果我硬把模型搞复杂，让训练误差降到接近 0，会发生什么？下期讲过拟合 / 欠拟合 U 形曲线。",
+      "notes": "整期收尾段（原 cta type 调整）· ~340字。\n\nseg 6 概念地图（无 demo 6 段足够）：\n1. 整期 3 论点（pipeline 6 步 / 标准化纪律 / 殊途同归）\n2. 推迟 3 项：地理空间 → 专题 / 特征工程 → 后续 / sklearn 版本差异 → 兼容专题\n3. 下期预告：过拟合反直觉\n\n衔接钩埋伏 E10：\n  E10 hook 应回应：'拟合得太好是好事吗' / '反直觉' / '训练误差小测试误差大' / '过拟合 U 形'\n  → README 规划: e10 hook: '上期 pipeline 顺利收尾，这期我们看一个反直觉现象：训练越准，测试越差' U 形 ✓\n\nfigure \"E10 teaser：U 形曲线 + 训练 vs 测试误差对比\"\nquote \"如果讲得有不对的地方，欢迎在评论区指正\"[结尾]",
+      "text_tts": "这一期到这。我们解决了 L-R 完整工程化三件事：第一，加州房价 8 特征替代废弃的 Boston，pipeline 6 步 fetch + split + scale + fit + predict + evaluate；第二，标准化是多元 L-R 必须做的预处理，fit transform 只在训练集 transform 应用到测试集防泄露；第三，正规方程和 S-G-D 两种解法在凸优化下收敛到同一最优 M-S-E 0.5075 R 平方 0.6094。点到没展开的：8 特征里地理位置 Latitude / Longitude 含义留给地理空间分析专题；R 平方 0.6 还有 40% 不能解释，特征工程和非线性模型留给后续章节；S-G-D Regressor 的工程坑 S-K-learn 不同版本默认参数差异留给版本兼容专题。下一期看 L-R 的另一面——这一期跑出来 R 平方 0.6094 看似不错，但如果我硬把模型搞复杂，让训练误差降到接近 0，会发生什么？下期讲过拟合 / 欠拟合 U 形曲线。"
+    },
+    {
+      "id": 8,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用 · 拆独立 shot 由下游 astral-video 渲染合成（本仓只写 text 不录 mp4）",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

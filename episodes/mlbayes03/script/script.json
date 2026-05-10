@@ -1,0 +1,72 @@
+{
+  "title": "朴素贝叶斯 e03：情感分析实战",
+  "description": "用“书 垃圾”小例子手算多项式朴素贝叶斯，再落到 CountVectorizer 与 MultinomialNB 的中文评论分类流程。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 840,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "数学机器进入真实文本",
+      "text": "前两期我们把朴素贝叶斯的数学机器搭好了：贝叶斯公式负责翻方向，朴素假设负责拆联合概率，拉普拉斯平滑负责救零概率。这一期把它放进文本分类。任务很具体：给一条商品评论，判断它是好评还是差评。我们先用 4 条短评论手算一遍“书 垃圾”为什么更像差评，再看 sklearn 里怎么用 CountVectorizer 和 MultinomialNB 把同一套流程跑起来。",
+      "notes": "~190字。A 动画段。figure: 三个齿轮“贝叶斯翻转 / 朴素拆分 / 平滑救零”合到“评论分类”流程图。src: 01-pipeline.md"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "手算任务：书 垃圾是好评还是差评",
+      "text": "先看一个极小的数据集。4 条评论，2 条好评，2 条差评。好评是“好 书”和“书 好”。差评是“垃圾 书”和“太 垃圾”。现在新来一条评论：“书 垃圾”。我们要比较两个概率：它是好评的概率，和它是差评的概率。因为好评和差评各 2 条，所以先验一样，都是 0.5。真正拉开差距的，是“书”和“垃圾”这两个词在两类评论里的出现次数。",
+      "notes": "~210字。A 动画段。figure: 4 行评论表；新评论“书 垃圾”作为待预测卡片；prior cards: 好评=0.5，差评=0.5。src: 01-pipeline.md"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "词频统计和平滑概率",
+      "text": "词表一共有 4 个词：好、书、垃圾、太。好评里，“好”出现 2 次，“书”出现 2 次，“垃圾”和“太”都是 0 次。差评里，“书”出现 1 次，“垃圾”出现 2 次，“太”出现 1 次，“好”是 0 次。每个类别下总词数都是 4。现在加拉普拉斯平滑，α 取 1，分母就是类别总词数 4，加词表大小 4，等于 8。所以 P(书|好评) 是 3/8，P(垃圾|好评) 是 1/8。P(书|差评) 是 2/8，P(垃圾|差评) 是 3/8。注意，如果不平滑，P(垃圾|好评) 会是 0，好评这一类会直接被一票否决。",
+      "notes": "~315字。A 动画段。figure: 词频矩阵；formula cards: P(书|好评)=3/8，P(垃圾|好评)=1/8，P(书|差评)=2/8，P(垃圾|差评)=3/8。src: 01-pipeline.md。数字已 Python 复算。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "两个类别分子比较",
+      "text": "接下来比较两个类别的分子。好评分子等于 P(书|好评) 乘 P(垃圾|好评) 再乘 P(好评)。也就是 3/8 乘 1/8 乘 0.5，等于 3/128，约 0.0234。差评分子等于 P(书|差评) 乘 P(垃圾|差评) 再乘 P(差评)。也就是 2/8 乘 3/8 乘 0.5，等于 3/64，也可以写成 6/128，约 0.0469。差评分子是好评分子的 2 倍，所以“书 垃圾”判为差评。如果把两个分子归一化，好评是 1/3，约 33.3%；差评是 2/3，约 66.7%。",
+      "notes": "~285字。A 动画段。figure: 两条计算链并排；好评分子 3/128，差评分子 6/128；概率条 33.3% vs 66.7%。src: 01-pipeline.md。数字已 Python 复算。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "API 家族：按特征类型选模型",
+      "text": "sklearn 里朴素贝叶斯不是只有一个类，而是一组按特征分布选择的模型。MultinomialNB，multinomial naive Bayes，适合离散计数，最典型就是文本词频或者 TF-IDF。BernoulliNB，Bernoulli naive Bayes，适合 0/1 特征，比如只关心某个词有没有出现，不关心出现几次。GaussianNB，Gaussian naive Bayes，适合连续数值特征，并假设每个特征在类别里大致服从高斯分布。商品评论里，我们拿到的是词频矩阵，所以优先选 MultinomialNB。",
+      "notes": "~265字。A 动画段。figure: 三列卡片 MultinomialNB / BernoulliNB / GaussianNB；highlight MultinomialNB。src: 01-pipeline.md"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "中文文本流程：从句子到矩阵",
+      "text": "真实中文评论不能直接丢给模型。第一步，读入 CSV，拿到内容列和评价列。第二步，把标签转成数字，比如好评是 1，差评是 0。第三步，用 jieba 做中文分词，把“很好的入门书”切成“很 好 的 入门 书”这样的词序列。第四步，去掉停用词，比如“的”“了”“很”这种高频但区分度弱的词。第五步，用 CountVectorizer 把分词后的文本转成词频矩阵。到这一步，句子才变成模型能读的数字表。最后再划分训练集和测试集，交给 MultinomialNB 训练、预测、评估。",
+      "notes": "~290字。A+B 段。A 画流程图：CSV → 标签映射 → jieba 分词 → 停用词 → CountVectorizer → MultinomialNB。B 可短切 marimo demo 01-text-classification.py 的 step 2，展示预分词文本如何进入词频矩阵。src: 01-pipeline.md"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "代码落地：CountVectorizer + MultinomialNB",
+      "text": "代码里核心是三步。第一，分词后用空格拼回字符串，因为 CountVectorizer 通常按空白切词。第二，调用 fit transform，把训练评论变成词频矩阵。第三，用 MultinomialNB 训练模型，并把 α 设成 1.0。α 等于 1.0，就对应上一期讲的拉普拉斯平滑。预测时，predict 输出类别，比如差评；predict proba 输出每个类别的概率估计，比如好评约 0.333，差评约 0.667。这里还要注意一个版本问题：旧代码里的 get feature names 已经过时，现在统一用 get feature names out。",
+      "notes": "~280字。B 录屏段。demo: 02-sentiment-case/demos/01-text-classification.py。录屏主线按 step slider 走：1 训练样本；2 CountVectorizer 词频矩阵；3 MultinomialNB(alpha=1.0) 与平滑后 P(词|类别)；4 predict / predict_proba，默认输入“书 垃圾”输出差评，P(好评)=0.333，P(差评)=0.667。src: 01-pipeline.md。预分词小样本已用 sklearn 1.8.0 复核；demo 不依赖 jieba。"
+    },
+    {
+      "id": 8,
+      "type": "content",
+      "topic": "常见坑与全章收尾",
+      "text": "最后收几个常见坑。第一，中文原句不要直接丢给 CountVectorizer，先分词，再用空格拼接。第二，停用词要自己准备，sklearn 自带的英文停用词不适合中文。第三，predict proba 不要当成绝对可靠的置信度，朴素假设会影响概率校准，它的类别排序通常比概率绝对值更可信。第四，词频是离散计数，优先用 MultinomialNB，不要随手套 GaussianNB。到这里，朴素贝叶斯这一章就闭环了：先用贝叶斯翻方向，再用朴素假设拆概率，最后用平滑和词频矩阵落到文本分类。",
+      "notes": "~285字。A 动画段。body: 四个常见坑；final chain: 贝叶斯翻方向 → 朴素拆概率 → 平滑救零 → 文本分类。src: 01-pipeline.md"
+    },
+    {
+      "id": 9,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下章见，欢迎评论区留言讨论。",
+      "notes": "整章末期 cta 模板 · 14 字左右 · 拆独立 shot 由下游渲染合成。"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "episode_id": "ml11",
+  "source_episode": "e11a-交叉验证",
+  "synced_at": "2026-05-04T00:31:03Z",
+  "shots": {
+    "shot06": {
+      "file": "shot06.mp4",
+      "duration_s": 86.760,
+      "video": {"width": 1254, "height": 636, "fps": 25}
+    }
+  }
+}

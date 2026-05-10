@@ -1,0 +1,73 @@
+{
+  "title": "LR 第 7 期 · BGD / SGD / MBGD + 正规方程 vs 梯度下降全面对比",
+  "description": "梯度下降按'每步用多少样本'分三类：BGD 全部 / SGD 一个 / MBGD 小批；与正规方程做 8 维全面对比，sklearn 对应实现 SGDRegressor。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 720,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "下山每步全部样本受不了 → 三种变体 + 对比正规方程",
+      "text": "上一期梯度下降的下山思想懂了——但每一步都用全部样本算梯度，大数据时代每步算几亿样本受不了。这一期看三种 GD 变体：BGD 全部样本、SGD 一个样本、MBGD 一小批，工业主流是第三种。再做一次正规方程 vs 梯度下降的全面对比，搞清楚什么时候选哪个。这一期解决三件事：BGD / SGD / MBGD 三种变体的优缺点和直觉对比；sklearn 对应实现 SGDRegressor vs LinearRegression；正规方程 vs GD 八维度完整对比表。下一期换角度——训练完了，怎么评估模型好不好？MAE / MSE / RMSE 三件套。",
+      "notes": "~190字。\n[src: 04b-gd/03 + 04]\n\n衔接钩（精确呼应 E06 cta）：\n  E06 cta = '下山每步全部样本' / '大数据' / 'SGD 一个' / 'MBGD 小批' / 'vs 正规方程' → E07 hook 全覆盖 ✓\n\ntitle \"LR 第 7 期 · 三种下山 + vs 正规方程\"\nfigure \"3 种下山员图标 + vs 正规方程对照表\"\nbody \"本期：① BGD/SGD/MBGD 三变体 ② sklearn 对应 ③ 8 维对比\"",
+      "text_tts": "上一期梯度下降的下山思想懂了——但每一步都用全部样本算梯度，大数据时代每步算几亿样本受不了。这一期看三种 G-D 变体：B-G-D 全部样本、S-G-D 一个样本、M-B-G-D 一小批，工业主流是第三种。再做一次正规方程 vs 梯度下降的全面对比，搞清楚什么时候选哪个。这一期解决三件事：B-G-D / S-G-D / M-B-G-D 三种变体的优缺点和直觉对比；S-K-learn 对应实现 S-G-D Regressor vs Linear Regression；正规方程 vs G-D 八维度完整对比表。下一期换角度——训练完了，怎么评估模型好不好？M-A-E / M-S-E / R-M-S-E 三件套。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "BGD 批量梯度下降 · 全部样本算梯度",
+      "text": "先看 BGD 批量梯度下降，全名 Batch Gradient Descent。每次更新参数都用全部 n 个样本算一遍梯度，再走一步。优点是梯度方向最准确，下降轨迹最平滑——你能看到损失曲线很干净地往下走，不抖。缺点也明显：n 等于 1 万还能忍，n 等于 100 万每步算 100 万次梯度，一轮就要几秒；n 等于 1 亿样本？一步算几分钟，1000 步要几天。第二个问题是内存——大数据集装不进单机内存，BGD 算梯度要把整张 X 矩阵搬出来，工程上根本跑不通。所以 BGD 在 LR 时代还能用——身高体重 5 个点 / 房价几千行没问题；到了深度学习每张图 50 万像素几百万张图的规模，完全淘汰。这是上期 GD 公式的标准实现版本——但实际工程几乎不用。",
+      "notes": "~310字。\n[src: 03-梯度下降算法分类.md]\n\ntitle \"BGD · 全部 n 个样本\"[变体1]\nfigure \"BGD 流程：算 n 个样本梯度 → 平均 → 走一步 → 重复\"\nformula \"∇L = (1/n) Σᵢ₌₁ⁿ ∇Lᵢ（全部样本平均）\"\ntitle \"优缺点\"\nbody \"✓ 梯度准 / 收敛轨迹平滑\"\nbody \"✗ 慢（n=1M → 几秒/步）/ 内存爆（X 装不下）\"\nquote \"LR 还能用 / DL 完全淘汰\"[关键]",
+      "text_tts": "先看 B-G-D 批量梯度下降，全名 Batch Gradient Descent。每次更新参数都用全部 n 个样本算一遍梯度，再走一步。优点是梯度方向最准确，下降轨迹最平滑——你能看到损失曲线很干净地往下走，不抖。缺点也明显：n 等于 1 万还能忍，n 等于 100 万每步算 100 万次梯度，一轮就要几秒；n 等于 1 亿样本？一步算几分钟，1000 步要几天。第二个问题是内存——大数据集装不进单机内存，B-G-D 算梯度要把整张 X 矩阵搬出来，工程上根本跑不通。所以 B-G-D 在 L-R 时代还能用——身高体重 5 个点 / 房价几千行没问题；到了深度学习每张图 50 万像素几百万张图的规模，完全淘汰。这是上期 G-D 公式的标准实现版本——但实际工程几乎不用。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "SGD 随机梯度下降 · 1 个样本算梯度",
+      "text": "另一个极端是 SGD 随机梯度下降，全名 Stochastic Gradient Descent。每次只随机抽 1 个样本算梯度走一步——n 等于 100 万也好 1 亿也好，每步只算一次梯度，速度直接拉满。优点：极快、内存友好、梯度噪声大反而能帮模型跳出局部最优陷阱（虽然 LR 凸函数没局部最优）。缺点：单样本梯度噪声大，下降轨迹震荡，看损失曲线像锯齿——但平均下来仍在下降；震荡导致最终停在最优点附近的小邻域，精度不如 BGD 但实际工程够用。sklearn 有专门实现叫 SGDRegressor，n 大于 10 万或 online learning 在线学习场景一般走它，不用 LinearRegression。SGD 是大数据时代的破局者——没有 SGD，深度学习根本训练不出来。",
+      "notes": "~290字。\n[src: 03-梯度下降算法分类.md]\n\ntitle \"SGD · 1 个样本（随机抽）\"[变体2]\nformula \"∇L ≈ ∇Lᵢ（i 随机抽 1 个）\"\nbody \"✓ 极快 / 内存友好 / 跳出局部（LR 凸函数无）\"\nbody \"✗ 噪声大震荡 / 精度略弱（停最优邻域）\"\ntitle \"sklearn SGDRegressor\"[工程]\nbody \"n > 10⁵ 或 online learning → 默认走它，不用 LinearRegression\"\nquote \"大数据时代的破局者 / DL 全靠它\"[金句]",
+      "text_tts": "另一个极端是 S-G-D 随机梯度下降，全名 Stochastic Gradient Descent。每次只随机抽 1 个样本算梯度走一步——n 等于 100 万也好 1 亿也好，每步只算一次梯度，速度直接拉满。优点：极快、内存友好、梯度噪声大反而能帮模型跳出局部最优陷阱（虽然 L-R 凸函数没局部最优）。缺点：单样本梯度噪声大，下降轨迹震荡，看损失曲线像锯齿——但平均下来仍在下降；震荡导致最终停在最优点附近的小邻域，精度不如 B-G-D 但实际工程够用。S-K-learn 有专门实现叫 S-G-D Regressor，n 大于 10 万或 online learning 在线学习场景一般走它，不用 Linear Regression。S-G-D 是大数据时代的破局者——没有 S-G-D，深度学习根本训练不出来。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "MBGD 小批量梯度下降 · 主流默认",
+      "text": "BGD 太慢 SGD 太抖，工程实践中走折中路线：小批量梯度下降 MBGD，全名 Mini-Batch Gradient Descent。每次抽 batch_size 个样本算梯度走一步——典型值 32、64、128、256，深度学习常用 512 或 1024。MBGD 兼顾两边：梯度足够准（不像 SGD 那么抖），又比 BGD 快得多（不用每步算全部样本）。还有个工程加分项：现代 GPU 一次能并行算几百几千个样本的梯度，单样本反而浪费算力——一个 batch 刚好喂满一张 GPU。代价是多了个超参 batch_size 要调，但实操经验值有规律：内存够就 256 起步，batch 越大梯度越平滑。今天'梯度下降'这个词在 99% 场景里说的就是 MBGD；纯 BGD 工业基本不用，纯 batch=1 的 SGD 多见于在线学习场景，框架里叫的'SGD optimizer'其实底层都是 MBGD。",
+      "notes": "~310字。\n[src: 03-梯度下降算法分类.md]\n\ntitle \"MBGD · 一批 batch_size（主流默认）\"[变体3]\nformula \"∇L ≈ (1/batch) Σ ∇Lᵢ（i 在 batch 中）\"\nbody \"典型 batch_size: 32 / 64 / 128 / 256（DL 常 512+）\"\nbody \"✓ 兼顾速度 + 稳定 / GPU 并行喂满\"\nbody \"✗ 多 1 超参（实操内存够就 256 起）\"\nquote \"今天 99% 场景说 GD = MBGD / 框架 SGD optimizer 底层就是 MBGD\"[金句]\nfigure \"3 类下山员图：BGD 看完整本书 ｜ SGD 看一句话 ｜ MBGD 看一段（适中）\"",
+      "text_tts": "B-G-D 太慢 S-G-D 太抖，工程实践中走折中路线：小批量梯度下降 M-B-G-D，全名 Mini-Batch Gradient Descent。每次抽 batch size 个样本算梯度走一步——典型值 32、64、128、256，深度学习常用 512 或 1024。M-B-G-D 兼顾两边：梯度足够准（不像 S-G-D 那么抖），又比 B-G-D 快得多（不用每步算全部样本）。还有个工程加分项：现代 G-P-U 一次能并行算几百几千个样本的梯度，单样本反而浪费算力——一个 batch 刚好喂满一张 G-P-U。代价是多了个超参 batch size 要调，但实操经验值有规律：内存够就 256 起步，batch 越大梯度越平滑。今天'梯度下降'这个词在 99% 场景里说的就是 M-B-G-D；纯 B-G-D 工业基本不用，纯 batch 等于 1 的 S-G-D 多见于在线学习场景，框架里叫的 S-G-D optimizer 其实底层都是 M-B-G-D。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "Demo 录屏 · 三种 GD dropdown 切换 · 看 loss 等高线 + 轨迹 + 曲线差异",
+      "text": "讲完三种 GD，打开 demo 看可视化对比。dropdown 切 BGD（全部 200 样本）/ MBGD（batch 32）/ SGD（1 样本）。主图：MSE loss 等高线 + GD 轨迹白线脚印（红起点 (0, 0) → 绿钻最优 (k=0.5, b=2)）；副图：loss 随 step 下降曲线。选 BGD：轨迹平滑直奔碗底，100 步终态 k=0.72 / b=0.72 / MSE=1.23，loss 曲线干净单调下降。切 MBGD：轨迹中度抖动，终态 k=0.69 / b=0.70 / MSE=1.27，loss 曲线轻度波动但整体下行。切 SGD：轨迹明显锯齿震荡，终态 k=0.74 / b=0.57 / MSE=1.30，loss 曲线像锯齿——但平均仍在下降。三种都未收敛到真值 (0.5, 2.0)（lr=0.01 / 100 步限制），但 BGD 最准 / SGD 最抖 / MBGD 兼顾——前面讲的优缺点视觉钉死。",
+      "notes": "~290字。B demo 录屏段。\n\ndemo: 02-LR/04b-gd/demos/batch-size-vs-gd.py（端口 2767）\n\n实测数字（python 直跑 · 100 步终态 · seed=7 / lr=0.01 / max_iter=100）：\n  BGD (batch=200): k=0.7151, b=0.7220, MSE=1.2261\n  MBGD (batch=32): k=0.6857, b=0.7049, MSE=1.2651\n  SGD (batch=1):   k=0.7378, b=0.5736, MSE=1.3021\n  真值: k=0.5, b=2.0\n  注：100 步未完全收敛（演示用足够，看轨迹形态差异）\n\nstates（Playwright dropdown 切 3 次）:\n  s1: algo='BGD · 全部 200 样本'  expect: 平滑轨迹直奔碗底，loss 单调降\n  s2: algo='MBGD · batch 32（主流）' expect: 中度抖动，loss 轻波动\n  s3: algo='SGD · 1 样本'          expect: 锯齿震荡，loss 锯齿曲线\n\ncue 词:\n  '选 BGD'        → s1\n  '切 MBGD'       → s2\n  '切 SGD'        → s3\n\n3.5 复核 TODO（v1 录屏前再跑一次）：\n  [ ] marimo run batch-size-vs-gd.py，dropdown 切 3 次截图轨迹 + loss 曲线\n  [ ] 验证终态数字与上面表格一致（差 < 0.01）\n  [ ] 验证 loss 曲线 log y 轴看震荡形态清晰\n\ntitle \"三种 GD 视觉对比\"[demo]\nfigure \"等高线 + 白线脚印 + loss 曲线\"\nquote \"BGD 最准 / SGD 最抖 / MBGD 兼顾\"[金句]",
+      "text_tts": "讲完三种 G-D，打开 demo 看可视化对比。dropdown 切 B-G-D（全部 200 样本）/ M-B-G-D（batch 32）/ S-G-D（1 样本）。主图：M-S-E loss 等高线 + G-D 轨迹白线脚印（红起点 (0, 0) 得到 绿钻最优 (k=0.5, b=2)）；副图：loss 随 step 下降曲线。选 B-G-D：轨迹平滑直奔碗底，100 步终态 k=0.72 / b=0.72 / M-S-E=1.23，loss 曲线干净单调下降。切 M-B-G-D：轨迹中度抖动，终态 k=0.69 / b=0.70 / M-S-E=1.27，loss 曲线轻度波动但整体下行。切 S-G-D：轨迹明显锯齿震荡，终态 k=0.74 / b=0.57 / M-S-E=1.30，loss 曲线像锯齿——但平均仍在下降。三种都未收敛到真值 (0.5, 2.0)（lr=0.01 / 100 步限制），但 B-G-D 最准 / S-G-D 最抖 / M-B-G-D 兼顾——前面讲的优缺点视觉钉死。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "正规方程 vs 梯度下降 8 维对比表",
+      "text": "讲完三种 GD，做一次正规方程 vs 梯度下降的全面对比。屏幕上 8 维对照表，重点看三条结论：第一，正规方程一步出解、GD 多步迭代——这是根本路线差异。第二，复杂度上正规方程要算 (XᵀX) 的逆，复杂度 O(d³)，d 是特征数——特征到几千就开始吃力，再加上整张 X 要装内存大数据吃不消；GD 单步只看 n 个样本算梯度 O(n)，SGD / MBGD 单步内存还和 n 无关——大数据场景 GD 完胜。第三，适用范围正规方程只能 LR / Ridge 这种凸二次损失，GD 通用所有可导损失——神经网络损失非凸根本没解析解，必须 GD。一句话场景：小数据小特征用正规方程，大特征或大样本或非线性损失用 GD。",
+      "notes": "~390字。\n[src: 04-正规方程vs梯度下降.md（README 已有 8 行表）]\n\n注意：n=样本数、d=特征数 全期统一约定。复杂度 O(d³) 的 d 是特征数，与 n 区分。\n\ntitle \"正规方程 vs 梯度下降 · 8 维对比\"[核心]\nfigure \"8 行对照表：求解方式 / 学习率 / 迭代数 / 特征数 d 影响 / 样本数 n 影响 / 适用算法 / sklearn / 典型场景\"\nbody \"① 一步出解 vs 多步迭代\"\nbody \"② 不需 α vs 必须调 α\"\nbody \"③ 不需 max_iter vs 必须设\"\nbody \"④ 特征数 d 影响：O(d³) 求逆 vs 每步线性\"\nbody \"⑤ 样本数 n 影响：整张 X 装内存 vs SGD/MBGD 单步与 n 无关\"\nbody \"⑥ 适用：仅 LR/Ridge vs 通用所有可导损失\"\nbody \"⑦ sklearn: LinearRegression vs SGDRegressor\"\nbody \"⑧ 场景：小+小 vs 大特征/大样本/非线性\"\nquote \"DL 损失非凸 → 没有解析解 → 必须 GD\"[关键]",
+      "text_tts": "讲完三种 G-D，做一次正规方程 vs 梯度下降的全面对比。屏幕上 8 维对照表，重点看三条结论：第一，正规方程一步出解、G-D 多步迭代——这是根本路线差异。第二，复杂度上正规方程要算 X 转置 X 的逆，复杂度 O(d 三次)，d 是特征数——特征到几千就开始吃力，再加上整张 X 要装内存大数据吃不消；G-D 单步只看 n 个样本算梯度 O(n)，S-G-D / M-B-G-D 单步内存还和 n 无关——大数据场景 G-D 完胜。第三，适用范围正规方程只能 L-R / Ridge 这种凸二次损失，G-D 通用所有可导损失——神经网络损失非凸根本没解析解，必须 G-D。一句话场景：小数据小特征用正规方程，大特征或大样本或非线性损失用 G-D。"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "整期收尾 + 推迟项 + 下期预告",
+      "text": "这一期到这。我们解决了 LR 优化方法的全景三件事：第一，BGD 全部样本最准但慢、SGD 一个样本极快但抖、MBGD 一批 32 到 512 是工业主流；第二，sklearn 对应实现 LinearRegression 走正规方程加 SGDRegressor 走 SGD，n 大于 10 万换 SGD；第三，正规方程 vs GD 八维对比表，记住核心一条：小数据小特征用正规方程、大数据或非线性用 GD。点到没展开的：自适应学习率算法 Adam 和 momentum 留给优化器专题；学习率衰减 schedule 留给深度学习；mini-batch 内的 BatchNorm 等技巧留给 DL 章。下一期换角度——前面 6 期都在讲怎么训练 LR，但训练完了模型好不好得有评估指标。光看损失值不直观——MSE 单位是 y 的平方，预测体重的 MSE 是公斤平方根本不是公斤。下期讲三件套：MAE 平均绝对误差 / MSE 均方误差 / RMSE 均方根误差。",
+      "notes": "整期收尾段（原 cta type 调整）· ~365字。\n\nseg 6 概念地图（合一段不拆 7 段，因为本期纯概念无 demo）：\n1. 整期 3 论点（三变体 / sklearn 对应 / 8 维对比）\n2. 推迟 3 项：Adam → 优化器 / 学习率 schedule → DL / BatchNorm → DL\n3. 下期预告：MAE / MSE / RMSE 三件套\n\n衔接钩埋伏 E08：\n  E08 hook 应回应：'训练完了' / '评估指标' / 'MAE / MSE / RMSE 三件套'\n  → README 规划: e08 hook: '上期我们训练出模型，这期换个角度：怎么评估它？MAE/MSE/RMSE 三件套' ✓\n\nfigure \"E08 teaser：3 个评估器图标 MAE / MSE / RMSE\"\nquote \"如果讲得有不对的地方，欢迎在评论区指正\"[结尾]",
+      "text_tts": "这一期到这。我们解决了 L-R 优化方法的全景三件事：第一，B-G-D 全部样本最准但慢、S-G-D 一个样本极快但抖、M-B-G-D 一批 32 到 512 是工业主流；第二，S-K-learn 对应实现 Linear Regression 走正规方程加 S-G-D Regressor 走 S-G-D，n 大于 10 万换 S-G-D；第三，正规方程 vs G-D 八维对比表，记住核心一条：小数据小特征用正规方程、大数据或非线性用 G-D。点到没展开的：自适应学习率算法 Adam 和 momentum 留给优化器专题；学习率衰减 schedule 留给深度学习；mini-batch 内的 Batch Norm 等技巧留给 D-L 章。下一期换角度——前面 6 期都在讲怎么训练 L-R，但训练完了模型好不好得有评估指标。光看损失值不直观——M-S-E 单位是 y 的平方，预测体重的 M-S-E 是公斤平方根本不是公斤。下期讲三件套：M-A-E 平均绝对误差 / M-S-E 均方误差 / R-M-S-E 均方根误差。"
+    },
+    {
+      "id": 8,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用 · 拆独立 shot 由下游 astral-video 渲染合成（本仓只写 text 不录 mp4）",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

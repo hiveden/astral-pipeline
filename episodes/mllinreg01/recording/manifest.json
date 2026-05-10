@@ -1,0 +1,29 @@
+{
+  "episode_id": "mllinreg01",
+  "source_episode": "e01-LR是什么",
+  "synced_at": "2026-05-07T18:04:09Z",
+  "shots": {
+    "shot03": {
+      "duration_s": 92.8,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 92.823,
+      "duration_diff_ms": 23.0,
+      "file": "shot03.mp4"
+    },
+    "shot05": {
+      "duration_s": 107.133,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 107.131,
+      "duration_diff_ms": 2.0,
+      "file": "shot05.mp4"
+    }
+  }
+}

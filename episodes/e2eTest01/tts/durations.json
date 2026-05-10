@@ -1,0 +1,5 @@
+[
+  { "id": "shot01", "duration_s": 5.0, "file": "shot01.wav" },
+  { "id": "shot02", "duration_s": 5.0, "file": "shot02.wav" },
+  { "id": "shot03", "duration_s": 5.0, "file": "shot03.wav" }
+]

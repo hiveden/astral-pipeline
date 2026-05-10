@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://astral-pipeline/schemas/series.schema.json",
+  "title": "astral-pipeline series registry",
+  "description": "Single source of truth for episode series whitelist consumed by script-agent-harness, tts-agent-harness, ai-engineer-roadmap, and astral-video.",
+  "type": "object",
+  "required": ["version", "series"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": {
+      "type": "string",
+      "description": "Schema-data version of this file (bumped on breaking changes)."
+    },
+    "series": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/seriesEntry" }
+    },
+    "legacy_outliers": {
+      "type": "array",
+      "description": "Episode ids that predate the whitelist and are kept for compatibility.",
+      "items": {
+        "type": "object",
+        "required": ["id", "reason"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "seriesEntry": {
+      "type": "object",
+      "required": ["name", "naming", "writers", "enabled"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*$",
+          "description": "kebab-free lowercase series prefix (e.g. ml, meta, agui)."
+        },
+        "naming": {
+          "type": "string",
+          "enum": ["single", "series-algo"],
+          "description": "single = <series><NN> (e.g. meta10); series-algo = <series><algo><NN> (e.g. mldtree03)."
+        },
+        "writers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "script-agent-harness",
+              "tts-agent-harness",
+              "ai-engineer-roadmap",
+              "astral-video"
+            ]
+          },
+          "description": "Project names allowed to write into this series' raw/ subdirs. astral-video is consumer-only and should not appear in writers."
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "When false, new-episode creation is rejected for this series."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable purpose of this series."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

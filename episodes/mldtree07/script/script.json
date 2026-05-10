@@ -1,0 +1,58 @@
+{
+  "title": "DecisionTree 第 7 期 · Titanic 工程实战 · 从数据到可视化树",
+  "description": "用 Titanic 生存预测跑通 DecisionTreeClassifier：选特征、处理缺失、编码类别、训练、评估和可视化规则树。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 600,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "Titanic 业务规则天然像树",
+      "text": "前面几期我们一直在手算特征怎么切。这一期落到工程项目：Titanic 生存预测。这个任务天然适合决策树，因为历史上救援顺序本来就很像规则链：舱位高低、性别、年龄，都会影响生存概率。我们的目标不是还原历史因果，而是用数据训练一个分类模型，输入乘客信息，预测 Survived，也就是是否生还。 这也是教学项目只选少量特征的原因：先让规则树的结构和代码流程足够清楚，再讨论更多字段能不能继续提升效果。",
+      "notes": "~220字。\n[src: 05-titanic/01-案例背景.md]\n\nfigure \"Titanic 乘客 → Pclass / Sex / Age → Survived\"\n术语：Survived 在本期第一次出现时解释。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "数据字段和特征选择",
+      "text": "这份数据里，标签 y 是 Survived，0 表示未生还，1 表示生还。特征 x 我们只用 3 个：Pclass、Age、Sex。Pclass 是船票等级，能间接反映舱位和资源；Age 是年龄，可能影响救援优先级；Sex 是性别，在 Titanic 这种场景里非常关键。其他字段，比如 Name、Ticket、Cabin，看起来信息多，但要么缺失严重，要么容易让模型记住个体，而不是学到可泛化规律。教学项目先用 3 个特征，把完整流程跑通最重要。 少选特征还有一个好处：后面画树时节点更容易读。观众能看懂每条规则，才能理解决策树为什么适合解释型项目。",
+      "notes": "~300字。\n[src: 05-titanic/01-案例背景.md]\n\nfigure \"字段表：PassengerId / Survived / Pclass / Name / Sex / Age\"\nbody \"x = Pclass, Age, Sex；y = Survived\""
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "API 参数：开关、刹车、种子",
+      "text": "核心模型是 DecisionTreeClassifier。常用参数可以分成三类。第一类是开关，criterion 选择切分标准，常见是 gini，也可以用 entropy。注意，sklearn 里的 entropy 仍然是 CART 二叉树，不是 ID3 或 C4.5。第二类是刹车，比如 max_depth、min_samples_split、min_samples_leaf，用来限制树不要长得太深。第三类是种子 random_state，用来保证同样代码每次跑出同样结果。决策树很容易过拟合，所以生产代码几乎不会放任 max_depth 一直长。",
+      "notes": "~330字。\n[src: 05-titanic/02-API.md]\n\nfigure \"参数三类：criterion / max_depth min_samples_split min_samples_leaf / random_state\"\n口径：sklearn 是 CART；criterion entropy 不是 ID3 或 C4.5。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "Pipeline 六步",
+      "text": "完整流程可以分 6 步。第一，读入数据。第二，取出 x 和 y，y 是 Survived，x 先取 Pclass、Sex、Age。第三，处理缺失值，Age 有缺失，代码先算年龄均值，再填回缺口。第四，把 Sex 这种文本类别转成 one-hot 数字列，代码会得到 Sex_female 和 Sex_male，然后删掉 Sex_male，最后保留 Sex_female。所以这一列等于 1 表示 female，等于 0 表示 male。第五，切分训练集和测试集，再调用 fit 训练模型。第六，用 predict 预测，再用 score 或 classification_report 评估。决策树训练很方便，但流程里的数据处理一点不能省。",
+      "notes": "~320字。\n[src: 05-titanic/03-实现.md]\n\nmarimo demo: 01-ML/04-DecisionTree/05-titanic/demos/01-titanic-pipeline.py\nstates: step 1 import / step 2 data / step 3 preprocess / step 4 split / step 5 fit / step 6 evaluate。\n说明: demo 使用内置 Titanic-like 教学数据集，字段口径与原代码一致；`代码/01-泰坦尼克号幸存案例.py` 保留为原始素材。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "可视化树和常见坑",
+      "text": "决策树还有一个工程优势：可以把规则画出来。用 plot_tree 时，如果不给 feature_names，图里只会出现 x0、x1、x2，业务方看不懂。实际代码传入的是 x.columns，当前特征名会显示成 Pclass、Age、Sex_female，节点条件才会变成能读的规则。这里也顺手记两个坑。第一，老写法里 pandas 链式索引加 inplace 容易触发 SettingWithCopyWarning，本期代码已经先 copy 再赋值，写法更稳。第二，classification_report 的参数顺序是 y_true 在前，y_pred 在后，顺序反了会让 precision 和 recall 的含义混乱。",
+      "notes": "~320字。\n[src: 05-titanic/03-实现.md]\n\nfigure \"plot_tree: x[0] → Pclass\"\n坑：SettingWithCopyWarning；classification_report(y_true, y_pred)。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "收尾 + 下期预告",
+      "text": "这一期我们把分类树工程跑通了：明确 y 是 Survived，选 Pclass、Age、Sex 三个特征，处理缺失和类别编码，再训练 DecisionTreeClassifier，最后评估和画树。到这里，分类任务已经闭环。下一期换一个问题：如果标签不是生还或未生还，而是房价、销量、温度这种连续数值，树还能不能用？答案是能，只是纯度尺子要从分类不纯度换成平方损失。 这也为回归树做了铺垫：模型外壳仍然是 fit 和 predict，变化的是标签类型、切分标准和叶子输出。 录屏时可以把代码光标停在对应位置，让观众看到特征列和树图节点名称是一一对应的。",
+      "notes": "~280字。\n\n衔接钩：e08 回归树，分类纯度 → 平方损失。"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+# astral-pipeline .gitignore
+# 设计：只追小文件（schemas/契约/状态/元信息）；大件（wav/mp4/png）只在本地。
+# 见 README.md "data + control plane" 心智 + design.md Open Question #3。
+
+# ───────────────────────────────────────────────────
+# 大文件 binaries（local only，不进 git）
+# ───────────────────────────────────────────────────
+
+# 新 layout: episodes/<id>/raw/...
+episodes/**/raw/tts/*.wav
+episodes/**/raw/tts/*.flac
+episodes/**/raw/tts/*.mp3
+episodes/**/raw/recording/*.mp4
+episodes/**/raw/recording/*.mov
+episodes/**/raw/recording/*.mkv
+episodes/**/raw/script/screenshots/
+
+# 老 layout: episodes/<id>/{script,tts,recording}/...（mv 进来的 72 个老 episode 内部仍是老结构）
+episodes/*/script/screenshots/
+episodes/*/tts/*.wav
+episodes/*/tts/*.flac
+episodes/*/tts/*.mp3
+episodes/*/recording/*.mp4
+episodes/*/recording/*.mov
+episodes/*/recording/*.mkv
+
+# ───────────────────────────────────────────────────
+# OS / IDE / 构建产物
+# ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
+.next/
+.cache/
+
+# ───────────────────────────────────────────────────
+# Agent harness 本地配置（不强制追踪）
+# ───────────────────────────────────────────────────
+.codex/
+.gemini/

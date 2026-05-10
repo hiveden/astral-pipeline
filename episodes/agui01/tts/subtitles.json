@@ -1,0 +1,1618 @@
+{
+  "shot01": [
+    {
+      "id": "shot01-0",
+      "text": "最近读完 AG-UI 的官方介绍文档，",
+      "start": 0.0,
+      "end": 2.75
+    },
+    {
+      "id": "shot01-1",
+      "text": "一句话定位：",
+      "start": 2.75,
+      "end": 3.76
+    },
+    {
+      "id": "shot01-2",
+      "text": "AG-UI 是开放、轻量、",
+      "start": 3.76,
+      "end": 5.72
+    },
+    {
+      "id": "shot01-3",
+      "text": "基于事件的协议，",
+      "start": 5.72,
+      "end": 7.12
+    },
+    {
+      "id": "shot01-4",
+      "text": "标准化 AI agent 和用户侧应用之间的连接。",
+      "start": 7.12,
+      "end": 10.9
+    },
+    {
+      "id": "shot01-5",
+      "text": "这是一个双向通道，",
+      "start": 10.9,
+      "end": 12.62
+    },
+    {
+      "id": "shot01-6",
+      "text": "传 agent 状态、",
+      "start": 12.62,
+      "end": 13.9
+    },
+    {
+      "id": "shot01-7",
+      "text": "UI 意图和用户交互。",
+      "start": 13.9,
+      "end": 15.84
+    }
+  ],
+  "shot02": [
+    {
+      "id": "shot02-0",
+      "text": "讲 AG-UI 本身之前，",
+      "start": 0.0,
+      "end": 2.32
+    },
+    {
+      "id": "shot02-1",
+      "text": "先把它放到更大的图里看：",
+      "start": 2.32,
+      "end": 4.28
+    },
+    {
+      "id": "shot02-2",
+      "text": "agentic 生态里有三个主流开放协议，",
+      "start": 4.28,
+      "end": 7.58
+    },
+    {
+      "id": "shot02-3",
+      "text": "各管一层——MCP 连接 agent 和工具、上下文，",
+      "start": 7.58,
+      "end": 11.64
+    },
+    {
+      "id": "shot02-4",
+      "text": "A2A 连接 agent 和 agent，",
+      "start": 11.64,
+      "end": 14.12
+    },
+    {
+      "id": "shot02-5",
+      "text": "AG-UI 连接 agent 和用户侧应用。",
+      "start": 14.12,
+      "end": 17.46
+    },
+    {
+      "id": "shot02-6",
+      "text": "三个协议互补、",
+      "start": 17.46,
+      "end": 19.24
+    },
+    {
+      "id": "shot02-7",
+      "text": "技术目标不同，",
+      "start": 19.24,
+      "end": 20.58
+    },
+    {
+      "id": "shot02-8",
+      "text": "一个 agent 经常同时用上全部三个。",
+      "start": 20.58,
+      "end": 23.7
+    },
+    {
+      "id": "shot02-9",
+      "text": "画面里 agent 站在中间：",
+      "start": 24.053,
+      "end": 26.053
+    },
+    {
+      "id": "shot02-10",
+      "text": "往上用 AG-UI 连前端 App 给用户，",
+      "start": 26.053,
+      "end": 29.893
+    },
+    {
+      "id": "shot02-11",
+      "text": "往下用 MCP 连工具和数据源，",
+      "start": 29.893,
+      "end": 32.853
+    },
+    {
+      "id": "shot02-12",
+      "text": "横向用 A2A 连其它 agent——三条线正交，",
+      "start": 32.853,
+      "end": 36.893
+    },
+    {
+      "id": "shot02-13",
+      "text": "互不干扰。",
+      "start": 36.893,
+      "end": 38.133
+    },
+    {
+      "id": "shot02-14",
+      "text": "AG-UI 自己的定位说得很直白——",
+      "start": 38.133,
+      "end": 40.773
+    },
+    {
+      "id": "shot02-15",
+      "text": "kitchen sink 协议，",
+      "start": 40.773,
+      "end": 42.433
+    },
+    {
+      "id": "shot02-16",
+      "text": "大杂烩协议：",
+      "start": 42.433,
+      "end": 43.613
+    },
+    {
+      "id": "shot02-17",
+      "text": "它不追求理论上最干净的抽象，",
+      "start": 43.613,
+      "end": 46.213
+    },
+    {
+      "id": "shot02-18",
+      "text": "而是把构建真实 agentic 应用所需",
+      "start": 46.213,
+      "end": 49.373
+    },
+    {
+      "id": "shot02-19",
+      "text": "要的能力全部装进去。",
+      "start": 49.373,
+      "end": 51.133
+    },
+    {
+      "id": "shot02-20",
+      "text": "building blocks 是从应用",
+      "start": 51.133,
+      "end": 51.953
+    },
+    {
+      "id": "shot02-21",
+      "text": "侧需求自下而上倒推出来的。",
+      "start": 51.953,
+      "end": 54.436
+    },
+    {
+      "id": "shot02-22",
+      "text": "对照之下，",
+      "start": 54.636,
+      "end": 55.696
+    },
+    {
+      "id": "shot02-23",
+      "text": "MCP 只管工具接入，",
+      "start": 55.696,
+      "end": 57.536
+    },
+    {
+      "id": "shot02-24",
+      "text": "A2A 只管 agent 协作，",
+      "start": 57.536,
+      "end": 59.656
+    },
+    {
+      "id": "shot02-25",
+      "text": "AG-UI 承担的面最宽。",
+      "start": 59.656,
+      "end": 61.356
+    }
+  ],
+  "shot03": [
+    {
+      "id": "shot03-0",
+      "text": "AG-UI 的形状不是请求/响应，",
+      "start": 0.0,
+      "end": 2.7
+    },
+    {
+      "id": "shot03-1",
+      "text": "而是事件流：",
+      "start": 2.7,
+      "end": 4.02
+    },
+    {
+      "id": "shot03-2",
+      "text": "主流方向是 agent 向 UI 连续发事件，",
+      "start": 4.02,
+      "end": 7.64
+    },
+    {
+      "id": "shot03-3",
+      "text": "反向通道让 UI 把用户输入、中断、审批回传。",
+      "start": 7.64,
+      "end": 12.16
+    },
+    {
+      "id": "shot03-4",
+      "text": "这是和传统 Web API 最大的结构差异，",
+      "start": 12.16,
+      "end": 15.32
+    },
+    {
+      "id": "shot03-5",
+      "text": "后面所有设计都建立在这个形状上。",
+      "start": 15.32,
+      "end": 17.84
+    }
+  ],
+  "shot04": [
+    {
+      "id": "shot04-0",
+      "text": "为什么 agent 扛不住传统 REST",
+      "start": 0.0,
+      "end": 2.34
+    },
+    {
+      "id": "shot04-1",
+      "text": "或 GraphQL？",
+      "start": 2.34,
+      "end": 4.12
+    },
+    {
+      "id": "shot04-2",
+      "text": "因为 agentic 应用打破了请求/响应模型，",
+      "start": 4.12,
+      "end": 8.22
+    },
+    {
+      "id": "shot04-3",
+      "text": "官方列了 4 条特性。第一，",
+      "start": 8.22,
+      "end": 11.11
+    },
+    {
+      "id": "shot04-4",
+      "text": "长任务加流式，",
+      "start": 11.11,
+      "end": 12.8
+    },
+    {
+      "id": "shot04-5",
+      "text": "跨多轮会话：",
+      "start": 12.8,
+      "end": 14.1
+    },
+    {
+      "id": "shot04-6",
+      "text": "一次 agent 回合可能跑几秒到几分钟，",
+      "start": 14.1,
+      "end": 17.88
+    },
+    {
+      "id": "shot04-7",
+      "text": "LLM 推理加上工具调用、",
+      "start": 17.88,
+      "end": 20.64
+    },
+    {
+      "id": "shot04-8",
+      "text": "多步思考，",
+      "start": 20.64,
+      "end": 21.86
+    },
+    {
+      "id": "shot04-9",
+      "text": "而且会跨多轮会话持续累积，",
+      "start": 21.86,
+      "end": 24.66
+    },
+    {
+      "id": "shot04-10",
+      "text": "不是一次回合结束就了事。",
+      "start": 24.66,
+      "end": 26.62
+    },
+    {
+      "id": "shot04-11",
+      "text": "中间过程需要边产生边下发——token",
+      "start": 27.04,
+      "end": 30.04
+    },
+    {
+      "id": "shot04-12",
+      "text": "级流式文字、",
+      "start": 30.04,
+      "end": 31.02
+    },
+    {
+      "id": "shot04-13",
+      "text": "工具调用起止、",
+      "start": 31.02,
+      "end": 32.3
+    },
+    {
+      "id": "shot04-14",
+      "text": "中间推理步骤、",
+      "start": 32.3,
+      "end": 33.68
+    },
+    {
+      "id": "shot04-15",
+      "text": "状态变更——REST 的一次性返回模型装不下。第二,非确定性，",
+      "start": 33.68,
+      "end": 39.16
+    },
+    {
+      "id": "shot04-16",
+      "text": "含两层：",
+      "start": 39.16,
+      "end": 40.3
+    },
+    {
+      "id": "shot04-17",
+      "text": "输出不确定，",
+      "start": 40.3,
+      "end": 41.28
+    },
+    {
+      "id": "shot04-18",
+      "text": "同一个问题两次调可能结果不同；",
+      "start": 41.28,
+      "end": 44.68
+    },
+    {
+      "id": "shot04-19",
+      "text": "再加一层——agent 主动决定这次渲染什么组件。",
+      "start": 44.68,
+      "end": 48.62
+    },
+    {
+      "id": "shot04-20",
+      "text": "UI 形态本身是 agent 输出的一部分，",
+      "start": 48.62,
+      "end": 51.7
+    },
+    {
+      "id": "shot04-21",
+      "text": "前端没法预先知道 schema。",
+      "start": 51.7,
+      "end": 53.88
+    },
+    {
+      "id": "shot04-22",
+      "text": "第三，",
+      "start": 54.115,
+      "end": 54.635
+    },
+    {
+      "id": "shot04-23",
+      "text": "结构化和非结构化 IO 混合：",
+      "start": 54.635,
+      "end": 57.135
+    },
+    {
+      "id": "shot04-24",
+      "text": "一次响应里同时有流式文字、",
+      "start": 57.135,
+      "end": 59.375
+    },
+    {
+      "id": "shot04-25",
+      "text": "工具调用参数、",
+      "start": 59.375,
+      "end": 60.455
+    },
+    {
+      "id": "shot04-26",
+      "text": "状态 delta、",
+      "start": 60.455,
+      "end": 61.355
+    },
+    {
+      "id": "shot04-27",
+      "text": "语音或图片、思考步骤，",
+      "start": 61.355,
+      "end": 63.415
+    },
+    {
+      "id": "shot04-28",
+      "text": "在时间上交错——传统",
+      "start": 63.415,
+      "end": 65.395
+    },
+    {
+      "id": "shot04-29",
+      "text": "Content-Type 一次响应一种类型，",
+      "start": 65.395,
+      "end": 67.815
+    },
+    {
+      "id": "shot04-30",
+      "text": "要混合只能自己拼。第四，",
+      "start": 67.815,
+      "end": 70.255
+    },
+    {
+      "id": "shot04-31",
+      "text": "可交互组合：",
+      "start": 70.255,
+      "end": 71.635
+    },
+    {
+      "id": "shot04-32",
+      "text": "一个任务可能递归调用子 agent，",
+      "start": 71.635,
+      "end": 74.035
+    },
+    {
+      "id": "shot04-33",
+      "text": "形成执行树，",
+      "start": 74.035,
+      "end": 75.515
+    },
+    {
+      "id": "shot04-34",
+      "text": "用户能在中途介入——审批子步骤、改参数、中断分支。",
+      "start": 75.515,
+      "end": 79.435
+    },
+    {
+      "id": "shot04-35",
+      "text": "AG-UI 把 sub-agent 调用",
+      "start": 79.833,
+      "end": 81.813
+    },
+    {
+      "id": "shot04-36",
+      "text": "的三件事作为一等公民——作用域状态",
+      "start": 81.813,
+      "end": 84.643
+    },
+    {
+      "id": "shot04-37",
+      "text": "scoped state、",
+      "start": 84.853,
+      "end": 85.933
+    },
+    {
+      "id": "shot04-38",
+      "text": "追踪 tracing、",
+      "start": 85.933,
+      "end": 86.973
+    },
+    {
+      "id": "shot04-39",
+      "text": "取消 cancellation——",
+      "start": 86.973,
+      "end": 88.353
+    },
+    {
+      "id": "shot04-40",
+      "text": "REST 是扁平的一来一回，",
+      "start": 88.353,
+      "end": 90.333
+    },
+    {
+      "id": "shot04-41",
+      "text": "没有会话树这种概念。",
+      "start": 90.333,
+      "end": 92.133
+    },
+    {
+      "id": "shot04-42",
+      "text": "四条对应四个维度的变化：",
+      "start": 92.133,
+      "end": 94.233
+    },
+    {
+      "id": "shot04-43",
+      "text": "时间从一次性变成持续加流式，",
+      "start": 94.233,
+      "end": 97.153
+    },
+    {
+      "id": "shot04-44",
+      "text": "输出从预定义 schema 变成非确定加",
+      "start": 97.153,
+      "end": 100.193
+    },
+    {
+      "id": "shot04-45",
+      "text": "动态 UI，",
+      "start": 100.193,
+      "end": 101.153
+    },
+    {
+      "id": "shot04-46",
+      "text": "数据从单类型变成多类型交错，",
+      "start": 101.153,
+      "end": 103.653
+    },
+    {
+      "id": "shot04-47",
+      "text": "结构从扁平 req/res 变成递归执行树。",
+      "start": 103.653,
+      "end": 107.093
+    },
+    {
+      "id": "shot04-48",
+      "text": "AG-UI 基于事件，",
+      "start": 107.407,
+      "end": 108.947
+    },
+    {
+      "id": "shot04-49",
+      "text": "建立在 HTTP、",
+      "start": 108.947,
+      "end": 110.542
+    },
+    {
+      "id": "shot04-50",
+      "text": "WebSocket 这些 Web 基础协议之上，",
+      "start": 110.542,
+      "end": 112.687
+    },
+    {
+      "id": "shot04-51",
+      "text": "作为面向 agentic 时代的抽象层。",
+      "start": 112.687,
+      "end": 115.507
+    }
+  ],
+  "shot05": [
+    {
+      "id": "shot05-0",
+      "text": "事件流具体走哪种传输？",
+      "start": 0.0,
+      "end": 2.3
+    },
+    {
+      "id": "shot05-1",
+      "text": "两种都支持。",
+      "start": 2.3,
+      "end": 3.44
+    },
+    {
+      "id": "shot05-2",
+      "text": "先看 SSE，",
+      "start": 3.44,
+      "end": 5.06
+    },
+    {
+      "id": "shot05-3",
+      "text": "Server-Sent Events：",
+      "start": 5.06,
+      "end": 6.2
+    },
+    {
+      "id": "shot05-4",
+      "text": "方向是单向，",
+      "start": 6.2,
+      "end": 7.54
+    },
+    {
+      "id": "shot05-5",
+      "text": "服务器推到浏览器；",
+      "start": 7.54,
+      "end": 9.18
+    },
+    {
+      "id": "shot05-6",
+      "text": "底层是 HTTP 长连接，",
+      "start": 9.18,
+      "end": 11.22
+    },
+    {
+      "id": "shot05-7",
+      "text": "Content-Type 是 text/",
+      "start": 11.22,
+      "end": 12.6
+    },
+    {
+      "id": "shot05-8",
+      "text": "event-stream；",
+      "start": 12.6,
+      "end": 13.74
+    },
+    {
+      "id": "shot05-9",
+      "text": "浏览器原生 EventSource，",
+      "start": 13.74,
+      "end": 15.84
+    },
+    {
+      "id": "shot05-10",
+      "text": "自带自动重连。",
+      "start": 15.84,
+      "end": 16.76
+    },
+    {
+      "id": "shot05-11",
+      "text": "WebSocket 双向全双工：",
+      "start": 17.197,
+      "end": 18.997
+    },
+    {
+      "id": "shot05-12",
+      "text": "先走 HTTP 升级握手，",
+      "start": 18.997,
+      "end": 21.077
+    },
+    {
+      "id": "shot05-13",
+      "text": "Upgrade 头切到独立的帧协议；",
+      "start": 21.077,
+      "end": 23.557
+    },
+    {
+      "id": "shot05-14",
+      "text": "浏览器原生 WebSocket API，",
+      "start": 23.557,
+      "end": 25.697
+    },
+    {
+      "id": "shot05-15",
+      "text": "但重连要自己实现。",
+      "start": 25.697,
+      "end": 27.377
+    },
+    {
+      "id": "shot05-16",
+      "text": "对比几个维度：",
+      "start": 27.377,
+      "end": 28.337
+    },
+    {
+      "id": "shot05-17",
+      "text": "方向上 SSE 单向、",
+      "start": 28.337,
+      "end": 30.157
+    },
+    {
+      "id": "shot05-18",
+      "text": "WebSocket 双向；",
+      "start": 30.157,
+      "end": 31.497
+    },
+    {
+      "id": "shot05-19",
+      "text": "底层 SSE 走 HTTP、",
+      "start": 31.497,
+      "end": 33.457
+    },
+    {
+      "id": "shot05-20",
+      "text": "WebSocket 走独立协议；",
+      "start": 33.457,
+      "end": 35.237
+    },
+    {
+      "id": "shot05-21",
+      "text": "重连 SSE 浏览器自动、",
+      "start": 35.237,
+      "end": 37.537
+    },
+    {
+      "id": "shot05-22",
+      "text": "WebSocket 自己做；",
+      "start": 37.537,
+      "end": 38.917
+    },
+    {
+      "id": "shot05-23",
+      "text": "代理和防火墙友好度 SSE 更高，",
+      "start": 38.917,
+      "end": 41.837
+    },
+    {
+      "id": "shot05-24",
+      "text": "WebSocket 中等。",
+      "start": 41.837,
+      "end": 42.957
+    },
+    {
+      "id": "shot05-25",
+      "text": "怎么选：",
+      "start": 43.371,
+      "end": 44.111
+    },
+    {
+      "id": "shot05-26",
+      "text": "多数 agent 场景 SSE 足够，",
+      "start": 44.111,
+      "end": 46.851
+    },
+    {
+      "id": "shot05-27",
+      "text": "agent 以下发为主，",
+      "start": 46.851,
+      "end": 48.291
+    },
+    {
+      "id": "shot05-28",
+      "text": "用户输入走另一个 POST 就行；",
+      "start": 48.291,
+      "end": 50.711
+    },
+    {
+      "id": "shot05-29",
+      "text": "真需要密集双向、",
+      "start": 50.711,
+      "end": 52.311
+    },
+    {
+      "id": "shot05-30",
+      "text": "比如实时 steering 或语音双工，",
+      "start": 52.311,
+      "end": 54.451
+    },
+    {
+      "id": "shot05-31",
+      "text": "再上 WebSocket。踩坑提示：",
+      "start": 54.451,
+      "end": 56.931
+    },
+    {
+      "id": "shot05-32",
+      "text": "排查事件流断连时，",
+      "start": 56.931,
+      "end": 58.731
+    },
+    {
+      "id": "shot05-33",
+      "text": "优先查反向代理对长连接的 buffer",
+      "start": 58.731,
+      "end": 61.511
+    },
+    {
+      "id": "shot05-34",
+      "text": "和超时配置——Nginx、",
+      "start": 61.511,
+      "end": 63.411
+    },
+    {
+      "id": "shot05-35",
+      "text": "Cloudflare 这些默认配置经常是元凶。",
+      "start": 63.411,
+      "end": 66.091
+    }
+  ],
+  "shot06": [
+    {
+      "id": "shot06-0",
+      "text": "AG-UI 的官方 Overview 列",
+      "start": 0.0,
+      "end": 1.98
+    },
+    {
+      "id": "shot06-1",
+      "text": "了 13 个 building",
+      "start": 1.98,
+      "end": 3.04
+    },
+    {
+      "id": "shot06-2",
+      "text": "blocks，",
+      "start": 3.04,
+      "end": 3.48
+    },
+    {
+      "id": "shot06-3",
+      "text": "这是它 kitchen sink 定位的",
+      "start": 3.48,
+      "end": 5.28
+    },
+    {
+      "id": "shot06-4",
+      "text": "具体清单——我按 5 组过一遍，",
+      "start": 5.28,
+      "end": 7.64
+    },
+    {
+      "id": "shot06-5",
+      "text": "每项带一句话说明。",
+      "start": 7.64,
+      "end": 9.22
+    },
+    {
+      "id": "shot06-6",
+      "text": "第一组，传输基础，3 项：",
+      "start": 9.581,
+      "end": 12.061
+    },
+    {
+      "id": "shot06-7",
+      "text": "Streaming chat——",
+      "start": 12.061,
+      "end": 12.961
+    },
+    {
+      "id": "shot06-8",
+      "text": "token 与事件流式下发，",
+      "start": 12.961,
+      "end": 14.781
+    },
+    {
+      "id": "shot06-9",
+      "text": "支持取消与恢复；",
+      "start": 14.781,
+      "end": 16.241
+    },
+    {
+      "id": "shot06-10",
+      "text": "Multimodality——带类型的附",
+      "start": 16.241,
+      "end": 18.261
+    },
+    {
+      "id": "shot06-11",
+      "text": "件与实时媒体，文件、图片、音频、转写；",
+      "start": 18.261,
+      "end": 21.341
+    },
+    {
+      "id": "shot06-12",
+      "text": "Custom events——协议未覆盖",
+      "start": 21.341,
+      "end": 23.441
+    },
+    {
+      "id": "shot06-13",
+      "text": "场景的开放数据通道。",
+      "start": 23.441,
+      "end": 24.841
+    },
+    {
+      "id": "shot06-14",
+      "text": "第二组，",
+      "start": 25.199,
+      "end": 25.699
+    },
+    {
+      "id": "shot06-15",
+      "text": "Generative UI，2 项：",
+      "start": 25.699,
+      "end": 27.519
+    },
+    {
+      "id": "shot06-16",
+      "text": "静态 Generative UI 把模型",
+      "start": 27.519,
+      "end": 29.839
+    },
+    {
+      "id": "shot06-17",
+      "text": "输出渲染为稳定的、",
+      "start": 29.839,
+      "end": 31.779
+    },
+    {
+      "id": "shot06-18",
+      "text": "带类型的组件；",
+      "start": 31.779,
+      "end": 33.019
+    },
+    {
+      "id": "shot06-19",
+      "text": "声明式 Generative UI 用一",
+      "start": 33.019,
+      "end": 35.099
+    },
+    {
+      "id": "shot06-20",
+      "text": "套小型声明式语言，",
+      "start": 35.099,
+      "end": 37.199
+    },
+    {
+      "id": "shot06-21",
+      "text": "agent 提议组件树，",
+      "start": 37.199,
+      "end": 38.919
+    },
+    {
+      "id": "shot06-22",
+      "text": "应用校验并挂载。",
+      "start": 38.919,
+      "end": 40.246
+    },
+    {
+      "id": "shot06-23",
+      "text": "第三组，",
+      "start": 40.445,
+      "end": 41.225
+    },
+    {
+      "id": "shot06-24",
+      "text": "状态与可视化，3 项：",
+      "start": 41.225,
+      "end": 43.305
+    },
+    {
+      "id": "shot06-25",
+      "text": "Shared state 是只读或读写的",
+      "start": 43.305,
+      "end": 45.725
+    },
+    {
+      "id": "shot06-26",
+      "text": "共享 store，",
+      "start": 45.725,
+      "end": 46.705
+    },
+    {
+      "id": "shot06-27",
+      "text": "事件源的流式 diff 与冲突解决；",
+      "start": 46.705,
+      "end": 49.345
+    },
+    {
+      "id": "shot06-28",
+      "text": "Thinking steps 从",
+      "start": 49.345,
+      "end": 50.665
+    },
+    {
+      "id": "shot06-29",
+      "text": "trace 与工具事件可视化中间推理；",
+      "start": 50.665,
+      "end": 53.385
+    },
+    {
+      "id": "shot06-30",
+      "text": "Tool output",
+      "start": 53.385,
+      "end": 54.245
+    },
+    {
+      "id": "shot06-31",
+      "text": "streaming 流式工具结果与日志。",
+      "start": 54.245,
+      "end": 56.625
+    },
+    {
+      "id": "shot06-32",
+      "text": "第四组，工具调用，2 项，方向对偶：",
+      "start": 57.039,
+      "end": 60.259
+    },
+    {
+      "id": "shot06-33",
+      "text": "Frontend tool calls",
+      "start": 60.259,
+      "end": 61.594
+    },
+    {
+      "id": "shot06-34",
+      "text": "是 agent 叫前端做动作的带类型握手，",
+      "start": 61.699,
+      "end": 65.459
+    },
+    {
+      "id": "shot06-35",
+      "text": "Backend tool",
+      "start": 65.459,
+      "end": 66.219
+    },
+    {
+      "id": "shot06-36",
+      "text": "rendering 是后端工具的执行输出",
+      "start": 66.219,
+      "end": 68.739
+    },
+    {
+      "id": "shot06-37",
+      "text": "在应用和对话里可视化——一个是",
+      "start": 68.739,
+      "end": 71.079
+    },
+    {
+      "id": "shot06-38",
+      "text": "agent 到前端的动作调用，",
+      "start": 71.079,
+      "end": 72.859
+    },
+    {
+      "id": "shot06-39",
+      "text": "一个是后端执行结果给 UI 看。",
+      "start": 72.859,
+      "end": 75.279
+    },
+    {
+      "id": "shot06-40",
+      "text": "第五组，",
+      "start": 75.536,
+      "end": 76.616
+    },
+    {
+      "id": "shot06-41",
+      "text": "人机介入与组合，3 项：",
+      "start": 76.616,
+      "end": 78.616
+    },
+    {
+      "id": "shot06-42",
+      "text": "Interrupts，",
+      "start": 78.616,
+      "end": 79.776
+    },
+    {
+      "id": "shot06-43",
+      "text": "全称 Human In The Loop，",
+      "start": 79.776,
+      "end": 81.656
+    },
+    {
+      "id": "shot06-44",
+      "text": "简写 HITL，",
+      "start": 81.656,
+      "end": 83.336
+    },
+    {
+      "id": "shot06-45",
+      "text": "在流程中途暂停、批准、编辑、重试、升级，不丢状态；",
+      "start": 83.336,
+      "end": 88.276
+    },
+    {
+      "id": "shot06-46",
+      "text": "Agent steering 用实时用户",
+      "start": 88.276,
+      "end": 90.476
+    },
+    {
+      "id": "shot06-47",
+      "text": "输入动态引导 agent 执行；",
+      "start": 90.476,
+      "end": 93.336
+    },
+    {
+      "id": "shot06-48",
+      "text": "Sub-agents and",
+      "start": 93.336,
+      "end": 94.376
+    },
+    {
+      "id": "shot06-49",
+      "text": "composition 嵌套委派，",
+      "start": 94.376,
+      "end": 96.186
+    },
+    {
+      "id": "shot06-50",
+      "text": "带三件事——作用域状态 scoped",
+      "start": 96.186,
+      "end": 99.056
+    },
+    {
+      "id": "shot06-51",
+      "text": "state、",
+      "start": 99.056,
+      "end": 99.756
+    },
+    {
+      "id": "shot06-52",
+      "text": "追踪 tracing、",
+      "start": 99.756,
+      "end": 100.956
+    },
+    {
+      "id": "shot06-53",
+      "text": "取消 cancellation。",
+      "start": 100.956,
+      "end": 102.136
+    },
+    {
+      "id": "shot06-54",
+      "text": "这 13 项每一项对应后续",
+      "start": 102.622,
+      "end": 104.542
+    },
+    {
+      "id": "shot06-55",
+      "text": "concepts 文档里的一个章节，",
+      "start": 104.542,
+      "end": 106.222
+    },
+    {
+      "id": "shot06-56",
+      "text": "可以当学习地图用。",
+      "start": 106.222,
+      "end": 107.822
+    }
+  ],
+  "shot07": [
+    {
+      "id": "shot07-0",
+      "text": "第一次读这篇文档最容易混的一个点：",
+      "start": 0.0,
+      "end": 2.98
+    },
+    {
+      "id": "shot07-1",
+      "text": "A2UI 和 AG-UI 不是一回事——名字相近，",
+      "start": 2.98,
+      "end": 6.54
+    },
+    {
+      "id": "shot07-2",
+      "text": "但职责不同。",
+      "start": 6.54,
+      "end": 7.7
+    },
+    {
+      "id": "shot07-3",
+      "text": "AG-UI 是事件流传输协议，",
+      "start": 7.7,
+      "end": 10.2
+    },
+    {
+      "id": "shot07-4",
+      "text": "管 agent 到用户这条线，",
+      "start": 10.2,
+      "end": 12.28
+    },
+    {
+      "id": "shot07-5",
+      "text": "解决怎么传；",
+      "start": 12.28,
+      "end": 13.48
+    },
+    {
+      "id": "shot07-6",
+      "text": "A2UI 是 generative UI",
+      "start": 13.48,
+      "end": 15.72
+    },
+    {
+      "id": "shot07-7",
+      "text": "widget 描述格式，",
+      "start": 15.72,
+      "end": 17.16
+    },
+    {
+      "id": "shot07-8",
+      "text": "在 A2A 传输上投递 UI，",
+      "start": 17.16,
+      "end": 20.0
+    },
+    {
+      "id": "shot07-9",
+      "text": "解决传什么形状。",
+      "start": 20.0,
+      "end": 21.42
+    },
+    {
+      "id": "shot07-10",
+      "text": "两者正交，",
+      "start": 21.42,
+      "end": 22.9
+    },
+    {
+      "id": "shot07-11",
+      "text": "一条 AG-UI 连接里可以承载",
+      "start": 22.9,
+      "end": 25.58
+    },
+    {
+      "id": "shot07-12",
+      "text": "A2UI 格式的组件下发。",
+      "start": 25.58,
+      "end": 27.96
+    },
+    {
+      "id": "shot07-13",
+      "text": "同一层还有另外两个 generative",
+      "start": 28.321,
+      "end": 30.701
+    },
+    {
+      "id": "shot07-14",
+      "text": "UI 规范——MCP-UI 基于MCP，",
+      "start": 30.701,
+      "end": 33.921
+    },
+    {
+      "id": "shot07-15",
+      "text": "Open JSON UI 是通用 UI",
+      "start": 33.921,
+      "end": 36.321
+    },
+    {
+      "id": "shot07-16",
+      "text": "描述 schema——AG-UI 和这三",
+      "start": 36.321,
+      "end": 39.201
+    },
+    {
+      "id": "shot07-17",
+      "text": "个 generative UI 规范全部兼容。",
+      "start": 39.201,
+      "end": 41.641
+    }
+  ],
+  "shot08": [
+    {
+      "id": "shot08-0",
+      "text": "AG-UI 贡献者最近加了",
+      "start": 0.0,
+      "end": 1.86
+    },
+    {
+      "id": "shot08-1",
+      "text": "handshake 机制——AG-UI",
+      "start": 1.94,
+      "end": 3.46
+    },
+    {
+      "id": "shot08-2",
+      "text": "可以为 MCP 和 A2A 协议的",
+      "start": 3.46,
+      "end": 5.98
+    },
+    {
+      "id": "shot08-3",
+      "text": "agent front for，",
+      "start": 5.98,
+      "end": 7.18
+    },
+    {
+      "id": "shot08-4",
+      "text": "代言它们。",
+      "start": 7.18,
+      "end": 8.28
+    },
+    {
+      "id": "shot08-5",
+      "text": "工程上的意思是：",
+      "start": 8.28,
+      "end": 9.36
+    },
+    {
+      "id": "shot08-6",
+      "text": "如果后端 agent 已经是 MCP 或",
+      "start": 9.36,
+      "end": 11.8
+    },
+    {
+      "id": "shot08-7",
+      "text": "A2A 实现，",
+      "start": 11.8,
+      "end": 12.74
+    },
+    {
+      "id": "shot08-8",
+      "text": "不需要重写成 AG-UI 原生——",
+      "start": 12.74,
+      "end": 15.46
+    },
+    {
+      "id": "shot08-9",
+      "text": "AG-UI 客户端库把这些 agent",
+      "start": 15.46,
+      "end": 17.66
+    },
+    {
+      "id": "shot08-10",
+      "text": "包装成 AG-UI 事件流，",
+      "start": 17.66,
+      "end": 19.86
+    },
+    {
+      "id": "shot08-11",
+      "text": "前端按 AG-UI 统一消费。",
+      "start": 19.86,
+      "end": 22.14
+    },
+    {
+      "id": "shot08-12",
+      "text": "这是一个生态位扩张策略：",
+      "start": 22.551,
+      "end": 24.791
+    },
+    {
+      "id": "shot08-13",
+      "text": "前端层用一套 AG-UI 客户端，",
+      "start": 24.791,
+      "end": 27.171
+    },
+    {
+      "id": "shot08-14",
+      "text": "通吃三种后端。",
+      "start": 27.171,
+      "end": 28.871
+    },
+    {
+      "id": "shot08-15",
+      "text": "AG-UI 的使命是支持现代",
+      "start": 28.871,
+      "end": 30.951
+    },
+    {
+      "id": "shot08-16",
+      "text": "agentic 应用所需的全部",
+      "start": 30.951,
+      "end": 33.211
+    },
+    {
+      "id": "shot08-17",
+      "text": "building blocks——",
+      "start": 33.211,
+      "end": 34.311
+    },
+    {
+      "id": "shot08-18",
+      "text": "handshake 让这个使命不用靠重写",
+      "start": 34.311,
+      "end": 36.851
+    },
+    {
+      "id": "shot08-19",
+      "text": "后端来完成。",
+      "start": 36.851,
+      "end": 37.771
+    }
+  ],
+  "shot09": [
+    {
+      "id": "shot09-0",
+      "text": "AG-UI 已支持的集成大致分几类。第一类，",
+      "start": 0.0,
+      "end": 3.3
+    },
+    {
+      "id": "shot09-1",
+      "text": "直连 LLM。",
+      "start": 3.3,
+      "end": 5.12
+    },
+    {
+      "id": "shot09-2",
+      "text": "第二类是 Agent Framework",
+      "start": 5.12,
+      "end": 6.8
+    },
+    {
+      "id": "shot09-3",
+      "text": "合作生态。",
+      "start": 6.8,
+      "end": 7.94
+    },
+    {
+      "id": "shot09-4",
+      "text": "代表有 LangGraph 和",
+      "start": 7.94,
+      "end": 9.48
+    },
+    {
+      "id": "shot09-5",
+      "text": "CrewAI。",
+      "start": 9.48,
+      "end": 10.34
+    },
+    {
+      "id": "shot09-6",
+      "text": "第三类是 Agent Framework",
+      "start": 10.34,
+      "end": 12.2
+    },
+    {
+      "id": "shot09-7",
+      "text": "1st Party。",
+      "start": 12.2,
+      "end": 13.3
+    },
+    {
+      "id": "shot09-8",
+      "text": "这一类的特点是 Agent 框架厂商自己",
+      "start": 13.3,
+      "end": 15.9
+    },
+    {
+      "id": "shot09-9",
+      "text": "原生支持 AG-UI，",
+      "start": 15.9,
+      "end": 17.52
+    },
+    {
+      "id": "shot09-10",
+      "text": "不是 AG-UI 团队去做适配。",
+      "start": 17.52,
+      "end": 20.3
+    },
+    {
+      "id": "shot09-11",
+      "text": "微软自己有 Microsoft",
+      "start": 20.3,
+      "end": 21.88
+    },
+    {
+      "id": "shot09-12",
+      "text": "Agent Framework。",
+      "start": 21.88,
+      "end": 23.18
+    },
+    {
+      "id": "shot09-13",
+      "text": "Google 推 ADK。",
+      "start": 23.61,
+      "end": 25.11
+    },
+    {
+      "id": "shot09-14",
+      "text": "AWS 出了 Strands 和",
+      "start": 25.11,
+      "end": 26.99
+    },
+    {
+      "id": "shot09-15",
+      "text": "Bedrock AgentCore。",
+      "start": 26.99,
+      "end": 28.93
+    },
+    {
+      "id": "shot09-16",
+      "text": "这一类剩下几家独立框架。",
+      "start": 28.93,
+      "end": 31.47
+    },
+    {
+      "id": "shot09-17",
+      "text": "Mastra、",
+      "start": 31.47,
+      "end": 32.43
+    },
+    {
+      "id": "shot09-18",
+      "text": "Pydantic AI、Agno、",
+      "start": 32.43,
+      "end": 34.68
+    },
+    {
+      "id": "shot09-19",
+      "text": "LlamaIndex 和 AG2 都接入了。",
+      "start": 34.68,
+      "end": 37.11
+    },
+    {
+      "id": "shot09-20",
+      "text": "第四类是 Agent 之间的交互协议。",
+      "start": 37.11,
+      "end": 39.73
+    },
+    {
+      "id": "shot09-21",
+      "text": "比如 A2A Middleware。",
+      "start": 39.73,
+      "end": 41.73
+    },
+    {
+      "id": "shot09-22",
+      "text": "规范层有 Oracle AgentSpec。",
+      "start": 41.73,
+      "end": 44.33
+    },
+    {
+      "id": "shot09-23",
+      "text": "SDK 覆盖了主流语言，",
+      "start": 44.33,
+      "end": 46.47
+    },
+    {
+      "id": "shot09-24",
+      "text": "具体清单看视频。",
+      "start": 46.47,
+      "end": 47.89
+    },
+    {
+      "id": "shot09-25",
+      "text": "Clients 端主力是",
+      "start": 48.265,
+      "end": 49.445
+    },
+    {
+      "id": "shot09-26",
+      "text": "CopilotKit——AG-UI 这个",
+      "start": 49.445,
+      "end": 51.925
+    },
+    {
+      "id": "shot09-27",
+      "text": "协议本身也源自 CopilotKit。",
+      "start": 51.925,
+      "end": 54.265
+    }
+  ],
+  "shot10": [
+    {
+      "id": "shot10-0",
+      "text": "读完这章我抓到的最小集是 4 点：",
+      "start": 0.0,
+      "end": 2.76
+    },
+    {
+      "id": "shot10-1",
+      "text": "位置是 AG-UI 在三协议里位于",
+      "start": 2.76,
+      "end": 5.38
+    },
+    {
+      "id": "shot10-2",
+      "text": "agent 到用户这一层；",
+      "start": 5.38,
+      "end": 7.38
+    },
+    {
+      "id": "shot10-3",
+      "text": "形状是事件流，",
+      "start": 7.38,
+      "end": 8.66
+    },
+    {
+      "id": "shot10-4",
+      "text": "不是请求响应；",
+      "start": 8.66,
+      "end": 10.28
+    },
+    {
+      "id": "shot10-5",
+      "text": "理由是传统 REST 和 GraphQL",
+      "start": 10.28,
+      "end": 12.58
+    },
+    {
+      "id": "shot10-6",
+      "text": "扛不住 agent 的 4 个特性——",
+      "start": 13.14,
+      "end": 15.567
+    },
+    {
+      "id": "shot10-7",
+      "text": "长任务流式、非确定、",
+      "start": 15.567,
+      "end": 17.26
+    },
+    {
+      "id": "shot10-8",
+      "text": "IO 混合、",
+      "start": 17.26,
+      "end": 18.22
+    },
+    {
+      "id": "shot10-9",
+      "text": "可交互组合；",
+      "start": 18.22,
+      "end": 20.02
+    },
+    {
+      "id": "shot10-10",
+      "text": "学习路径是 13 个 building",
+      "start": 20.02,
+      "end": 22.06
+    },
+    {
+      "id": "shot10-11",
+      "text": "blocks 就是后续章节的索引。",
+      "start": 22.06,
+      "end": 24.62
+    },
+    {
+      "id": "shot10-12",
+      "text": "这是我第一次通读这两篇文档的理解，",
+      "start": 24.62,
+      "end": 27.58
+    },
+    {
+      "id": "shot10-13",
+      "text": "刚拿到手，",
+      "start": 27.58,
+      "end": 28.66
+    },
+    {
+      "id": "shot10-14",
+      "text": "讲错的地方欢迎指正。",
+      "start": 28.66,
+      "end": 30.16
+    }
+  ]
+}

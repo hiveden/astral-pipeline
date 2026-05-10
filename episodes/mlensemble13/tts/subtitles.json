@@ -1,0 +1,1286 @@
+{
+  "shot01": [
+    {
+      "id": "shot01-0",
+      "text": "上一期我们推到了 XGBoost 的叶子",
+      "start": 0.0,
+      "end": 2.707
+    },
+    {
+      "id": "shot01-1",
+      "text": "值和分裂 Gain。",
+      "start": 2.707,
+      "end": 3.869
+    },
+    {
+      "id": "shot01-2",
+      "text": "现在把公式落到工程。",
+      "start": 3.869,
+      "end": 5.674
+    },
+    {
+      "id": "shot01-3",
+      "text": "γ 会变成 gamma，",
+      "start": 5.674,
+      "end": 7.384
+    },
+    {
+      "id": "shot01-4",
+      "text": "λ 会变成 reg_lambda，",
+      "start": 7.384,
+      "end": 9.022
+    },
+    {
+      "id": "shot01-5",
+      "text": "学习率会变成 learning_rate，",
+      "start": 9.022,
+      "end": 11.257
+    },
+    {
+      "id": "shot01-6",
+      "text": "树的数量会变成 n_estimators。",
+      "start": 11.257,
+      "end": 13.874
+    },
+    {
+      "id": "shot01-7",
+      "text": "和随机森林、",
+      "start": 13.874,
+      "end": 15.016
+    },
+    {
+      "id": "shot01-8",
+      "text": "GBDT 不同，",
+      "start": 15.016,
+      "end": 16.179
+    },
+    {
+      "id": "shot01-9",
+      "text": "XGBoost 不在 sklearn 里，",
+      "start": 16.179,
+      "end": 18.585
+    },
+    {
+      "id": "shot01-10",
+      "text": "需要单独安装 xgboost 包。",
+      "start": 18.585,
+      "end": 20.75
+    },
+    {
+      "id": "shot01-11",
+      "text": "装好以后，",
+      "start": 21.312,
+      "end": 22.093
+    },
+    {
+      "id": "shot01-12",
+      "text": "它既有自己的原生 API，",
+      "start": 22.093,
+      "end": 24.337
+    },
+    {
+      "id": "shot01-13",
+      "text": "也有 sklearn 兼容的",
+      "start": 24.337,
+      "end": 26.039
+    },
+    {
+      "id": "shot01-14",
+      "text": "XGBClassifier。",
+      "start": 26.039,
+      "end": 27.561
+    },
+    {
+      "id": "shot01-15",
+      "text": "最后一期我们用红酒品质预测收官：",
+      "start": 27.561,
+      "end": 30.866
+    },
+    {
+      "id": "shot01-16",
+      "text": "3269 条数据，",
+      "start": 30.866,
+      "end": 32.569
+    },
+    {
+      "id": "shot01-17",
+      "text": "11 个特征，",
+      "start": 32.569,
+      "end": 33.51
+    },
+    {
+      "id": "shot01-18",
+      "text": "6 个品质类别，",
+      "start": 33.51,
+      "end": 34.692
+    },
+    {
+      "id": "shot01-19",
+      "text": "而且类别明显不均衡。",
+      "start": 34.692,
+      "end": 36.855
+    },
+    {
+      "id": "shot01-20",
+      "text": "这个任务比单纯调一个准确率更贴近真实项目，",
+      "start": 36.855,
+      "end": 40.761
+    },
+    {
+      "id": "shot01-21",
+      "text": "因为模型不只要会分中间档，",
+      "start": 40.761,
+      "end": 43.165
+    },
+    {
+      "id": "shot01-22",
+      "text": "还要照顾样本很少的好酒和差酒。",
+      "start": 43.165,
+      "end": 45.669
+    }
+  ],
+  "shot02": [
+    {
+      "id": "shot02-0",
+      "text": "第一件事是安装。",
+      "start": 0.0,
+      "end": 1.583
+    },
+    {
+      "id": "shot02-1",
+      "text": "XGBoost 是独立库，",
+      "start": 1.583,
+      "end": 3.406
+    },
+    {
+      "id": "shot02-2",
+      "text": "不在 sklearn.ensemble",
+      "start": 3.406,
+      "end": 5.309
+    },
+    {
+      "id": "shot02-3",
+      "text": "里面，",
+      "start": 5.309,
+      "end": 5.81
+    },
+    {
+      "id": "shot02-4",
+      "text": "所以要先 pip install",
+      "start": 5.81,
+      "end": 7.773
+    },
+    {
+      "id": "shot02-5",
+      "text": "xgboost。",
+      "start": 7.773,
+      "end": 8.855
+    },
+    {
+      "id": "shot02-6",
+      "text": "使用时有两套接口。",
+      "start": 8.855,
+      "end": 10.558
+    },
+    {
+      "id": "shot02-7",
+      "text": "原生接口是 xgb.train 加",
+      "start": 10.558,
+      "end": 12.962
+    },
+    {
+      "id": "shot02-8",
+      "text": "DMatrix，",
+      "start": 12.962,
+      "end": 13.923
+    },
+    {
+      "id": "shot02-9",
+      "text": "适合生产训练、",
+      "start": 13.923,
+      "end": 15.145
+    },
+    {
+      "id": "shot02-10",
+      "text": "大数据和更细的早停控制。",
+      "start": 15.145,
+      "end": 17.429
+    },
+    {
+      "id": "shot02-11",
+      "text": "sklearn 兼容接口是",
+      "start": 17.661,
+      "end": 19.426
+    },
+    {
+      "id": "shot02-12",
+      "text": "XGBClassifier 和",
+      "start": 19.426,
+      "end": 21.091
+    },
+    {
+      "id": "shot02-13",
+      "text": "XGBRegressor，fit、",
+      "start": 21.091,
+      "end": 23.257
+    },
+    {
+      "id": "shot02-14",
+      "text": "predict、",
+      "start": 23.257,
+      "end": 23.899
+    },
+    {
+      "id": "shot02-15",
+      "text": "score 的风格和 sklearn 模",
+      "start": 23.899,
+      "end": 25.905
+    },
+    {
+      "id": "shot02-16",
+      "text": "型一致，",
+      "start": 25.905,
+      "end": 26.587
+    },
+    {
+      "id": "shot02-17",
+      "text": "可以直接接 Pipeline、",
+      "start": 26.587,
+      "end": 28.252
+    },
+    {
+      "id": "shot02-18",
+      "text": "GridSearchCV 和交叉验证。",
+      "start": 28.252,
+      "end": 30.398
+    },
+    {
+      "id": "shot02-19",
+      "text": "教学和快速实验里，",
+      "start": 30.632,
+      "end": 32.359
+    },
+    {
+      "id": "shot02-20",
+      "text": "优先用 XGBClassifier，",
+      "start": 32.359,
+      "end": 34.569
+    },
+    {
+      "id": "shot02-21",
+      "text": "因为它和前面",
+      "start": 34.569,
+      "end": 35.613
+    },
+    {
+      "id": "shot02-22",
+      "text": "RandomForestClassifier、",
+      "start": 35.613,
+      "end": 37.582
+    },
+    {
+      "id": "shot02-23",
+      "text": "AdaBoostClassifier、",
+      "start": 37.582,
+      "end": 38.928
+    },
+    {
+      "id": "shot02-24",
+      "text": "GradientBoostingClassifier",
+      "start": 38.928,
+      "end": 40.695
+    },
+    {
+      "id": "shot02-25",
+      "text": "的调用方式保持一致。",
+      "start": 40.695,
+      "end": 42.523
+    },
+    {
+      "id": "shot02-26",
+      "text": "需要注意参数别名：",
+      "start": 42.767,
+      "end": 44.314
+    },
+    {
+      "id": "shot02-27",
+      "text": "原生接口常用 eta，",
+      "start": 44.314,
+      "end": 46.826
+    },
+    {
+      "id": "shot02-28",
+      "text": "sklearn 兼容接口常用",
+      "start": 46.826,
+      "end": 48.695
+    },
+    {
+      "id": "shot02-29",
+      "text": "learning_rate；",
+      "start": 48.695,
+      "end": 49.881
+    },
+    {
+      "id": "shot02-30",
+      "text": "原生接口里的 lambda，",
+      "start": 49.881,
+      "end": 51.408
+    },
+    {
+      "id": "shot02-31",
+      "text": "在 sklearn 兼容接口里写",
+      "start": 51.408,
+      "end": 53.538
+    },
+    {
+      "id": "shot02-32",
+      "text": "reg_lambda。",
+      "start": 53.538,
+      "end": 54.543
+    }
+  ],
+  "shot03": [
+    {
+      "id": "shot03-0",
+      "text": "XGBClassifier 的核心参数可",
+      "start": 0.0,
+      "end": 2.164
+    },
+    {
+      "id": "shot03-1",
+      "text": "以按理论分组。",
+      "start": 2.164,
+      "end": 3.467
+    },
+    {
+      "id": "shot03-2",
+      "text": "n_estimators 是最多建多少棵",
+      "start": 3.467,
+      "end": 5.832
+    },
+    {
+      "id": "shot03-3",
+      "text": "树，",
+      "start": 5.832,
+      "end": 6.072
+    },
+    {
+      "id": "shot03-4",
+      "text": "通常配合早停，",
+      "start": 6.072,
+      "end": 7.395
+    },
+    {
+      "id": "shot03-5",
+      "text": "不一定全部用完。",
+      "start": 7.395,
+      "end": 8.577
+    },
+    {
+      "id": "shot03-6",
+      "text": "learning_rate 是每棵树输出",
+      "start": 8.577,
+      "end": 10.541
+    },
+    {
+      "id": "shot03-7",
+      "text": "的缩放，",
+      "start": 10.541,
+      "end": 11.162
+    },
+    {
+      "id": "shot03-8",
+      "text": "也就是前面说的步长。",
+      "start": 11.162,
+      "end": 12.485
+    },
+    {
+      "id": "shot03-9",
+      "text": "max_depth 控制单棵树最多分几层，",
+      "start": 12.485,
+      "end": 15.631
+    },
+    {
+      "id": "shot03-10",
+      "text": "过拟合时先考虑降深度。",
+      "start": 15.631,
+      "end": 18.096
+    },
+    {
+      "id": "shot03-11",
+      "text": "gamma 是分裂 Gain 里的叶子成",
+      "start": 18.096,
+      "end": 20.16
+    },
+    {
+      "id": "shot03-12",
+      "text": "本，越大，",
+      "start": 20.16,
+      "end": 20.942
+    },
+    {
+      "id": "shot03-13",
+      "text": "节点越不容易继续分裂。",
+      "start": 20.942,
+      "end": 22.725
+    },
+    {
+      "id": "shot03-14",
+      "text": "reg_lambda 是 L2 正则，",
+      "start": 22.725,
+      "end": 24.829
+    },
+    {
+      "id": "shot03-15",
+      "text": "控制叶子值不要太极端。",
+      "start": 24.829,
+      "end": 26.412
+    },
+    {
+      "id": "shot03-16",
+      "text": "subsample 是行采样比例，",
+      "start": 26.914,
+      "end": 28.719
+    },
+    {
+      "id": "shot03-17",
+      "text": "colsample_bytree 是列采",
+      "start": 28.719,
+      "end": 30.403
+    },
+    {
+      "id": "shot03-18",
+      "text": "样比例，",
+      "start": 30.403,
+      "end": 31.025
+    },
+    {
+      "id": "shot03-19",
+      "text": "用来防过拟合和提速。",
+      "start": 31.025,
+      "end": 33.09
+    },
+    {
+      "id": "shot03-20",
+      "text": "objective 指定任务类型，",
+      "start": 33.09,
+      "end": 34.995
+    },
+    {
+      "id": "shot03-21",
+      "text": "二分类常用 binary",
+      "start": 34.995,
+      "end": 36.418
+    },
+    {
+      "id": "shot03-22",
+      "text": "logistic，",
+      "start": 36.418,
+      "end": 37.22
+    },
+    {
+      "id": "shot03-23",
+      "text": "多分类可以用 multi softmax，",
+      "start": 37.22,
+      "end": 39.486
+    },
+    {
+      "id": "shot03-24",
+      "text": "回归可以用 reg",
+      "start": 39.486,
+      "end": 40.388
+    },
+    {
+      "id": "shot03-25",
+      "text": "squarederror。",
+      "start": 40.388,
+      "end": 41.511
+    },
+    {
+      "id": "shot03-26",
+      "text": "eval_metric 则决定验证集上看",
+      "start": 41.511,
+      "end": 43.777
+    },
+    {
+      "id": "shot03-27",
+      "text": "什么指标。",
+      "start": 43.777,
+      "end": 44.519
+    }
+  ],
+  "shot04": [
+    {
+      "id": "shot04-0",
+      "text": "XGBoost 调参时，",
+      "start": 0.0,
+      "end": 1.623
+    },
+    {
+      "id": "shot04-1",
+      "text": "不建议死盯 n_estimators。",
+      "start": 1.623,
+      "end": 3.848
+    },
+    {
+      "id": "shot04-2",
+      "text": "常见做法是把 n_estimators",
+      "start": 3.848,
+      "end": 6.012
+    },
+    {
+      "id": "shot04-3",
+      "text": "设大一点，",
+      "start": 6.012,
+      "end": 6.874
+    },
+    {
+      "id": "shot04-4",
+      "text": "比如 1000，",
+      "start": 6.874,
+      "end": 7.835
+    },
+    {
+      "id": "shot04-5",
+      "text": "再用",
+      "start": 7.835,
+      "end": 8.096
+    },
+    {
+      "id": "shot04-6",
+      "text": "early_stopping_rounds",
+      "start": 8.096,
+      "end": 9.419
+    },
+    {
+      "id": "shot04-7",
+      "text": "配合验证集。",
+      "start": 9.419,
+      "end": 10.461
+    },
+    {
+      "id": "shot04-8",
+      "text": "只要连续若干轮验证指标没有提升，",
+      "start": 10.461,
+      "end": 13.206
+    },
+    {
+      "id": "shot04-9",
+      "text": "训练就停止，",
+      "start": 13.206,
+      "end": 14.248
+    },
+    {
+      "id": "shot04-10",
+      "text": "预测时使用验证表现最好的轮次。",
+      "start": 14.248,
+      "end": 17.434
+    },
+    {
+      "id": "shot04-11",
+      "text": "这样比拍脑袋决定树数量更稳。",
+      "start": 17.434,
+      "end": 20.159
+    },
+    {
+      "id": "shot04-12",
+      "text": "GPU 口径也要按当前写法讲。",
+      "start": 20.159,
+      "end": 22.424
+    },
+    {
+      "id": "shot04-13",
+      "text": "旧资料里常见 tree_method 等",
+      "start": 22.973,
+      "end": 25.117
+    },
+    {
+      "id": "shot04-14",
+      "text": "于 gpu_hist，",
+      "start": 25.117,
+      "end": 26.459
+    },
+    {
+      "id": "shot04-15",
+      "text": "新版本更推荐 tree_method 等",
+      "start": 26.459,
+      "end": 28.482
+    },
+    {
+      "id": "shot04-16",
+      "text": "于 hist，",
+      "start": 28.482,
+      "end": 29.264
+    },
+    {
+      "id": "shot04-17",
+      "text": "再加 device 等于 cuda。",
+      "start": 29.264,
+      "end": 31.107
+    },
+    {
+      "id": "shot04-18",
+      "text": "没有 GPU 时，",
+      "start": 31.107,
+      "end": 32.008
+    },
+    {
+      "id": "shot04-19",
+      "text": "tree_method 等于 hist",
+      "start": 32.008,
+      "end": 33.851
+    },
+    {
+      "id": "shot04-20",
+      "text": "也能用 CPU 直方图加速。注意，",
+      "start": 33.851,
+      "end": 37.037
+    },
+    {
+      "id": "shot04-21",
+      "text": "GPU 和早停都不是为了改变算法思想，",
+      "start": 37.037,
+      "end": 40.603
+    },
+    {
+      "id": "shot04-22",
+      "text": "而是为了更快、",
+      "start": 40.603,
+      "end": 41.805
+    },
+    {
+      "id": "shot04-23",
+      "text": "更稳地找到合适的树数量和分裂结构。",
+      "start": 41.805,
+      "end": 44.77
+    }
+  ],
+  "shot05": [
+    {
+      "id": "shot05-0",
+      "text": "红酒品质案例有 3269 条数据，",
+      "start": 0.0,
+      "end": 3.927
+    },
+    {
+      "id": "shot05-1",
+      "text": "11 个特征，",
+      "start": 3.927,
+      "end": 4.968
+    },
+    {
+      "id": "shot05-2",
+      "text": "目标是品质等级。",
+      "start": 4.968,
+      "end": 6.631
+    },
+    {
+      "id": "shot05-3",
+      "text": "原始品质常见是 3 到 8 分，",
+      "start": 6.631,
+      "end": 9.256
+    },
+    {
+      "id": "shot05-4",
+      "text": "代码里会减 3，",
+      "start": 9.256,
+      "end": 10.538
+    },
+    {
+      "id": "shot05-5",
+      "text": "变成 0 到 5。",
+      "start": 10.538,
+      "end": 11.66
+    },
+    {
+      "id": "shot05-6",
+      "text": "这样做是为了符合多分类标签从 0 开始的",
+      "start": 11.66,
+      "end": 15.125
+    },
+    {
+      "id": "shot05-7",
+      "text": "习惯。",
+      "start": 15.125,
+      "end": 15.987
+    },
+    {
+      "id": "shot05-8",
+      "text": "模型使用 XGBClassifier，",
+      "start": 15.987,
+      "end": 18.631
+    },
+    {
+      "id": "shot05-9",
+      "text": "objective 设为 multi",
+      "start": 18.631,
+      "end": 20.294
+    },
+    {
+      "id": "shot05-10",
+      "text": "softmax，",
+      "start": 20.294,
+      "end": 21.115
+    },
+    {
+      "id": "shot05-11",
+      "text": "num_class 设为 6，",
+      "start": 21.115,
+      "end": 22.658
+    },
+    {
+      "id": "shot05-12",
+      "text": "eval_metric 可以用",
+      "start": 22.658,
+      "end": 23.96
+    },
+    {
+      "id": "shot05-13",
+      "text": "merror。",
+      "start": 23.96,
+      "end": 24.576
+    },
+    {
+      "id": "shot05-14",
+      "text": "划分训练集和测试集时，",
+      "start": 24.832,
+      "end": 26.536
+    },
+    {
+      "id": "shot05-15",
+      "text": "一定要加 stratify 等于 y。",
+      "start": 26.536,
+      "end": 29.041
+    },
+    {
+      "id": "shot05-16",
+      "text": "原因是红酒品质类别不均衡，",
+      "start": 29.041,
+      "end": 31.646
+    },
+    {
+      "id": "shot05-17",
+      "text": "中间档样本多，",
+      "start": 31.646,
+      "end": 33.27
+    },
+    {
+      "id": "shot05-18",
+      "text": "极端好酒和差酒样本少。",
+      "start": 33.27,
+      "end": 35.514
+    },
+    {
+      "id": "shot05-19",
+      "text": "普通随机切分可能让某些少数类在测试集里比",
+      "start": 35.514,
+      "end": 39.061
+    },
+    {
+      "id": "shot05-20",
+      "text": "例异常，",
+      "start": 39.061,
+      "end": 39.643
+    },
+    {
+      "id": "shot05-21",
+      "text": "甚至数量太少，",
+      "start": 39.643,
+      "end": 40.985
+    },
+    {
+      "id": "shot05-22",
+      "text": "评估结果不稳定。",
+      "start": 40.985,
+      "end": 42.829
+    },
+    {
+      "id": "shot05-23",
+      "text": "分层切分能让训练集和测试集尽量保持相同类",
+      "start": 42.829,
+      "end": 46.457
+    },
+    {
+      "id": "shot05-24",
+      "text": "别比例。",
+      "start": 46.457,
+      "end": 47.141
+    }
+  ],
+  "shot06": [
+    {
+      "id": "shot06-0",
+      "text": "这个案例的重点不是只看 accuracy，",
+      "start": 0.0,
+      "end": 2.664
+    },
+    {
+      "id": "shot06-1",
+      "text": "而是处理不均衡。",
+      "start": 2.664,
+      "end": 4.206
+    },
+    {
+      "id": "shot06-2",
+      "text": "第一板斧是 sample_weight。",
+      "start": 4.206,
+      "end": 6.109
+    },
+    {
+      "id": "shot06-3",
+      "text": "用",
+      "start": 6.109,
+      "end": 6.269
+    },
+    {
+      "id": "shot06-4",
+      "text": "compute_sample_weight",
+      "start": 6.269,
+      "end": 7.511
+    },
+    {
+      "id": "shot06-5",
+      "text": "的 balanced 模式给训练样本分",
+      "start": 7.511,
+      "end": 9.814
+    },
+    {
+      "id": "shot06-6",
+      "text": "配权重，",
+      "start": 9.814,
+      "end": 10.755
+    },
+    {
+      "id": "shot06-7",
+      "text": "少数类样本权重大，",
+      "start": 10.755,
+      "end": 12.338
+    },
+    {
+      "id": "shot06-8",
+      "text": "多数类样本权重小，",
+      "start": 12.338,
+      "end": 14.06
+    },
+    {
+      "id": "shot06-9",
+      "text": "然后在 fit 时传",
+      "start": 14.06,
+      "end": 15.302
+    },
+    {
+      "id": "shot06-10",
+      "text": "sample_weight。",
+      "start": 15.302,
+      "end": 16.464
+    },
+    {
+      "id": "shot06-11",
+      "text": "这样模型计算损失时会更重视少数类。",
+      "start": 16.464,
+      "end": 19.969
+    },
+    {
+      "id": "shot06-12",
+      "text": "第二板斧是",
+      "start": 19.969,
+      "end": 20.81
+    },
+    {
+      "id": "shot06-13",
+      "text": "StratifiedKFold。",
+      "start": 20.81,
+      "end": 22.132
+    },
+    {
+      "id": "shot06-14",
+      "text": "做 GridSearchCV 时，",
+      "start": 22.505,
+      "end": 23.907
+    },
+    {
+      "id": "shot06-15",
+      "text": "用分层 K 折，",
+      "start": 23.907,
+      "end": 25.109
+    },
+    {
+      "id": "shot06-16",
+      "text": "保证每一折的类别比例更稳定。",
+      "start": 25.109,
+      "end": 27.674
+    },
+    {
+      "id": "shot06-17",
+      "text": "第三板斧是 scoring 选",
+      "start": 27.674,
+      "end": 29.396
+    },
+    {
+      "id": "shot06-18",
+      "text": "f1_macro。",
+      "start": 29.396,
+      "end": 30.358
+    },
+    {
+      "id": "shot06-19",
+      "text": "accuracy 会被多数类主导，",
+      "start": 30.358,
+      "end": 32.321
+    },
+    {
+      "id": "shot06-20",
+      "text": "模型全猜中间档也可能看起来不错；",
+      "start": 32.321,
+      "end": 35.186
+    },
+    {
+      "id": "shot06-21",
+      "text": "macro F1 会对每个类别的 F1",
+      "start": 35.186,
+      "end": 37.57
+    },
+    {
+      "id": "shot06-22",
+      "text": "做简单平均，",
+      "start": 37.57,
+      "end": 38.792
+    },
+    {
+      "id": "shot06-23",
+      "text": "少数类表现差会直接拉低总分。",
+      "start": 38.792,
+      "end": 41.877
+    },
+    {
+      "id": "shot06-24",
+      "text": "红酒品质这种任务，",
+      "start": 41.877,
+      "end": 43.4
+    },
+    {
+      "id": "shot06-25",
+      "text": "f1_macro 比 accuracy",
+      "start": 43.4,
+      "end": 45.083
+    },
+    {
+      "id": "shot06-26",
+      "text": "更诚实。",
+      "start": 45.083,
+      "end": 45.643
+    }
+  ],
+  "shot07": [
+    {
+      "id": "shot07-0",
+      "text": "完整训练可以分三步。第一步，",
+      "start": 0.0,
+      "end": 2.364
+    },
+    {
+      "id": "shot07-1",
+      "text": "先跑一个基础 XGBClassifier，",
+      "start": 2.364,
+      "end": 4.928
+    },
+    {
+      "id": "shot07-2",
+      "text": "拿到",
+      "start": 4.928,
+      "end": 5.269
+    },
+    {
+      "id": "shot07-3",
+      "text": "classification_report，",
+      "start": 5.269,
+      "end": 6.791
+    },
+    {
+      "id": "shot07-4",
+      "text": "观察哪些类别 precision 和",
+      "start": 6.791,
+      "end": 8.714
+    },
+    {
+      "id": "shot07-5",
+      "text": "recall 很低。第二步，",
+      "start": 8.714,
+      "end": 10.657
+    },
+    {
+      "id": "shot07-6",
+      "text": "加 sample_weight 重新训练，",
+      "start": 10.657,
+      "end": 12.641
+    },
+    {
+      "id": "shot07-7",
+      "text": "重点看少数类召回是否改善，",
+      "start": 12.641,
+      "end": 15.265
+    },
+    {
+      "id": "shot07-8",
+      "text": "而不是只看整体准确率。",
+      "start": 15.265,
+      "end": 17.088
+    },
+    {
+      "id": "shot07-9",
+      "text": "第三步，",
+      "start": 17.336,
+      "end": 17.977
+    },
+    {
+      "id": "shot07-10",
+      "text": "用 GridSearchCV 搜索",
+      "start": 17.977,
+      "end": 20.04
+    },
+    {
+      "id": "shot07-11",
+      "text": "n_estimators、",
+      "start": 20.04,
+      "end": 21.182
+    },
+    {
+      "id": "shot07-12",
+      "text": "max_depth、",
+      "start": 21.182,
+      "end": 22.043
+    },
+    {
+      "id": "shot07-13",
+      "text": "learning_rate 等参数，",
+      "start": 22.043,
+      "end": 23.565
+    },
+    {
+      "id": "shot07-14",
+      "text": "交叉验证用",
+      "start": 23.565,
+      "end": 24.627
+    },
+    {
+      "id": "shot07-15",
+      "text": "StratifiedKFold，",
+      "start": 24.627,
+      "end": 26.39
+    },
+    {
+      "id": "shot07-16",
+      "text": "评分用 f1_macro。",
+      "start": 26.39,
+      "end": 28.192
+    },
+    {
+      "id": "shot07-17",
+      "text": "这里同样不要提前写死一个最优分数。",
+      "start": 28.192,
+      "end": 31.137
+    },
+    {
+      "id": "shot07-18",
+      "text": "不同 xgboost 版本、数据文件、",
+      "start": 31.137,
+      "end": 33.56
+    },
+    {
+      "id": "shot07-19",
+      "text": "随机种子都会影响结果。",
+      "start": 33.56,
+      "end": 35.984
+    },
+    {
+      "id": "shot07-20",
+      "text": "判断原则是：",
+      "start": 35.984,
+      "end": 37.106
+    },
+    {
+      "id": "shot07-21",
+      "text": "如果 macro F1 上升，",
+      "start": 37.106,
+      "end": 38.928
+    },
+    {
+      "id": "shot07-22",
+      "text": "同时少数类召回变好，",
+      "start": 38.928,
+      "end": 41.172
+    },
+    {
+      "id": "shot07-23",
+      "text": "模型才是真的更适合这个任务。",
+      "start": 41.172,
+      "end": 43.255
+    }
+  ],
+  "shot08": [
+    {
+      "id": "shot08-0",
+      "text": "到这里，",
+      "start": 0.0,
+      "end": 0.561
+    },
+    {
+      "id": "shot08-1",
+      "text": "集成学习这一章就串完整了。",
+      "start": 0.561,
+      "end": 2.784
+    },
+    {
+      "id": "shot08-2",
+      "text": "第一条路线是 bagging，",
+      "start": 2.784,
+      "end": 4.406
+    },
+    {
+      "id": "shot08-3",
+      "text": "代表是随机森林：",
+      "start": 4.406,
+      "end": 5.809
+    },
+    {
+      "id": "shot08-4",
+      "text": "并行训练很多棵不同的树，",
+      "start": 5.809,
+      "end": 7.952
+    },
+    {
+      "id": "shot08-5",
+      "text": "通过投票或平均求稳。",
+      "start": 7.952,
+      "end": 9.854
+    },
+    {
+      "id": "shot08-6",
+      "text": "第二条路线是 boosting，",
+      "start": 9.854,
+      "end": 11.417
+    },
+    {
+      "id": "shot08-7",
+      "text": "先从 AdaBoost 开始：",
+      "start": 11.417,
+      "end": 13.079
+    },
+    {
+      "id": "shot08-8",
+      "text": "错样本权重变大，",
+      "start": 13.079,
+      "end": 14.691
+    },
+    {
+      "id": "shot08-9",
+      "text": "弱学习器按表现加权。",
+      "start": 14.691,
+      "end": 16.945
+    },
+    {
+      "id": "shot08-10",
+      "text": "再到 GBDT：",
+      "start": 16.945,
+      "end": 18.127
+    },
+    {
+      "id": "shot08-11",
+      "text": "不再传样本权重，",
+      "start": 18.127,
+      "end": 19.509
+    },
+    {
+      "id": "shot08-12",
+      "text": "而是传损失函数的负梯度，",
+      "start": 19.509,
+      "end": 21.772
+    },
+    {
+      "id": "shot08-13",
+      "text": "让下一棵树补上一轮的差。",
+      "start": 21.772,
+      "end": 23.875
+    },
+    {
+      "id": "shot08-14",
+      "text": "最后到 XGBoost：",
+      "start": 24.097,
+      "end": 25.639
+    },
+    {
+      "id": "shot08-15",
+      "text": "在 GBDT 上加入二阶导、正则项、",
+      "start": 25.639,
+      "end": 28.682
+    },
+    {
+      "id": "shot08-16",
+      "text": "分裂 Gain 和工程优化。实战上，",
+      "start": 28.682,
+      "end": 31.064
+    },
+    {
+      "id": "shot08-17",
+      "text": "先用随机森林拿基线，",
+      "start": 31.064,
+      "end": 32.866
+    },
+    {
+      "id": "shot08-18",
+      "text": "再根据精度、速度、",
+      "start": 32.866,
+      "end": 34.267
+    },
+    {
+      "id": "shot08-19",
+      "text": "可调性选择 GBDT 或 XGBoost。",
+      "start": 34.267,
+      "end": 37.45
+    },
+    {
+      "id": "shot08-20",
+      "text": "不要只背模型名字，",
+      "start": 37.45,
+      "end": 38.892
+    },
+    {
+      "id": "shot08-21",
+      "text": "要记住每条路线传递的信息是什么：",
+      "start": 38.892,
+      "end": 41.774
+    },
+    {
+      "id": "shot08-22",
+      "text": "随机森林传差异性，",
+      "start": 41.774,
+      "end": 43.456
+    },
+    {
+      "id": "shot08-23",
+      "text": "AdaBoost 传样本权重，",
+      "start": 43.456,
+      "end": 45.618
+    },
+    {
+      "id": "shot08-24",
+      "text": "GBDT 和 XGBoost 传梯度信息。",
+      "start": 45.618,
+      "end": 48.441
+    }
+  ],
+  "shot09": [
+    {
+      "id": "shot09-0",
+      "text": "下期见，",
+      "start": 0.0,
+      "end": 0.611
+    },
+    {
+      "id": "shot09-1",
+      "text": "欢迎评论区留言讨论。",
+      "start": 0.611,
+      "end": 1.956
+    }
+  ]
+}

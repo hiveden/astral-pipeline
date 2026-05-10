@@ -1,0 +1,73 @@
+{
+  "title": "LR 第 2 期 · sklearn 4 行跑通 · LinearRegression API + 6 场景演示",
+  "description": "sklearn 实操：5 步流程（导入 / 准备 2D 数据 / 实例化 / fit / predict）+ 6 个预设场景演示（fit_intercept 开关 / 5pt → 30pt 鲁棒性 / 切加州房价 / 外推风险）+ 5 个常见坑。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 780,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "上期手算太累 + 4 行 sklearn 跑通 + 验证小明体重",
+      "text": "上一期我们讲了线性回归是什么——从一元的 y 等于 k 乘以 x 加 b，到多元的 wᵀ乘 x 加 b。但每次手算 w 和 b 太累——这一期我们打开 sklearn，4 行代码跑通线性回归，顺便把上期那个悬案解决：小明身高 176 厘米，体重到底多少。这一期我们解决三件事：sklearn 5 步流程怎么用；6 个场景演示 API 在不同数据 / 不同参数下的表现；以及 5 个新手最常见的坑。下一期我们打开 sklearn 内部的黑盒：先讲损失函数。",
+      "notes": "~190字。\n[src: 02-LR/02-api/01-LinearRegression.md（slide 15-17）]\n\n衔接钩（关键词级精确呼应 E01 cta）：\n  E01 cta 关键词 = \"手算\" / \"4 行代码\" / \"sklearn\" → E02 hook 三词全覆盖 ✓\n\ntitle \"sklearn 第 2 期 · LinearRegression API · 4 行跑通\"\nfigure \"标题卡：第 2 期 · sklearn API\"\nbody \"上期一元 y=kx+b ↔ 多元 w·x+b\"\nfigure \"E01 公式回顾：左 1D 直线 + 右多元向量内积\"\nbody \"本期解决：① 5 步流程 ② 6 场景 demo ③ 5 个坑\"",
+      "text_tts": "上一期我们讲了线性回归是什么——从一元的 y 等于 k 乘以 x 加 b，到多元的 w 转置 乘 x 加 b。但每次手算 w 和 b 太累——这一期我们打开 S-K-learn，4 行代码跑通线性回归，顺便把上期那个悬案解决：小明身高 176 厘米，体重到底多少。这一期我们解决三件事：S-K-learn 5 步流程怎么用；6 个场景演示 A-P-I 在不同数据 / 不同参数下的表现；以及 5 个新手最常见的坑。下一期我们打开 S-K-learn 内部的黑盒：先讲损失函数。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "5 步流程详解 · X 必须 2D / coef_ / intercept_",
+      "text": "先看 5 步流程。第一步导入：从 sklearn.linear_model 引入 LinearRegression 类。第二步准备数据：X 是身高列表，但必须写成嵌套列表——每个样本是一个独立的列表，比如 160 写成中括号 160 中括号，5 个样本就是 5 个嵌套中括号。这是 sklearn 的硬规则：X 必须是二维数组。y 是体重列表，一维就够。第三步实例化：写一行 estimator 等于 LinearRegression 加括号——一个空对象，里面什么模型都没学。第四步 fit：调用 estimator.fit 传入 x、y——这一行就是训练，sklearn 内部会算出 w 和 b。第五步 predict：调用 estimator.predict 传入新样本——返回预测值。fit 之后还能查参数：coef 下划线是权重 w，intercept 下划线是截距 b。注意一个 sklearn 约定：凡是 fit 之后才有的属性，都带下划线后缀。",
+      "notes": "~360字。\n[src: 02-LR/02-api/01-LinearRegression.md（slide 16 + 讲解段 5 步代码范例）]\n\ntitle \"sklearn LR · 5 步流程\"[流程]\nfigure \"5 步框图（导入 → 数据 → 实例化 → fit → predict 横向 5 框，箭头连接）\"\ntitle \"步 1 导入\"\nformula \"from sklearn.linear_model import LinearRegression\"[code]\ntitle \"步 2 准备数据 · X 必须 2D\"[关键]\nfigure \"X = [[160], [166], [172], [174], [180]]  ← 嵌套中括号 vs [160, 166, ...] ❌一维报错\"\nbody \"y = [56.3, 60.6, 65.1, 68.5, 75]  一维即可\"\ntitle \"步 3 实例化 · 步 4 fit · 步 5 predict\"\nfigure \"代码 4 行高亮：estimator = LinearRegression() / estimator.fit(x, y) / estimator.coef_ / estimator.predict([[176]])\"\nquote \"sklearn 约定：fit 之后才有的属性都带下划线后缀（coef_ / intercept_）\"[约定]",
+      "text_tts": "先看 5 步流程。第一步导入：从 S-K-learn.linear model 引入 Linear Regression 类。第二步准备数据：X 是身高列表，但必须写成嵌套列表——每个样本是一个独立的列表，比如 160 写成中括号 160 中括号，5 个样本就是 5 个嵌套中括号。这是 S-K-learn 的硬规则：X 必须是二维数组。y 是体重列表，一维就够。第三步实例化：写一行 estimator 等于 Linear Regression 加括号——一个空对象，里面什么模型都没学。第四步 fit：调用 estimator.fit 传入 x、y——这一行就是训练，S-K-learn 内部会算出 w 和 b。第五步 predict：调用 estimator.predict 传入新样本——返回预测值。fit 之后还能查参数：coefficient 下划线是权重 w，intercept 下划线是截距 b。注意一个 S-K-learn 约定：凡是 fit 之后才有的属性，都带下划线后缀。"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "补充说明 · demo 前先认识三个面板词",
+      "text": "打开 demo 前，先补三个看面板的关键词。第一，fit_intercept 是 LinearRegression 括号里的一个开关，可以理解成：这条直线能不能上下平移。默认 True 时，模型会同时调斜率 w 和截距 b，公式是 y 等于 wx 加 b，直线可以上下移动，自己找最贴近数据的位置。如果设成 False，就把 b 锁死为 0，公式变成 y 等于 wx，模型只能调斜率，不能上下平移，所以直线必须穿过原点。第二，coef 和 intercept 分别对应上一期的权重 w 和截距 b，它们是 fit 之后学出来的结果。第三，R 平方先当成拟合分数读就行，越接近 1 说明直线越贴合数据，掉得越低说明拟合越差，公式后面评估指标那期再展开。接下来 6 个场景，本质上只是在换三件事：开关变不变、数据变不变、新样本位置变不变。",
+      "notes": "补充段 · 建议下游插在 seg2 和 seg3 之间。用途：demo 前补齐 fit_intercept / coef / intercept / R² 的面板语言，避免在 demo 里首次教学。\n\ntitle \"demo 前：3 个面板词\"[补充]\nbody \"① fit_intercept：是否学习截距 b；False 强制 b=0\"\nbody \"② coef / intercept：fit 后学出来的 w 和 b\"\nbody \"③ R²：先当拟合分数，越接近 1 越好\"\nquote \"6 个场景只看：开关 / 数据 / 新样本位置\"[观察任务]",
+      "text_tts": "打开 demo 前，先补三个看面板的关键词。第一，fit intercept 是 Linear Regression 括号里的一个开关，可以理解成：这条直线能不能上下平移。默认 True 时，模型会同时调斜率 w 和截距 b，公式是 y 等于 w x 加 b，直线可以上下移动，自己找最贴近数据的位置。如果设成 False，就把 b 锁死为 0，公式变成 y 等于 w x，模型只能调斜率，不能上下平移，所以直线必须穿过原点。第二，coefficient 和 intercept 分别对应上一期的权重 w 和截距 b，它们是 fit 之后学出来的结果。第三，R 平方先当成拟合分数读就行，越接近 1 说明直线越贴合数据，掉得越低说明拟合越差，公式后面评估指标那期再展开。接下来 6 个场景，本质上只是在换三件事：开关变不变、数据变不变、新样本位置变不变。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "Demo 录屏 · 6 个预设场景（dropdown 切换）",
+      "text": "打开 demo，我们按 6 个观察场景走一遍。先看画面分工：左侧是数据和 x_new 控件，中间是拟合图，右侧是关键读数。图表会在两种视角之间切换：默认用缩放视图，看清点、线和预测值；关掉 fit_intercept 时切到原点视图，专门看红线为什么必须穿过坐标原点。\n场景 1，4 行跑通最经典版本：5 个身高体重点，fit_intercept 默认开。看参数面板：coef 等于 0.93，intercept 等于负 93.27，预测 176 厘米对应 70.30 公斤——上期那个小明体重悬案的答案。R 平方 0.98，5 个点几乎全在直线上。\n场景 2，关掉 fit_intercept：勾掉这个开关，强制截距等于 0。红线被迫穿过原点。coef 从 0.93 跌到 0.38，predict 从 70.30 偏低到 67.40，R 平方从 0.98 暴跌到 0.64。结论：默认 True 不要乱关。\n场景 3，数据从 5 点扩到 30 点：散点变成一团带噪声的云，红线还在中间穿过。coef 仍约 0.96，跟场景 1 的 0.93 差不多——只要分布相近，加点不会大改参数；多点的好处主要是降低噪声影响。\n场景 4，切到加州房价真实数据：散点从身高体重换成收入和房价，单位完全不同。注意一个细节——API 代码一行没变，sklearn 自动算出新的 coef 和 intercept。这就是参数化模型的好处：换数据不换代码。\n场景 5，加州 + 关 fit_intercept：和场景 2 一样关掉开关，但这次更严重。R 平方掉到 0.10——几乎学不到东西。加州房价的中心点不在原点附近，强行穿原点的拟合彻底失败。\n场景 6，拖动新样本：把 x_new 从 176 拖到 165，红线不动，蓝菱形沿红线滑到 165，预测 60.08 公斤——这是数据范围内的内插。注意一个隐患：拖出训练范围比如 200 厘米，LR 还是会给一个数字，但这是外推，不可信。LR 没有'我不知道'机制。",
+      "notes": "~610字。B demo 录屏段。\n\ndemo: 02-LR/02-api/demos/api-walkthrough.py（端口 2756 · 注意文件 docstring 写 2736，按 README 走 2756）\n\n6 场景实测数字（python sklearn 直跑校准 · §3.5 复核已完成）：\n  | # | dataset | fi | x_new | coef | intercept | predict | R² |\n  | 1 | 5pt | T | 176 | 0.9294 | -93.2735 | 70.3048 | 0.9803 |\n  | 2 | 5pt | F | 176 | 0.3829 | 0.0000  | 67.3953 | 0.6408 |\n  | 3 | 30pt| T | 176 | 0.9607 | -98.7135| 70.3768 | 0.9620 |\n  | 4 | 加州 | T | 5.0 | 0.3433 | 0.7700  | 2.4862  | 0.3789 |\n  | 5 | 加州 | F | 5.0 | 0.5911 | 0.0000  | 2.9553  | 0.0972 |\n  | 6 | 5pt | T | 165 | 0.9294 | -93.2735| 60.0811 | 0.9803 |\n\nstates（Playwright dropdown 切 6 次 + 验证 panel 数字）:\n  s1: preset = '1 · 🎯 PPT 经典：4 行代码跑通'\n      expect: coef≈0.93, intercept≈-93.27, predict(176)≈70.30, R²≈0.98\n  s2: preset = '2 · 🚫 关掉 fit_intercept：看 b 被强制 0'\n      expect: coef≈0.38, intercept=0.00, predict(176)≈67.40, R²≈0.64\n  s3: preset = '3 · 📈 数据从 5 点 → 30 点：参数稳吗？'\n      expect: coef≈0.96, intercept≈-98.71, predict(176)≈70.38, R²≈0.96\n  s4: preset = '4 · 🌍 切到加州房价真实数据'\n      expect: coef≈0.34, intercept≈0.77, predict(5.0)≈2.49, R²≈0.38\n  s5: preset = '5 · ⚠️ 加州数据 + 关 fit_intercept'\n      expect: coef≈0.59, intercept=0.00, predict(5.0)≈2.96, R²≈0.10\n  s6: preset = '6 · 🎚️ 拖动新样本：看 predict 范围'\n      expect: coef≈0.93, intercept≈-93.27, x_new=165 → predict≈60.08\n\ncue 词（口播 → state 切换时机）:\n  \"打开 demo\"           → state s1（首次切换）\n  \"场景 2，关掉\"        → s2\n  \"场景 3，数据从 5 点\" → s3\n  \"场景 4，切到加州\"    → s4\n  \"场景 5，加州 + 关\"   → s5\n  \"场景 6，拖动新样本\"  → s6\n\n避开：自定义模式（dropdown 第 0 项 '✋ 自定义'）—— 录屏不展开滑块，只切 6 个预设\n\n关键说明：\n- demo 内 SCENARIOS 字典里有'预期结果'文本（如\"coef ≈ 0.93、intercept ≈ -93.45\"）—— 与 sklearn 实测略有差异（实测是 -93.27），口播以**实测**为准\n- demo 自带 SCENARIO 教学卡（绿色 callout）会跟随 dropdown 显示——录屏可见，与口播文案互补\n\n3.5 复核 TODO（v1 录屏前再跑一次）：\n  [ ] marimo run api-walkthrough.py，dropdown 切 6 次，截图各场景 panel 数字\n  [ ] 与上面 6 场景实测数字逐项对齐（差异 < 0.01 即过）\n  [ ] 验证场景 6 滑块拖动 165 时蓝菱形位置正确\n\n录屏口播更新（2026-05-08）：开场不再说“顶部场景下拉菜单”，改为说明左侧控件 / 中间拟合图 / 右侧关键读数，以及缩放视图与原点视图的切换。",
+      "text_tts": "打开 demo，我们按 6 个观察场景走一遍。先看画面分工：左侧是数据和 x new 控件，中间是拟合图，右侧是关键读数。图表会在两种视角之间切换：默认用缩放视图，看清点、线和预测值；关掉 fit intercept 时切到原点视图，专门看红线为什么必须穿过坐标原点。\n场景 1，4 行跑通最经典版本：5 个身高体重点，fit intercept 默认开。看参数面板：coefficient 等于 0.93，intercept 等于负 93.27，预测 176 厘米对应 70.30 公斤——上期那个小明体重悬案的答案。R 平方 0.98，5 个点几乎全在直线上。\n场景 2，关掉 fit intercept：勾掉这个开关，强制截距等于 0。红线被迫穿过原点。coefficient 从 0.93 跌到 0.38，predict 从 70.30 偏低到 67.40，R 平方从 0.98 暴跌到 0.64。结论：默认 True 不要乱关。\n场景 3，数据从 5 点扩到 30 点：散点变成一团带噪声的云，红线还在中间穿过。coefficient 仍约 0.96，跟场景 1 的 0.93 差不多——只要分布相近，加点不会大改参数；多点的好处主要是降低噪声影响。\n场景 4，切到加州房价真实数据：散点从身高体重换成收入和房价，单位完全不同。注意一个细节——A-P-I 代码一行没变，S-K-learn 自动算出新的 coefficient 和 intercept。这就是参数化模型的好处：换数据不换代码。\n场景 5，加州 + 关 fit intercept：和场景 2 一样关掉开关，但这次更严重。R 平方掉到 0.10——几乎学不到东西。加州房价的中心点不在原点附近，强行穿原点的拟合彻底失败。\n场景 6，拖动新样本：把 x new 从 176 拖到 165，红线不动，蓝菱形沿红线滑到 165，预测 60.08 公斤——这是数据范围内的内插。注意一个隐患：拖出训练范围比如 200 厘米，L-R 还是会给一个数字，但这是外推，不可信。L-R 没有'我不知道'机制。"
+    },
+    {
+      "id": 8,
+      "type": "content",
+      "topic": "补充说明 · 6 个 demo 场景先收束成三条",
+      "text": "看完 6 个场景，先把现象收束成三条。第一，默认学截距是正常做法，强行让直线穿过原点，经常会把拟合搞坏。第二，换数据集不需要换 API，还是 fit 和 predict，变的是 sklearn 学出来的 coef 和 intercept。第三，predict 永远会给数字，但训练范围外的数字只是外推，不代表可信。带着这三条，再看下面 5 个新手坑，就不是零散注意事项，而是刚才 demo 现象背后的工程规则。",
+      "notes": "补充段 · 可选，建议下游插在 seg3 和 seg4 之间。用途：长 demo 后先压缩结论，再进入 5 个常见坑。\n\ntitle \"6 场景收束成 3 条\"[复盘]\nbody \"① 默认学截距，不要乱强制过原点\"\nbody \"② 换数据不换 API，只是参数变\"\nbody \"③ predict 会给数字，外推不等于可信\"\nquote \"5 个新手坑 = demo 现象背后的工程规则\"[过渡]",
+      "text_tts": "看完 6 个场景，先把现象收束成三条。第一，默认学截距是正常做法，强行让直线穿过原点，经常会把拟合搞坏。第二，换数据集不需要换 A-P-I，还是 fit 和 predict，变的是 S-K-learn 学出来的 coefficient 和 intercept。第三，predict 永远会给数字，但训练范围外的数字只是外推，不代表可信。带着这三条，再看下面 5 个新手坑，就不是零散注意事项，而是刚才 demo 现象背后的工程规则。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "5 个常见坑（X 2D / fit_intercept / SVD / 不缩放 / coef_ shape）",
+      "text": "5 步流程跑完，提一下 5 个新手最容易踩的坑。第一坑，X 必须是二维。一维列表 sklearn 直接报错——修复有两条：写嵌套中括号，或者用 numpy reshape 加负 1 加 1。第二坑，fit_intercept 默认 True 不要乱关，除非数据已经手动中心化，或者业务上确定 x 等于 0 时 y 必须等于 0。刚才场景 2 和场景 5 演示过——R 平方暴跌不是开玩笑。第三坑要先点几个线代术语，听过就行——矩阵 matrix / 向量 vector / 共线 collinearity / SVD 奇异值分解 singular value decomposition / 范数 norm，这些都是后面矩阵化和正规方程那两期的内容，本期只用来描述现象不展开公式。sklearn 内部不直接求矩阵逆——它走 SVD 路径，特征共线时用伪逆给最小范数解。SVD 通常更稳，但相比直接求逆可能更慢——稳定性优先。第四坑，LinearRegression 不做特征缩放。一元单特征没事；多元量纲悬殊时工程上通常会配 StandardScaler，尤其后面要配正则或换 SGD 的时候——加州房价 8 特征那期会展开。第五坑，coef 下划线的 shape。单目标 y 是一维时，coef 是 n 个特征长度的一维数组；多目标 y 是二维时变成 n_targets 乘 n_features 的二维。下游代码取索引前先看 shape，不然容易踩维度坑。",
+      "notes": "~310字。\n[src: 02-LR/02-api/01-LinearRegression.md（讲解段「常见坑」5 条）]\n\ntitle \"5 个常见坑\"[警示]\nfigure \"5 个图标列表：① X 2D ② fit_intercept ③ SVD ④ 不缩放 ⑤ coef_ shape\"\ntitle \"坑 1 · X 必须 2D\"\nfigure \"对照：[160, 166, ...] ❌  vs  [[160], [166], ...] ✓ / np.array(x).reshape(-1, 1)\"\ntitle \"坑 2 · fit_intercept 慎关\"\nbody \"场景 2 / 场景 5 实证：R² 暴跌\"\ntitle \"坑 3 · 走 SVD 不求逆\"\nformula \"理论解 w = (XᵀX)⁻¹ Xᵀy ｜ sklearn 实际走 scipy.linalg.lstsq → SVD\"\nbody \"共线情况下伪逆给最小范数解，慢 2-3 倍但稳\"\ntitle \"坑 4 · 不做特征缩放\"\nbody \"一元 OK · 多元量纲悬殊 → StandardScaler（E09 加州房价展开）\"\ntitle \"坑 5 · coef_ shape\"\nfigure \"单目标 (n_features,) | 多目标 (n_targets, n_features)\"",
+      "text_tts": "5 步流程跑完，提一下 5 个新手最容易踩的坑。第一坑，X 必须是二维。一维列表 S-K-learn 直接报错——修复有两条：写嵌套中括号，或者用 numpy reshape 加负 1 加 1。第二坑，fit intercept 默认 True 不要乱关，除非数据已经手动中心化，或者业务上确定 x 等于 0 时 y 必须等于 0。刚才场景 2 和场景 5 演示过——R 平方暴跌不是开玩笑。第三坑要先点几个线代术语，听过就行——矩阵 matrix / 向量 vector / 共线 collinearity / S-V-D 奇异值分解 singular value decomposition / 范数 norm，这些都是后面矩阵化和正规方程那两期的内容，本期只用来描述现象不展开公式。S-K-learn 内部不直接求矩阵逆——它走 S-V-D 路径，特征共线时用伪逆给最小范数解。S-V-D 通常更稳，但相比直接求逆可能更慢——稳定性优先。第四坑，Linear Regression 不做特征缩放。一元单特征没事；多元量纲悬殊时工程上通常会配 Standard Scaler，尤其后面要配正则或换 S-G-D 的时候——加州房价 8 特征那期会展开。第五坑，coefficient 下划线的 shape。单目标 y 是一维时，coefficient 是 n 个特征长度的一维数组；多目标 y 是二维时变成 n targets 乘 n features 的二维。下游代码取索引前先看 shape，不然容易踩维度坑。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "整期收尾 + 推迟项 + 下期预告",
+      "text": "这一期到这。我们解决了 sklearn 用法的入门三件事：第一，5 步流程——导入、准备 2D 数据、实例化、fit、predict；第二，6 个场景演示 API 在不同数据 / 不同参数下的表现；第三，5 个新手坑——最关键是 X 必须二维 + fit_intercept 别乱关。点到没展开的：完整 API 速查表，构造参数 4 个加 fit 后属性 5 个加核心方法 3 个，需要时查 sklearn 文档；多元量纲悬殊的标准化操作留给加州房价那一期；大数据场景的 SGDRegressor 留给梯度下降变体那一期。下一期我们打开 sklearn 的黑盒：fit 一行调用，内部到底在做什么？什么是'好直线'？答案是损失函数——先定义'好' 等于'损失最小'，再求最优。",
+      "notes": "整期收尾段（原 cta type 调整）· ~280字。\n\nseg 5 完整概念地图（CTA 三段结构 · _3-script-guide §4）：\n1. 整期核心论点 3 条（5 步流程 / 6 场景 / 5 个坑）\n2. 提到但没展开的 3 项 + 推迟点：\n   - 完整 API 速查表 → sklearn 文档（不进视频）\n   - 多元标准化 StandardScaler → E09 加州房价\n   - SGDRegressor → E07（vs 正规方程）\n3. 下期预告 + cta\n\n衔接钩（关键词级精确埋伏 E03 hook）：\n  E03 hook 应回应：\"打开黑盒\" / \"损失函数\" / \"好直线 = 损失最小\"\n  → README 衔接钩规划: \"e03 hook: '上期 fit 一行就出结果，这期我们打开黑盒：先定义 好 = 损失最小'\" ✓ 关键词全覆盖\n\ntitle \"整期概念地图 + 边界声明\"[收敛]\nfigure \"两栏思维导图：左=讲清楚的（5 步 / 6 场景 / 5 坑）/ 右=没展开的（API 速查 / 标准化 / SGDRegressor → E09 / E07）\"\ntitle \"下期预告：打开 sklearn 黑盒\"[预告]\nfigure \"E03 teaser：损失函数 MSE 抛物线 + '好直线 = 损失最小' 金句\"\nquote \"如果讲得有不对的地方，欢迎在评论区指正\"[结尾]\n\ncta 不引流、不锁定、不催关注。",
+      "text_tts": "这一期到这。我们解决了 S-K-learn 用法的入门三件事：第一，5 步流程——导入、准备 2 D 数据、实例化、fit、predict；第二，6 个场景演示 A-P-I 在不同数据 / 不同参数下的表现；第三，5 个新手坑——最关键是 X 必须二维 + fit intercept 别乱关。点到没展开的：完整 A-P-I 速查表，构造参数 4 个加 fit 后属性 5 个加核心方法 3 个，需要时查 S-K-learn 文档；多元量纲悬殊的标准化操作留给加州房价那一期；大数据场景的 S-G-D Regressor 留给梯度下降变体那一期。下一期我们打开 S-K-learn 的黑盒：fit 一行调用，内部到底在做什么？什么是'好直线'？答案是损失函数——先定义'好' 等于'损失最小'，再求最优。"
+    },
+    {
+      "id": 6,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用 · 拆独立 shot 由下游 astral-video 渲染合成（本仓只写 text 不录 mp4）",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

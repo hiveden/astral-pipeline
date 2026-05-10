@@ -1,0 +1,58 @@
+{
+  "title": "KNN 第 10 期 · 鸢尾花实战 · 第一个完整 ML pipeline",
+  "description": "前 9 期所有概念第一次组装成完整流水线。鸢尾花 150 条 / 4 特征 / 3 类，sklearn 6 步 API：加载、拆分、标准化、训练、评估、预测，全部跑一遍。引入 stratify 分层抽样和混淆矩阵两个新概念。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 900,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "接 e09：工具齐了，本期实战",
+      "text": "前 9 期我们一块块拼工具：距离怎么算、K 怎么选、加权投票、工作流、回归、sklearn 三件套、距离度量、缩放（归一化、标准化）加高斯分布。零件齐了，这一期把它们装起来——跑一个完整的机器学习项目。这一期主角是鸢尾花数据集，机器学习领域的 hello world。我们会完整走一遍 6 步标准流程：加载、拆分、标准化、训练、评估、预测。每一步对应一行 sklearn API。走完这一期，你就会用 KNN 解决一个完整的分类任务了。",
+      "notes": "~170字。\n[src: 04c-iris-case/01-鸢尾花案例.md]\n\ntitle \"KNN 第一个完整 ML pipeline：鸢尾花\"\nbody \"前 9 期攒齐零件 → 本期组装\"\nfigure \"标题卡：第 10 期 · 鸢尾花实战\"\nfigure \"6 步流程预告条：加载 → 拆分 → 标准化 → 训练 → 评估 → 预测（依次点亮）\""
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "鸢尾花数据集介绍",
+      "text": "先认识数据。鸢尾花 Iris Dataset 是 1936 年统计学家 Fisher 整理的经典数据集，几乎所有机器学习教材都拿它当入门案例。一共 150 条样本，每条是一朵花的测量记录。每朵花用 4 个数字描述：花萼长度、花萼宽度、花瓣长度、花瓣宽度，单位都是厘米。这 4 个数字就是这一朵花在 4 维特征空间里的坐标。每条样本带一个标签，告诉你这朵花属于 3 个品种里的哪一种：山鸢尾 setosa、变色鸢尾 versicolor、维吉尼亚鸢尾 virginica。每个品种各 50 条，类别完全均衡。任务很直接：给一朵新鸢尾花的 4 个测量值，预测它是哪一种。",
+      "notes": "~225字。\n[src: 04c-iris-case/01-鸢尾花案例.md]\n\ntitle \"鸢尾花数据集 Iris Dataset\"[术语]\nbody \"1936 Fisher · 机器学习 hello world\"\nfigure \"3 张鸢尾花照片：setosa / versicolor / virginica\"\nfigure \"特征表：4 个特征 = 花萼长 / 花萼宽 / 花瓣长 / 花瓣宽（cm）\"\nbody \"150 样本 · 4 特征 · 3 类各 50 条（完全均衡）\""
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "6 步标准流程 + sklearn API 对应",
+      "text": "再把 6 步流程过一遍，每一步对应一行代码。第一步加载，调用 load_iris 拿到特征矩阵和标签数组。第二步拆分，train_test_split 把 150 条按 7 比 3 切，105 条训练 45 条测试。这一步引入一个新参数 stratify，分层抽样：3 个品种各 50 条，stratify 强制保证训练集和测试集里 3 个品种比例都按原比例切，不会某类被切偏导致评估失真。类别均衡或不均衡的任务都建议开。第三步标准化，StandardScaler 把每个特征减均值除标准差。关键纪律：均值和标准差只在训练集上算，测试集只 transform 不 fit——否则测试集偷看训练分布造成数据泄漏 data leakage。第四步训练，KNeighborsClassifier 设 k=5 调 fit。第五步评估，accuracy_score 拿测试集准确率，再加一个新工具叫混淆矩阵 confusion matrix——3 乘 3 的表，行是真实、列是预测，对角线对，其他格子告诉你错在哪。第六步预测，predict 输出类别，predict_proba 输出每一类概率。6 步走完，可以拿来预测。",
+      "notes": "~430字。\n[src: 04c-iris-case/01-鸢尾花案例.md 全 6 步]\n\nseg 3 是密度最高的概念段，必须配 6 步动画逐步亮起，不能只口播。\n\ntitle \"6 步标准流程 ↔ sklearn API\"[流程]\nfigure \"6 行代码逐行高亮，每行配一句白话解释\"\nbody \"step 1: load_iris() → 数据\"\nbody \"step 2: train_test_split(stratify=y) → 105/45 切分（分层抽样 stratification）\"[术语]\nbody \"step 3: StandardScaler.fit_transform(Xtr) → 均值 0 方差 1（fit 只在训练集，防数据泄漏 data leakage）\"[术语]\nbody \"step 4: KNeighborsClassifier(k=5).fit(Xtr_s, ytr) → 训练\"\nbody \"step 5: accuracy_score + confusion_matrix → 评估\"\nbody \"step 6: predict / predict_proba → 上线\"\nquote \"stratify 强制按类别比例切，避免某类被切偏\"[关键]\nquote \"测试集只 transform 不 fit，防止数据泄漏\"[关键]"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "Demo · baseline 跑通",
+      "text": "打开 demo，UI 顶部就是这 6 步的卡片说明。下面 3 列控件，分别管数据拆分、KNN 参数、2D 投影。我们先跑默认配置：测试集占 30%、随机种子 22、k 取 5、标准化开着、2D 投影选花瓣长和花瓣宽。看准确率对比卡：4 维全特征训练，测试集准确率约 93%——45 条里 42 条预测对、3 条错。再看下面的决策边界图：圆点是训练样本带黑色描边，十字是测试样本，背景三色是 KNN 在整个平面的预测——红色山鸢尾、绿色变色鸢尾、蓝色维吉尼亚鸢尾。注意看，红色山鸢尾几乎和另外两类完全分开，一条直线就能切——这是鸢尾花数据集著名的特点。绿色和蓝色之间会有少量重叠，那几个落在错色背景上的十字，就是被分错的测试样本，肉眼一眼就能找出来。再往下看混淆矩阵，3 乘 3 的蓝色热力图，对角线深色、非对角线浅色——大部分预测都落在对角线上，少数错分集中在 versicolor 和 virginica 互判，红色山鸢尾一个没错。这就是一个跑通的 KNN 分类器在测试集上的样子。",
+      "notes": "~395字。\nB demo 录屏段。\n[src: 04c-iris-case/demos/01-iris-pipeline.py]\n\ndemo: 04c-iris-case/demos/01-iris-pipeline.py\nstates: intro → baseline\nexpect (intro):    UI 总览（6 步卡 + 控件 + 图表）\nexpect (baseline): test_size=0.3, seed=22, k=5, std=ON, feat=花瓣长×花瓣宽\n                   4D acc ~93%（42/45 错 3 条）· 决策边界三色清晰 · 混淆矩阵对角线深色（setosa 全对，versicolor↔virginica 互错）\n\ncue 词:\n  \"打开 demo\"      → 进入 state intro\n  \"我们先跑默认配置\"  → 进入 state baseline\n\ntitle \"baseline：默认参数跑通\"[切换]\nfigure \"决策边界图：红/绿/蓝三色 + 训练圆 + 测试十字\"\nbody \"setosa 与另两类几乎完全分开（一条直线即可切）\"\nfigure \"混淆矩阵 3×3 蓝色热力图\"\nbody \"错分集中在 versicolor / virginica 互判\""
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "Demo · 2D 投影对比，维度信息量",
+      "text": "现在做一个有意思的实验。准确率对比卡上还有一个数字叫 2 维投影准确率——意思是只用当前选的两维特征训练 KNN，扔掉另外两维信息。默认选的是花瓣长和花瓣宽，2 维准确率和 4 维差不多。说明这两维信息已经够用了。把 2D 投影切换到花萼长和花萼宽——卡片立刻警告，4 维仍然 93%，2 维准确率掉到大约 71%，差距 20 多个百分点。决策边界图也变了：三类之间大量重叠，特别是绿色变色鸢尾和蓝色维吉尼亚鸢尾几乎挤在一起，连红色山鸢尾都开始和绿色互相侵入。结论很直白：花萼这两维信息量比花瓣弱很多，光看花萼分不清品种。这告诉我们一件事——特征工程的核心不是堆维度，是挑信息量大的维度。这一期不展开，本章 04c 末尾我们提到了维度选择和特征重要性，后续章节比如决策树会专门讲怎么自动度量每个特征的贡献。",
+      "notes": "~325字。\nB demo 录屏段。\n[src: 04c-iris-case/demos/01-iris-pipeline.py]\n\ndemo: 04c-iris-case/demos/01-iris-pipeline.py\nstate: feat-bad\nexpect: feat_x=花萼长, feat_y=花萼宽\n        4D acc 仍然 ~93% · 2D acc ~71% · 警告卡变红 · 决策边界三色严重重叠\n\ncue 词:\n  \"把 2D 投影切换到花萼长和花萼宽\"  → 进入 state feat-bad\n\ntitle \"2D 投影：维度信息量差异\"[对比]\nfigure \"花萼 2D vs 花瓣 2D 决策边界并排\"\nquote \"特征工程：挑信息量大的维度，不是堆维度\"[金句]\nbody \"特征重要性 feature importance / 自动选择留给后续章节（决策树）\""
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "Demo · 标准化开关 + k 极端",
+      "text": "再做两个对照。先把 2D 投影切回花瓣长花瓣宽，把标准化开关关掉。看准确率——切换标准化开关，acc 在 93 到 98 个百分点之间小幅波动，量级保持不变。前几期说过标准化对 KNN 很关键，这里关掉怎么没影响？答案在数据本身：鸢尾花 4 个特征量纲都是厘米，数值范围都在 0 到 8 厘米之间，本来就对齐了，标准化几乎不会改变数值。在 iris 这个具体数据上甚至会因为 KNN 距离尺度有偶然性、关闭标准化 acc 略高，但工程上仍然坚持开。前一期 e09 我们专门用量纲悬殊的数据演示标准化威力——票房亿级、评分十级——那种场景下不标准化 KNN 几乎只看大量纲那一维。鸢尾花是反例：量纲天然对齐时，标准化加不加都行，但写 pipeline 时仍然建议默认开着，养成默认开的习惯，换数据集时不会忘。最后调一下 k。把 k 拖到 1，决策边界立刻碎裂成贴着每个训练点的小块，回到第 2 期讲过的过拟合形态。再把 k 拖到 29，几乎是训练集 105 条的四分之一，决策边界变得过度光滑——iris 数据简单 acc 不一定下降，但边界形态已经接近欠拟合。k=5 这个默认值是不是最优？我们手动调感觉差不多，但有没有办法让数据自己挑？这个问题留给下一期回答。",
+      "notes": "~395字。\nB demo 录屏段。\n[src: 04c-iris-case/demos/01-iris-pipeline.py · accordion '为什么标准化对 KNN 关键']\n\ndemo: 04c-iris-case/demos/01-iris-pipeline.py\nstates: scale-off → k-extreme-1 → k-extreme-29\nexpect (scale-off):    feat 切回花瓣，std=OFF · 4D acc ~98%（切换 std 开关 acc 在 93-98% 间波动，量级不变）\nexpect (k-extreme-1):  k=1 · 决策边界贴每个训练点 · 回扣 e02 过拟合（iris 简单 acc 仍 ~93%）\nexpect (k-extreme-29): k=29 · 决策边界过度光滑 · iris 简单 acc 不一定下降（实测仍 ~93%），但边界形态已接近欠拟合\n\n录屏注意：滑动 k 时镜头避开 classification_report 区域（精确率/召回率本期不展开，避免观众分神）。\n\ncue 词:\n  \"把标准化开关关掉\"   → 进入 state scale-off\n  \"把 k 拖到 1\"        → 进入 state k-extreme-1\n  \"再把 k 拖到 29\"     → 进入 state k-extreme-29\n\ntitle \"标准化对照 + k 极端\"[对照]\nbody \"iris 量纲天然对齐（都是 cm）→ 标准化威力看不出\"\nbody \"e09 用量纲悬殊数据演示过 → 写 pipeline 仍建议默认开\"\nquote \"k=5 是不是最优？数据自己挑 → 下一期\"[钩子]"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "概念回顾 + 钩 e11a",
+      "text": "这一期到这。我们第一次把前 9 期所有零件组装成一个完整 pipeline——加载、拆分、标准化、训练、评估、预测，6 步走完。这一期讲清楚的：鸢尾花数据集 150 条 4 特征 3 类，sklearn 6 步 API 全过一遍，引入了两个新概念：分层抽样保证类别比例对齐，混淆矩阵看错在哪。还演示了维度信息量的差异，花瓣比花萼信息量大得多。这一期点到没展开的：分类报告里的精确率和召回率这一组评估指标，留给第 2 站逻辑回归专章；特征重要性和特征选择，留给后续章节决策树展开。下一期我们解决一个新问题——刚才 k 我们手动设了 5，到底是不是最优？K 怎么不靠手感、靠数据自己挑出最好的那个？答案叫交叉验证完整版，第 2 期我们提过留一交叉验证只是它的一个特例，下一期把通用做法讲透。如果讲得有不对的地方，欢迎在评论区指正。下期见。",
+      "notes": "~340字。\n\nseg 7 cta 结构：\n1. 这一期讲清楚的（6 步流程组装 / stratify / 混淆矩阵 / 维度信息量）\n2. 这一期点到没展开的：\n   - precision / recall / f1 → 02-LR 评估指标专章\n   - 特征重要性 / 特征选择 → 决策树章节\n3. 钩 e11a：手动选 k 的尴尬 → 让数据自己挑（CV 完整版）\n4. 回扣 e02 留下的伏笔（LOOCV 是特例）\n5. cta（欢迎指正）\n\n避免重复前期 cta 已列的推迟项（embedding / 其他距离 / 过拟合 / bias-variance / RMSE / R² / lazy learner）。\n\ntitle \"E10 概念地图 + e11a 钩子\"[收敛]\nfigure \"两栏思维导图：左=讲清楚的（6 步 + stratify + 混淆矩阵 + 维度信息量）/ 右=没展开的（precision/recall + 特征重要性）\"\nquote \"k=5 是不是最优？让数据自己挑 → 交叉验证完整版\"[钩子]\nquote \"如果讲得有不对的地方，欢迎在评论区指正\"[结尾]"
+    }
+  ]
+}

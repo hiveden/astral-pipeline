@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+// Remove all overlay files for an episode (keeps the directory).
+// Usage: clear-overlay <id> [--dry-run]
+
+const fs = require('node:fs');
+const path = require('node:path');
+const { PIPELINE_ROOT } = require('./_lib/episode-id.js');
+
+function resolveEpisodeDir(id) {
+  const candidates = [
+    path.join(PIPELINE_ROOT, 'episodes', id),
+    path.join(PIPELINE_ROOT, id),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c) && fs.statSync(c).isDirectory()) return c;
+  }
+  return null;
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
+    console.log('Usage: clear-overlay <id> [--dry-run]');
+    process.exit(args.length === 0 ? 1 : 0);
+  }
+  const id = args[0];
+  const dry = args.includes('--dry-run');
+
+  const dir = resolveEpisodeDir(id);
+  if (!dir) {
+    console.error(`clear-overlay: no episode "${id}"`);
+    process.exit(1);
+  }
+  const overlayDir = path.join(dir, 'overlay');
+  if (!fs.existsSync(overlayDir)) {
+    console.log(`clear-overlay: no overlay/ dir for ${id}, nothing to do`);
+    process.exit(0);
+  }
+
+  const entries = fs.readdirSync(overlayDir).filter((e) => e !== '.gitkeep');
+  if (entries.length === 0) {
+    console.log(`clear-overlay: overlay/ already empty for ${id}`);
+    process.exit(0);
+  }
+
+  console.log(`${dry ? '[dry-run] would remove' : 'removing'} ${entries.length} file(s) from ${path.relative(PIPELINE_ROOT, overlayDir)}/:`);
+  for (const e of entries) {
+    const f = path.join(overlayDir, e);
+    console.log(`  - ${e}`);
+    if (!dry) {
+      const stat = fs.statSync(f);
+      if (stat.isDirectory()) fs.rmSync(f, { recursive: true, force: true });
+      else fs.unlinkSync(f);
+    }
+  }
+  if (dry) console.log('(dry-run: no files were touched)');
+}
+
+main();

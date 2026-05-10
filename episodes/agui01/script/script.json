@@ -1,0 +1,79 @@
+{
+  "title": "AG-UI 10 分钟入门",
+  "description": "读完 AG-UI 官方文档的第一手理解——位置、形状、四个特性、SSE vs WebSocket、A2UI 为什么容易混。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 660,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "AG-UI 一句话定位",
+      "text": "最近读完 AG-UI 的官方介绍文档，一句话定位：AG-UI 是开放、轻量、基于事件的协议，标准化 AI agent 和用户侧应用之间的连接。这是一个双向通道，传 agent 状态、UI 意图和用户交互。",
+      "notes": "~90字。\n[src: https://docs.ag-ui.com/introduction]\n\ntitle \"最近读完 AG-UI 的官方介绍文档，一句话定位：AG-UI 是开放、轻量、基于事件的协议，标准化 AI agent 和用户侧应用之间的连接。\"\nbody \"这是一个双向通道，传 agent 状态、UI 意图和用户交互。\""
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "三协议分层：AG-UI / MCP / A2A",
+      "text": "讲 AG-UI 本身之前，先把它放到更大的图里看：agentic 生态里有三个主流开放协议，各管一层——MCP 连接 agent 和工具、上下文，A2A 连接 agent 和 agent，AG-UI 连接 agent 和用户侧应用。三个协议互补、技术目标不同，一个 agent 经常同时用上全部三个。画面里 agent 站在中间：往上用 AG-UI 连前端 App 给用户，往下用 MCP 连工具和数据源，横向用 A2A 连其它 agent——三条线正交，互不干扰。AG-UI 自己的定位说得很直白——kitchen sink 协议，大杂烩协议：它不追求理论上最干净的抽象，而是把构建真实 agentic 应用所需要的能力全部装进去。building blocks 是从应用侧需求自下而上倒推出来的。对照之下，MCP 只管工具接入，A2A 只管 agent 协作，AG-UI 承担的面最宽。",
+      "notes": "~310字。\n[src: https://docs.ag-ui.com/introduction#agentic-protocols]\n[src: https://docs.ag-ui.com/agentic-protocols#agentic-protocols]\n\ntitle \"讲 AG-UI 本身之前，先把它放到更大的图里看：agentic 生态里有三个主流开放协议，各管一层——MCP 连接 agent 和工具、上下文，A2A 连接 agent 和 agent，AG-UI 连接 agent 和用户侧应用。\"[intro]\nbody \"三个协议互补、技术目标不同，一个 agent 经常同时用上全部三个。\"\nfigure \"画面里 agent 站在中间：往上用 AG-UI 连前端 App 给用户，往下用 MCP 连工具和数据源，横向用 A2A 连其它 agent——三条线正交，互不干扰。\"\ntitle \"AG-UI 自己的定位说得很直白——kitchen sink 协议，大杂烩协议：它不追求理论上最干净的抽象，而是把构建真实 agentic 应用所需要的能力全部装进去。\"[kitchen-sink]\nbody \"building blocks 是从应用侧需求自下而上倒推出来的。\"\nbody \"对照之下，MCP 只管工具接入，A2A 只管 agent 协作，AG-UI 承担的面最宽。\""
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "协议形状：事件流",
+      "text": "AG-UI 的形状不是请求/响应，而是事件流：主流方向是 agent 向 UI 连续发事件，反向通道让 UI 把用户输入、中断、审批回传。这是和传统 Web API 最大的结构差异，后面所有设计都建立在这个形状上。",
+      "notes": "~90字。\n[src: https://docs.ag-ui.com/concepts/events]\n\ntitle \"AG-UI 的形状不是请求/响应，而是事件流：主流方向是 agent 向 UI 连续发事件，反向通道让 UI 把用户输入、中断、审批回传。\"\nbody \"这是和传统 Web API 最大的结构差异，后面所有设计都建立在这个形状上。\""
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "Why Agentic Apps Need AG-UI",
+      "text": "为什么 agent 扛不住传统 REST 或 GraphQL？因为 agentic 应用打破了请求/响应模型，官方列了 4 条特性。第一，长任务加流式，跨多轮会话：一次 agent 回合可能跑几秒到几分钟，LLM 推理加上工具调用、多步思考，而且会跨多轮会话持续累积，不是一次回合结束就了事。中间过程需要边产生边下发——token 级流式文字、工具调用起止、中间推理步骤、状态变更——REST 的一次性返回模型装不下。第二,非确定性，含两层：输出不确定，同一个问题两次调可能结果不同；再加一层——agent 主动决定这次渲染什么组件。UI 形态本身是 agent 输出的一部分，前端没法预先知道 schema。第三，结构化和非结构化 IO 混合：一次响应里同时有流式文字、工具调用参数、状态 delta、语音或图片、思考步骤，在时间上交错——传统 Content-Type 一次响应一种类型，要混合只能自己拼。第四，可交互组合：一个任务可能递归调用子 agent，形成执行树，用户能在中途介入——审批子步骤、改参数、中断分支。AG-UI 把 sub-agent 调用的三件事作为一等公民——作用域状态 scoped state、追踪 tracing、取消 cancellation——REST 是扁平的一来一回，没有会话树这种概念。四条对应四个维度的变化：时间从一次性变成持续加流式，输出从预定义 schema 变成非确定加动态 UI，数据从单类型变成多类型交错，结构从扁平 req/res 变成递归执行树。AG-UI 基于事件，建立在 HTTP、WebSocket 这些 Web 基础协议之上，作为面向 agentic 时代的抽象层。",
+      "notes": "~600字。\n[src: https://docs.ag-ui.com/introduction#why-agentic-apps-need-ag-ui]\n\ntitle \"为什么 agent 扛不住传统 REST 或 GraphQL？\"[问]\nbody \"因为 agentic 应用打破了请求/响应模型，官方列了 4 条特性。\"\nbody \"第一，长任务加流式，跨多轮会话：一次 agent 回合可能跑几秒到几分钟，LLM 推理加上工具调用、多步思考，而且会跨多轮会话持续累积，不是一次回合结束就了事。\"\nbody \"中间过程需要边产生边下发——token 级流式文字、工具调用起止、中间推理步骤、状态变更——REST 的一次性返回模型装不下。\"\nbody \"第二,非确定性，含两层：输出不确定，同一个问题两次调可能结果不同；再加一层——agent 主动决定这次渲染什么组件。\"\nbody \"UI 形态本身是 agent 输出的一部分，前端没法预先知道 schema。\"\nbody \"第三，结构化和非结构化 IO 混合：一次响应里同时有流式文字、工具调用参数、状态 delta、语音或图片、思考步骤，在时间上交错——传统 Content-Type 一次响应一种类型，要混合只能自己拼。\"\nbody \"第四，可交互组合：一个任务可能递归调用子 agent，形成执行树，用户能在中途介入——审批子步骤、改参数、中断分支。\"\nbody \"AG-UI 把 sub-agent 调用的三件事作为一等公民——作用域状态 scoped state、追踪 tracing、取消 cancellation——REST 是扁平的一来一回，没有会话树这种概念。\"\ntitle \"四条对应四个维度的变化：时间从一次性变成持续加流式，输出从预定义 schema 变成非确定加动态 UI，数据从单类型变成多类型交错，结构从扁平 req/res 变成递归执行树。\"[四维度]\nbody \"AG-UI 基于事件，建立在 HTTP、WebSocket 这些 Web 基础协议之上，作为面向 agentic 时代的抽象层。\""
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "底层传输：SSE 和 WebSocket",
+      "text": "事件流具体走哪种传输？两种都支持。先看 SSE，Server-Sent Events：方向是单向，服务器推到浏览器；底层是 HTTP 长连接，Content-Type 是 text/event-stream；浏览器原生 EventSource，自带自动重连。WebSocket 双向全双工：先走 HTTP 升级握手，Upgrade 头切到独立的帧协议；浏览器原生 WebSocket API，但重连要自己实现。对比几个维度：方向上 SSE 单向、WebSocket 双向；底层 SSE 走 HTTP、WebSocket 走独立协议；重连 SSE 浏览器自动、WebSocket 自己做；代理和防火墙友好度 SSE 更高，WebSocket 中等。怎么选：多数 agent 场景 SSE 足够，agent 以下发为主，用户输入走另一个 POST 就行；真需要密集双向、比如实时 steering 或语音双工，再上 WebSocket。踩坑提示：排查事件流断连时，优先查反向代理对长连接的 buffer 和超时配置——Nginx、Cloudflare 这些默认配置经常是元凶。",
+      "notes": "~400字。\n[src: https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events]\n[src: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API]\n[src: https://docs.ag-ui.com/introduction#why-agentic-apps-need-ag-ui]\n\ntitle \"事件流具体走哪种传输？\"[问]\nbody \"两种都支持。\"\ntitle \"先看 SSE，Server-Sent Events：方向是单向，服务器推到浏览器；底层是 HTTP 长连接，Content-Type 是 text/event-stream；浏览器原生 EventSource，自带自动重连。\"[sse]\ntitle \"WebSocket 双向全双工：先走 HTTP 升级握手，Upgrade 头切到独立的帧协议；浏览器原生 WebSocket API，但重连要自己实现。\"[websocket]\nbody \"对比几个维度：方向上 SSE 单向、WebSocket 双向；底层 SSE 走 HTTP、WebSocket 走独立协议；重连 SSE 浏览器自动、WebSocket 自己做；代理和防火墙友好度 SSE 更高，WebSocket 中等。\"\nbody \"怎么选：多数 agent 场景 SSE 足够，agent 以下发为主，用户输入走另一个 POST 就行；真需要密集双向、比如实时 steering 或语音双工，再上 WebSocket。\"\nbody \"踩坑提示：排查事件流断连时，优先查反向代理对长连接的 buffer 和超时配置——Nginx、Cloudflare 这些默认配置经常是元凶。\""
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "Building Blocks：13 项能力",
+      "text": "AG-UI 的官方 Overview 列了 13 个 building blocks，这是它 kitchen sink 定位的具体清单——我按 5 组过一遍，每项带一句话说明。第一组，传输基础，3 项：Streaming chat——token 与事件流式下发，支持取消与恢复；Multimodality——带类型的附件与实时媒体，文件、图片、音频、转写；Custom events——协议未覆盖场景的开放数据通道。第二组，Generative UI，2 项：静态 Generative UI 把模型输出渲染为稳定的、带类型的组件；声明式 Generative UI 用一套小型声明式语言，agent 提议组件树，应用校验并挂载。第三组，状态与可视化，3 项：Shared state 是只读或读写的共享 store，事件源的流式 diff 与冲突解决；Thinking steps 从 trace 与工具事件可视化中间推理；Tool output streaming 流式工具结果与日志。第四组，工具调用，2 项，方向对偶：Frontend tool calls 是 agent 叫前端做动作的带类型握手，Backend tool rendering 是后端工具的执行输出在应用和对话里可视化——一个是 agent 到前端的动作调用，一个是后端执行结果给 UI 看。第五组，人机介入与组合，3 项：Interrupts，全称 Human In The Loop，简写 HITL，在流程中途暂停、批准、编辑、重试、升级，不丢状态；Agent steering 用实时用户输入动态引导 agent 执行；Sub-agents and composition 嵌套委派，带三件事——作用域状态 scoped state、追踪 tracing、取消 cancellation。这 13 项每一项对应后续 concepts 文档里的一个章节，可以当学习地图用。",
+      "notes": "~700字。\n[src: https://docs.ag-ui.com/introduction#building-blocks-today--upcoming]\n\ntitle \"AG-UI 的官方 Overview 列了 13 个 building blocks，这是它 kitchen sink 定位的具体清单——我按 5 组过一遍，每项带一句话说明。\"[intro]\ntitle \"第一组，传输基础，3 项：Streaming chat——token 与事件流式下发，支持取消与恢复；Multimodality——带类型的附件与实时媒体，文件、图片、音频、转写；Custom events——协议未覆盖场景的开放数据通道。\"[g1]\ntitle \"第二组，Generative UI，2 项：静态 Generative UI 把模型输出渲染为稳定的、带类型的组件；声明式 Generative UI 用一套小型声明式语言，agent 提议组件树，应用校验并挂载。\"[g2]\ntitle \"第三组，状态与可视化，3 项：Shared state 是只读或读写的共享 store，事件源的流式 diff 与冲突解决；Thinking steps 从 trace 与工具事件可视化中间推理；Tool output streaming 流式工具结果与日志。\"[g3]\ntitle \"第四组，工具调用，2 项，方向对偶：Frontend tool calls 是 agent 叫前端做动作的带类型握手，Backend tool rendering 是后端工具的执行输出在应用和对话里可视化——一个是 agent 到前端的动作调用，一个是后端执行结果给 UI 看。\"[g4]\ntitle \"第五组，人机介入与组合，3 项：Interrupts，全称 Human In The Loop，简写 HITL，在流程中途暂停、批准、编辑、重试、升级，不丢状态；Agent steering 用实时用户输入动态引导 agent 执行；Sub-agents and composition 嵌套委派，带三件事——作用域状态 scoped state、追踪 tracing、取消 cancellation。\"[g5]\nbody \"这 13 项每一项对应后续 concepts 文档里的一个章节，可以当学习地图用。\""
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "易混点：A2UI ≠ AG-UI",
+      "text": "第一次读这篇文档最容易混的一个点：A2UI 和 AG-UI 不是一回事——名字相近，但职责不同。AG-UI 是事件流传输协议，管 agent 到用户这条线，解决怎么传；A2UI 是 generative UI widget 描述格式，在 A2A 传输上投递 UI，解决传什么形状。两者正交，一条 AG-UI 连接里可以承载 A2UI 格式的组件下发。同一层还有另外两个 generative UI 规范——MCP-UI 基于 MCP，Open JSON UI 是通用 UI 描述 schema——AG-UI 和这三个 generative UI 规范全部兼容。",
+      "notes": "~230字。\n[src: https://docs.ag-ui.com/introduction#agentic-protocols]\n[src: https://docs.ag-ui.com/agentic-protocols#generative-ui-specs]\n\ntitle \"第一次读这篇文档最容易混的一个点：A2UI 和 AG-UI 不是一回事——名字相近，但职责不同。\"\nbody \"AG-UI 是事件流传输协议，管 agent 到用户这条线，解决怎么传；A2UI 是 generative UI widget 描述格式，在 A2A 传输上投递 UI，解决传什么形状。\"\nbody \"两者正交，一条 AG-UI 连接里可以承载 A2UI 格式的组件下发。\"\nbody \"同一层还有另外两个 generative UI 规范——MCP-UI 基于 MCP，Open JSON UI 是通用 UI 描述 schema——AG-UI 和这三个 generative UI 规范全部兼容。\""
+    },
+    {
+      "id": 8,
+      "type": "content",
+      "topic": "Handshake：AG-UI 代言 MCP / A2A",
+      "text": "AG-UI 贡献者最近加了 handshake 机制——AG-UI 可以为 MCP 和 A2A 协议的 agent front for，代言它们。工程上的意思是：如果后端 agent 已经是 MCP 或 A2A 实现，不需要重写成 AG-UI 原生——AG-UI 客户端库把这些 agent 包装成 AG-UI 事件流，前端按 AG-UI 统一消费。这是一个生态位扩张策略：前端层用一套 AG-UI 客户端，通吃三种后端。AG-UI 的使命是支持现代 agentic 应用所需的全部 building blocks——handshake 让这个使命不用靠重写后端来完成。",
+      "notes": "~230字。\n[src: https://docs.ag-ui.com/agentic-protocols#ag-ui-handshakes-with-mcp-and-a2a]\n\ntitle \"AG-UI 贡献者最近加了 handshake 机制——AG-UI 可以为 MCP 和 A2A 协议的 agent front for，代言它们。\"\nbody \"工程上的意思是：如果后端 agent 已经是 MCP 或 A2A 实现，不需要重写成 AG-UI 原生——AG-UI 客户端库把这些 agent 包装成 AG-UI 事件流，前端按 AG-UI 统一消费。\"\nbody \"这是一个生态位扩张策略：前端层用一套 AG-UI 客户端，通吃三种后端。\"\nbody \"AG-UI 的使命是支持现代 agentic 应用所需的全部 building blocks——handshake 让这个使命不用靠重写后端来完成。\""
+    },
+    {
+      "id": 9,
+      "type": "content",
+      "topic": "集成生态",
+      "text": "AG-UI 已支持的集成大致分几类。第一类，直连 LLM。第二类是 Agent Framework 合作生态。代表有 LangGraph 和 CrewAI。第三类是 Agent Framework 1st Party。这一类的特点是 Agent 框架厂商自己原生支持 AG-UI，不是 AG-UI 团队去做适配。微软自己有 Microsoft Agent Framework。Google 推 ADK。AWS 出了 Strands 和 Bedrock AgentCore。这一类剩下几家独立框架。Mastra、Pydantic AI、Agno、LlamaIndex 和 AG2 都接入了。第四类是 Agent 之间的交互协议。比如 A2A Middleware。规范层有 Oracle Agent Spec。SDK 覆盖了主流语言，具体清单看视频。Clients 端主力是 CopilotKit——AG-UI 这个协议本身也源自 CopilotKit。",
+      "notes": "~250字。\n[src: https://docs.ag-ui.com/introduction#supported-integrations]\n\ntitle \"已支持集成大致分几类：直连 LLM；Agent Framework 合作有 LangGraph 和 CrewAI；Agent Framework 1st Party 包括 Microsoft Agent Framework、Google ADK、AWS Strands、AWS Bedrock AgentCore、Mastra、Pydantic AI、Agno、LlamaIndex、AG2。\"\nbody \"还有 Agent 交互协议 A2A Middleware、规范 Oracle Agent Spec、SDK 有 Kotlin、Go、Dart、Java、Rust、Clients 有 CopilotKit 和 Terminal + Agent。\"\nbody \"Clients 侧以 CopilotKit 为主力——AG-UI 这个协议本身也源自 CopilotKit。\""
+    },
+    {
+      "id": 10,
+      "type": "cta",
+      "topic": "最小集回顾",
+      "text": "读完这章我抓到的最小集是 4 点：位置是 AG-UI 在三协议里位于 agent 到用户这一层；形状是事件流，不是请求响应；理由是传统 REST 和 GraphQL 扛不住 agent 的 4 个特性——长任务流式、非确定、IO 混合、可交互组合；学习路径是 13 个 building blocks 就是后续章节的索引。这是我第一次通读这两篇文档的理解，刚拿到手，讲错的地方欢迎指正。",
+      "notes": "~180字。\n[src: https://docs.ag-ui.com/introduction]\n\ntitle \"读完这章我抓到的最小集是 4 点：位置是 AG-UI 在三协议里位于 agent 到用户这一层；形状是事件流，不是请求响应；理由是传统 REST 和 GraphQL 扛不住 agent 的 4 个特性——长任务流式、非确定、IO 混合、可交互组合；学习路径是 13 个 building blocks 就是后续章节的索引。\"\nbody \"这是我第一次通读这两篇文档的理解，刚拿到手，讲错的地方欢迎指正。\""
+    }
+  ]
+}

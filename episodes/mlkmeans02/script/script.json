@@ -1,0 +1,65 @@
+{
+  "title": "K-Means 第 2 期 · sklearn API · 一行 fit_predict 跑通聚类",
+  "description": "K-Means 代码入门：n_clusters、fit、predict、fit_predict，以及 make_blobs 二维模拟数据的最小聚类流程。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 720,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "从分堆概念进入 sklearn API",
+      "text": "上一期我们知道了，聚类是在没有标签的时候，先把相似样本分成几堆。这一期把它落到代码。K-Means 的 API 很短，最核心的入口就是 K-Means 加一个 n_clusters。这个参数决定我们准备分成几簇。然后调用 fit，让模型从数据里找质心；调用 predict，把样本分配到最近质心；或者直接用 fit_predict，一步拿到每个样本的簇编号。看起来只是一行代码，但这行代码背后，已经包含了选 K、训练质心、解释簇编号三件事。",
+      "notes": "~260字。\n[src: 02-api/01-API介绍.md]\ntitle \"KMeans(n_clusters=...)\"\nfigure \"参数 → fit → predict → labels\"",
+      "text_tts": "上一期我们知道了，聚类是在没有标签的时候，先把相似样本分成几堆。这一期把它落到代码。K Means 的 A-P-I 很短，最核心的入口就是 K Means 加一个 n clusters。这个参数决定我们准备分成几簇。然后调用 fit，让模型从数据里找质心；调用 predict，把样本分配到最近质心；或者直接用 fit predict，一步拿到每个样本的簇编号。看起来只是一行代码，但这行代码背后，已经包含了选 K、训练质心、解释簇编号三件事。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "n_clusters 是先定几个篮子",
+      "text": "先看 n_clusters。整理桌面文件时，我们可以先拿 3 个篮子：发票、合同、照片。每个文件来了，就放进最像的篮子。K-Means 也是这样，先告诉模型准备几个篮子，再让数据自己决定每个篮子的代表位置。n_clusters 等于 2，就是粗分两堆；n_clusters 等于 8，是 sklearn 的默认值，但不代表业务上一定正确；n_clusters 太大，每个簇会越来越碎，解释成本也会上升。所以 API 本身不难，关键责任在这个 K 到底取多少。后面的 SSE、肘部法、SC、CH，都是围绕这个问题展开。",
+      "notes": "~320字。\n[src: 02-api/01-API介绍.md]\nfigure \"n_clusters=2 / 5 / 8 的分堆示意\"\nquote \"API 很短，难点是 K 和解释。\"",
+      "text_tts": "先看 n clusters。整理桌面文件时，我们可以先拿 3 个篮子：发票、合同、照片。每个文件来了，就放进最像的篮子。K Means 也是这样，先告诉模型准备几个篮子，再让数据自己决定每个篮子的代表位置。n clusters 等于 2，就是粗分两堆；n clusters 等于 8，是 S-K-learn 的默认值，但不代表业务上一定正确；n clusters 太大，每个簇会越来越碎，解释成本也会上升。所以 A-P-I 本身不难，关键责任在这个 K 到底取多少。后面的 S-S-E、肘部法、S-C、C-H，都是围绕这个问题展开。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "fit predict fit_predict 三个入口",
+      "text": "再看三个方法。fit 的意思是训练：模型在 X 里反复找质心，直到质心稳定或者达到迭代上限。predict 的意思是分配：给定已经训练好的质心，把每个样本分给最近的那个质心。fit_predict 是教学和探索阶段最常用的快捷写法，等价于先 fit，再 predict，直接返回每个样本的簇编号。这里注意一个无监督学习的细节：训练时只喂 X，不喂 y。即使我们用 make_blobs 生成模拟数据时，函数顺手返回了 y，K-Means 训练也不会使用它。聚类要看的，是样本之间的相似结构，不是已有答案。",
+      "notes": "~350字。\n[src: 02-api/01-API介绍.md, 02-api/02-案例.md]\nfigure \"fit：训练质心；predict：分配样本；fit_predict：两步合一\"\nbody \"聚类训练只用 X，不用 y。\"",
+      "text_tts": "再看三个方法。fit 的意思是训练：模型在 X 里反复找质心，直到质心稳定或者达到迭代上限。predict 的意思是分配：给定已经训练好的质心，把每个样本分给最近的那个质心。fit predict 是教学和探索阶段最常用的快捷写法，等价于先 fit，再 predict，直接返回每个样本的簇编号。这里注意一个无监督学习的细节：训练时只喂 X，不喂 y。即使我们用 make blobs 生成模拟数据时，函数顺手返回了 y，K Means 训练也不会使用它。聚类要看的，是样本之间的相似结构，不是已有答案。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "make_blobs 最小案例",
+      "text": "为了先把流程跑通，我们用 make_blobs 造一批二维点。它像一个教学沙盘：先在平面上放几个中心，再围绕中心生成点。代码流程是五步。第一步导入 K-Means、make_blobs、画图库和 CH 指数。第二步生成 1000 个样本，每个样本 2 个特征，围绕 4 个中心分布。第三步画原始散点图，先确认数据确实有可见结构。第四步调用 K-Means 的 fit_predict，给每个点返回一个簇编号。第五步按簇编号上色，再用 calinski_harabasz_score 做一个基础评估。这里 CH 先不用记公式，只知道它是一个聚类评分，分数越高通常表示簇间更分开、簇内更紧。",
+      "notes": "~390字。B demo 录屏段。\ndemo: ../../demos/01-api-make-blobs.py\n[src: 02-api/02-案例.md]\nstates（Playwright 驱动到这些档位）:\n  1. baseline — K=3, seed=22\n     expect: 1000 个样本，2 个特征，3 个 labels，SSE≈370.33，SC≈0.613，CH≈2964.3\n  2. aligned — K=4, seed=22\n     expect: 4 个 labels，SSE≈138.97，SC≈0.671，CH≈5813.9\ncue 词（口播 → state 切换时机）:\n  \"第二步生成 1000 个样本\" → state 1\n  \"第五步按簇编号上色\" → state 1\nbody \"CH 公式主场在 e05，本期只点名评分用途。\"",
+      "text_tts": "为了先把流程跑通，我们用 make blobs 造一批二维点。它像一个教学沙盘：先在平面上放几个中心，再围绕中心生成点。代码流程是五步。第一步导入 K Means、make blobs、画图库和 C-H 指数。第二步生成 1000 个样本，每个样本 2 个特征，围绕 4 个中心分布。第三步画原始散点图，先确认数据确实有可见结构。第四步调用 K Means 的 fit predict，给每个点返回一个簇编号。第五步按簇编号上色，再用 calinski harabasz score 做一个基础评估。这里 C-H 先不用记公式，只知道它是一个聚类评分，分数越高通常表示簇间更分开、簇内更紧。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "K=3 和生成 4 个中心的观察点",
+      "text": "这个案例里有一个很好的观察点：make_blobs 生成数据时用了 4 个中心，但示例聚类时写的是 n_clusters 等于 3。这不是 API 错误，而是在提醒我们：K-Means 不会替我们自动决定 K。真实结构可能看起来像 4 堆，但只要我们指定 K=3，模型就必须把它硬分成 3 簇。反过来，如果指定 K=8，它也会硬分成 8 簇。聚类结果不只是算法决定的，也是我们给的 K 决定的。所以看到 labels 里的 0、1、2，不要把它们直接读成业务标签。它们只是编号，业务命名要等看过质心、特征均值和样本画像之后再做。",
+      "notes": "~340字。B demo 录屏段。\ndemo: ../../demos/01-api-make-blobs.py\n[src: 02-api/02-案例.md]\nstates（Playwright 驱动到这些档位）:\n  1. hard_3 — K=3, seed=22\n     expect: 真实结构约 4 团，但画面只有 3 个颜色簇\n  2. match_4 — K=4, seed=22\n     expect: 4 个颜色簇，CH≈5813.9\n  3. over_8 — K=8, seed=22\n     expect: 8 个颜色簇，SSE≈78.64，SC≈0.432，CH≈4494.3，切分变碎\ncue 词（口播 → state 切换时机）:\n  \"只要我们指定 K=3\" → state 1\n  \"如果指定 K=8\" → state 3\nquote \"K-Means 服从 n_clusters，不替业务决定 K。\"",
+      "text_tts": "这个案例里有一个很好的观察点：make blobs 生成数据时用了 4 个中心，但示例聚类时写的是 n clusters 等于 3。这不是 A-P-I 错误，而是在提醒我们：K Means 不会替我们自动决定 K。真实结构可能看起来像 4 堆，但只要我们指定 K=3，模型就必须把它硬分成 3 簇。反过来，如果指定 K=8，它也会硬分成 8 簇。聚类结果不只是算法决定的，也是我们给的 K 决定的。所以看到 labels 里的 0、1、2，不要把它们直接读成业务标签。它们只是编号，业务命名要等看过质心、特征均值和样本画像之后再做。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "整期收尾和下期预告",
+      "text": "这一期到这。我们把 K-Means 的最小代码链路跑通了：n_clusters 决定簇数，fit 负责训练质心，predict 负责分配样本，fit_predict 把两步合在一起。我们还看到，模拟数据里的 y 不参与训练，聚类只看 X。没有展开的内容有两个：CH 指数的公式，留到评估指标那一期；K-Means 训练质心到底怎么迭代，留到下一期。下一期我们打开 fit_predict 的内部过程，看它怎样反复执行分配样本和更新质心。",
+      "notes": "~300字。\nfigure \"本期代码链路 + 下期理解迭代过程\"",
+      "text_tts": "这一期到这。我们把 K Means 的最小代码链路跑通了：n clusters 决定簇数，fit 负责训练质心，predict 负责分配样本，fit predict 把两步合在一起。我们还看到，模拟数据里的 y 不参与训练，聚类只看 X。没有展开的内容有两个：C-H 指数的公式，留到评估指标那一期；K Means 训练质心到底怎么迭代，留到下一期。下一期我们打开 fit predict 的内部过程，看它怎样反复执行分配样本和更新质心。"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "固定片尾",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "固定片尾文案 · 约 3.8s · 各期保持一致。",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

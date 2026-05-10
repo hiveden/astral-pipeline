@@ -1,0 +1,18 @@
+{
+  "episode_id": "mllogreg01",
+  "source_episode": "e01-引入与sigmoid",
+  "synced_at": "2026-05-08T08:07:43Z",
+  "shots": {
+    "shot04": {
+      "duration_s": 63.2,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 63.217,
+      "duration_diff_ms": 17.0,
+      "file": "shot04.mp4"
+    }
+  }
+}

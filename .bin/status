@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+// Show status for an episode by reading manifest.json.
+// Supports both new (episodes/<id>/) and legacy (<id>/) layouts.
+
+const fs = require('node:fs');
+const path = require('node:path');
+const { PIPELINE_ROOT } = require('./_lib/episode-id.js');
+
+function resolveEpisodeDir(id) {
+  const candidates = [
+    path.join(PIPELINE_ROOT, 'episodes', id),
+    path.join(PIPELINE_ROOT, id),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c) && fs.statSync(c).isDirectory()) return c;
+  }
+  return null;
+}
+
+function pad(label, width = 18) {
+  return label.padEnd(width);
+}
+
+function fmtSection(name, obj) {
+  if (!obj || typeof obj !== 'object' || Object.keys(obj).length === 0) {
+    return `  ${pad(name)} (empty)`;
+  }
+  const lines = [`  ${name}:`];
+  for (const [k, v] of Object.entries(obj)) {
+    if (v && typeof v === 'object') {
+      lines.push(`    ${pad(k)} ${JSON.stringify(v)}`);
+    } else {
+      lines.push(`    ${pad(k)} ${v}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+function main() {
+  const id = process.argv[2];
+  if (!id || id === '-h' || id === '--help') {
+    console.log('Usage: status <id>');
+    process.exit(id ? 0 : 1);
+  }
+
+  const dir = resolveEpisodeDir(id);
+  if (!dir) {
+    console.error(`status: no episode "${id}" in episodes/ or root`);
+    process.exit(1);
+  }
+  const manifestPath = path.join(dir, 'manifest.json');
+  const outputPath = path.join(dir, 'output.json');
+
+  const layoutHint = path.relative(PIPELINE_ROOT, dir).startsWith('episodes/')
+    ? 'new (episodes/<id>/)'
+    : 'legacy (root <id>/)';
+
+  console.log(`Episode: ${id}`);
+  console.log(`  ${pad('layout')} ${layoutHint}`);
+  console.log(`  ${pad('path')} ${path.relative(PIPELINE_ROOT, dir)}`);
+
+  if (!fs.existsSync(manifestPath)) {
+    console.log(`  ${pad('manifest')} MISSING`);
+  } else {
+    const m = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    console.log(`  ${pad('schema_version')} ${m.schema_version || '?'}`);
+    console.log(fmtSection('raw', m.raw));
+    console.log(fmtSection('consistency', m.consistency));
+    if (Array.isArray(m.pending_actions) && m.pending_actions.length) {
+      console.log(`  pending_actions:`);
+      for (const a of m.pending_actions) console.log(`    - ${a}`);
+    } else {
+      console.log(`  ${pad('pending_actions')} (none)`);
+    }
+  }
+
+  if (!fs.existsSync(outputPath)) {
+    console.log(`  ${pad('output')} not yet rendered`);
+  } else {
+    const o = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
+    if (o.video) {
+      console.log(`  output:`);
+      console.log(`    ${pad('video.path')} ${o.video.path}`);
+      console.log(`    ${pad('video.duration_s')} ${o.video.duration_s}`);
+      console.log(`    ${pad('video.sha256')} ${o.video.sha256}`);
+      console.log(`    ${pad('rendered_at')} ${o.rendered_at || '?'}`);
+    }
+  }
+}
+
+main();

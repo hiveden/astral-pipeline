@@ -1,0 +1,22 @@
+{
+  "episode_id": "ml03",
+  "source_episode": "e03-工作流回归",
+  "synced_at": "2026-05-03T19:30:19Z",
+  "shots": {
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 53.000,
+      "video": {"width": 1278, "height": 770, "fps": 25}
+    },
+    "shot06": {
+      "file": "shot06.mp4",
+      "duration_s": 45.280,
+      "video": {"width": 1278, "height": 770, "fps": 25}
+    },
+    "shot07": {
+      "file": "shot07.mp4",
+      "duration_s": 29.480,
+      "video": {"width": 1278, "height": 770, "fps": 25}
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "title": "三协议位置（测试 fixture）",
+  "description": "Smoke 测试用，3 仓全流程 fixture，非业务期。",
+  "style": "meta",
+  "form": "tutorial",
+  "target_duration_s": 25,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "三协议各管一层",
+      "text": "三十秒讲清三个 agentic 协议的位置。MCP 接工具——A2A 接 agent——AG-UI 接用户。三条线正交。",
+      "notes": "~50字 测试用。\n[src: ^1]\n\n覆盖：短英文术语 MCP / A2A / AG-UI；破折号节奏；句末。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "AG-UI 走事件流",
+      "text": "AG-UI 走事件流，不是请求响应。主流方向是 agent 到 UI 连续发事件。底层可选 SSE 或 WebSocket，覆盖率约 90%。",
+      "notes": "~55字 测试用。\n\n覆盖：百分比口播（约 90%）；多个英文术语（SSE / WebSocket）；多句标点切分。"
+    },
+    {
+      "id": 3,
+      "type": "cta",
+      "topic": "三协议不混用",
+      "text": "今天就这条。三协议各管一层，不混着用。",
+      "notes": "~20字 测试用。\n\nCTA 段，不引流，不锁下期。"
+    }
+  ]
+}

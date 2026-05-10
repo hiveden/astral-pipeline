@@ -1,0 +1,18 @@
+{
+  "episode_id": "mllogreg04",
+  "source_episode": "e03a-原理与决策边界",
+  "synced_at": "2026-05-08T08:07:44Z",
+  "shots": {
+    "shot04": {
+      "duration_s": 51.633,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 51.668,
+      "duration_diff_ms": 35.0,
+      "file": "shot04.mp4"
+    }
+  }
+}

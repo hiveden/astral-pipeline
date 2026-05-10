@@ -1,0 +1,73 @@
+{
+  "title": "LogReg 第 4 期 · LogisticRegression API 与癌症分类案例",
+  "description": "从原理落到 sklearn：LogisticRegression 的 solver、penalty、C 三参数；C 越小正则越强。再用乳腺癌分类 pipeline 跑通加载、切分、标准化、训练、预测和评估。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 1080,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "原理讲完，落到 sklearn",
+      "text": "前面我们已经把逻辑回归的预测流程和损失函数讲清楚了。现在进入代码落地：sklearn 里真正调用的类叫 LogisticRegression。不要被名字吓到，它对外仍然是熟悉的三步：实例化模型，fit 训练，predict 预测。不同的是，这一期我们要看三个 API 参数怎么影响模型：solver 决定怎么优化，penalty 决定加哪种正则，C 决定正则强弱。后半段再把它放进乳腺癌分类案例，跑一遍完整 pipeline。",
+      "notes": "~210字。src: 03-api/01-API介绍.md, 02-癌症分类案例.md。",
+      "text_tts": "前面我们已经把逻辑回归的预测流程和损失函数讲清楚了。现在进入代码落地：S-K-learn 里真正调用的类叫 Logistic Regression。不要被名字吓到，它对外仍然是熟悉的三步：实例化模型，fit 训练，predict 预测。不同的是，这一期我们要看三个 A-P-I 参数怎么影响模型：solver 决定怎么优化，penalty 决定加哪种正则，C 决定正则强弱。后半段再把它放进乳腺癌分类案例，跑一遍完整 pipeline。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "LogisticRegression 三参数：solver、penalty、C",
+      "text": "先看 API 主体：LogisticRegression 里最常见的三个参数是 solver、penalty 和 C。solver 是优化器，也就是怎么找到最优参数；初学阶段先知道 liblinear、lbfgs、saga 这些名字，不急着展开。penalty 是正则类型，常见是 L2 收缩，或者 L1 稀疏。L2 更像把所有权重整体压小，L1 更容易把一些不重要特征压到 0。注意 solver 和 penalty 不能随便乱配，比如 lbfgs 不支持 L1；初学可以先用 lbfgs 加 L2，想看稀疏化时再切 liblinear 或 saga 加 L1。C 最容易反直觉：它不是正则强度，而是正则强度的倒数。C 越大，约束越松；C 越小，正则越强，权重会被压得更狠。第一轮先记这句就够：solver 选算法，penalty 选约束形态，C 反着调强弱。",
+      "notes": "~390字。src: 03-api/01-API介绍.md。补 solver/penalty 兼容关系：lbfgs 不支持 L1，L1 常用 liblinear/saga。",
+      "text_tts": "先看 A-P-I 主体：Logistic Regression 里最常见的三个参数是 solver、penalty 和 C。solver 是优化器，也就是怎么找到最优参数；初学阶段先知道 liblinear、lbfgs、saga 这些名字，不急着展开。penalty 是正则类型，常见是 L2 收缩，或者 L1 稀疏。L2 更像把所有权重整体压小，L1 更容易把一些不重要特征压到 0。注意 solver 和 penalty 不能随便乱配，比如 lbfgs 不支持 L1；初学可以先用 lbfgs 加 L2，想看稀疏化时再切 liblinear 或 saga 加 L1。C 最容易反直觉：它不是正则强度，而是正则强度的倒数。C 越大，约束越松；C 越小，正则越强，权重会被压得更狠。第一轮先记这句就够：solver 选算法，penalty 选约束形态，C 反着调强弱。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "Demo 录屏 · C 和 penalty 如何影响边界和权重",
+      "text": "打开参数 demo。画面左侧是控制区，可以拖 logC、切 penalty，还可以增加噪声维；右侧按镜头显示决策边界或 coef 权重条形图。先看 L2、C 等于 1 的基线，边界能把两类样本大致分开，权重条也比较平滑。把 C 降低，正则变强，权重整体被压小，边界会变得更保守。再切到 L1，观察 coef 图：如果噪声特征没有贡献，L1 更容易把它们压到 0，这就是稀疏化。这里不要把正则化讲成主线，只抓 API 直觉：penalty 决定压权重的方式，C 决定压得有多狠。后面如果模型过拟合，调这两个参数就是常见手段。",
+      "notes": "~360字。B demo 段。demo: 03-api/demos/01-c-penalty-effect.py。states: L2 C=1；降低 C；切 L1；coef 排行；稀疏化对比。3.5 TODO: 截图确认 n_zero 和 train_acc。",
+      "text_tts": "打开参数 demo。画面左侧是控制区，可以拖 log C、切 penalty，还可以增加噪声维；右侧按镜头显示决策边界或 coefficient 权重条形图。先看 L2、C 等于 1 的基线，边界能把两类样本大致分开，权重条也比较平滑。把 C 降低，正则变强，权重整体被压小，边界会变得更保守。再切到 L1，观察 coefficient 图：如果噪声特征没有贡献，L1 更容易把它们压到 0，这就是稀疏化。这里不要把正则化讲成主线，只抓 A-P-I 直觉：penalty 决定压权重的方式，C 决定压得有多狠。后面如果模型过拟合，调这两个参数就是常见手段。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "癌症分类 pipeline 六步",
+      "text": "进入乳腺癌分类案例。完整 pipeline 可以拆成六步。第一步加载数据，demo 用 sklearn 自带 breast cancer 数据集。第二步明确标签口径：这里把恶性当作正例，因为医疗场景最关心的是有没有漏掉恶性。第三步切分训练集和测试集，并且使用 stratify 保持正负比例。第四步标准化，逻辑回归对特征尺度敏感，所以先在训练集 fit 标准化器，再 transform 测试集。第五步训练 LogisticRegression。第六步评估，不只看 accuracy，还要看 precision、recall、F1 和 AUC。准确率高当然好，但医疗场景更怕漏诊，所以 recall 会非常重要。",
+      "notes": "~340字。src: 03-api/02-癌症分类案例.md。正例口径: demo 翻转标签，1=恶性。",
+      "text_tts": "进入乳腺癌分类案例。完整 pipeline 可以拆成六步。第一步加载数据，demo 用 S-K-learn 自带 breast cancer 数据集。第二步明确标签口径：这里把恶性当作正例，因为医疗场景最关心的是有没有漏掉恶性。第三步切分训练集和测试集，并且使用 stratify 保持正负比例。第四步标准化，逻辑回归对特征尺度敏感，所以先在训练集 fit 标准化器，再 transform 测试集。第五步训练 Logistic Regression。第六步评估，不只看 accuracy，还要看 precision、recall、F1 和 A-U-C。准确率高当然好，但医疗场景更怕漏诊，所以 recall 会非常重要。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "Demo 录屏 · 癌症 pipeline step 1-6",
+      "text": "打开癌症 pipeline demo。这个 demo 是代码讲解模式，左边是代码块行高亮，右边图表随 step 推进。step 1 是导入模块；step 2 加载数据，图上出现主特征和标签分布；step 3 切分训练和测试；step 4 标准化，横轴从原始尺度变成 z-score；step 5 训练模型，图上出现概率分界和模型曲线；step 6 输出评估指标柱图。注意，demo 的正例是恶性，所以 recall 的含义是：真实恶性里抓回来了多少。这个口径必须先定住，否则后面 precision、recall、AUC 都会读反。整段 demo 的核心不是炫代码，而是让你看到：模型两行，数据处理和评估才是案例的大头。",
+      "notes": "~380字。B demo 段。demo: 03-api/demos/02-cancer-pipeline.py。states: step=1..6。3.5 TODO: 记录 step6 指标和正例口径。",
+      "text_tts": "打开癌症 pipeline demo。这个 demo 是代码讲解模式，左边是代码块行高亮，右边图表随 step 推进。step 1 是导入模块；step 2 加载数据，图上出现主特征和标签分布；step 3 切分训练和测试；step 4 标准化，横轴从原始尺度变成 z-score；step 5 训练模型，图上出现概率分界和模型曲线；step 6 输出评估指标柱图。注意，demo 的正例是恶性，所以 recall 的含义是：真实恶性里抓回来了多少。这个口径必须先定住，否则后面 precision、recall、A-U-C 都会读反。整段 demo 的核心不是炫代码，而是让你看到：模型两行，数据处理和评估才是案例的大头。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "准确率很高，但医疗场景不能只看 accuracy",
+      "text": "癌症案例通常能拿到很高的 accuracy，但这里要提前埋一个问题：医疗场景里，漏诊一个恶性病人和误报一个健康人，代价完全不同。accuracy 会把这两种错误都算成错一次，但业务上它们不是一个量级。如果模型把恶性判成良性，这叫漏诊；如果把良性判成恶性，这叫误报。下一期开始，我们会把这两类错误拆开，用混淆矩阵明确 TP、FN、FP、TN 四个格子。只有把错误结构摊开，后面的 precision、recall、F1、ROC、AUC 才有意义。",
+      "notes": "~260字。埋钩 e05a 混淆矩阵。",
+      "text_tts": "癌症案例通常能拿到很高的 accuracy，但这里要提前埋一个问题：医疗场景里，漏诊一个恶性病人和误报一个健康人，代价完全不同。accuracy 会把这两种错误都算成错一次，但业务上它们不是一个量级。如果模型把恶性判成良性，这叫漏诊；如果把良性判成恶性，这叫误报。下一期开始，我们会把这两类错误拆开，用混淆矩阵明确 T-P、F-N、F-P、T-N 四个格子。只有把错误结构摊开，后面的 precision、recall、F1、R-O-C、A-U-C 才有意义。"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "整期收尾 + 下期预告",
+      "text": "这一期到这。我们完成了逻辑回归的第一轮代码落地：第一，LogisticRegression 的 solver、penalty、C 分别控制优化方式、正则类型和正则强度；第二，C 是反着来的，越小正则越强；第三，癌症分类不是模型一行就完，而是加载、切分、标准化、训练、预测、评估一整条 pipeline。点到没展开的正则化数学以后再讲。下一期我们从 accuracy 的盲区出发，正式学习混淆矩阵。",
+      "notes": "~220字。衔接 e05a。",
+      "text_tts": "这一期到这。我们完成了逻辑回归的第一轮代码落地：第一，Logistic Regression 的 solver、penalty、C 分别控制优化方式、正则类型和正则强度；第二，C 是反着来的，越小正则越强；第三，癌症分类不是模型一行就完，而是加载、切分、标准化、训练、预测、评估一整条 pipeline。点到没展开的正则化数学以后再讲。下一期我们从 accuracy 的盲区出发，正式学习混淆矩阵。"
+    },
+    {
+      "id": 8,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用。",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

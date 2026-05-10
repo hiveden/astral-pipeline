@@ -1,0 +1,12 @@
+{
+  "episode_id": "ml06",
+  "source_episode": "e06-距离族",
+  "synced_at": "2026-05-04T00:00:00Z",
+  "shots": {
+    "shot06": {
+      "file": "shot06.mp4",
+      "duration_s": 76.680,
+      "video": {"width": 1280, "height": 640, "fps": 25}
+    }
+  }
+}

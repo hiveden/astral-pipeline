@@ -1,0 +1,52 @@
+[
+  {
+    "id": "shot01",
+    "duration_s": 16.068,
+    "file": "shot01.wav"
+  },
+  {
+    "id": "shot02",
+    "duration_s": 61.648,
+    "file": "shot02.wav"
+  },
+  {
+    "id": "shot03",
+    "duration_s": 18.297,
+    "file": "shot03.wav"
+  },
+  {
+    "id": "shot04",
+    "duration_s": 115.674,
+    "file": "shot04.wav"
+  },
+  {
+    "id": "shot05",
+    "duration_s": 66.354,
+    "file": "shot05.wav"
+  },
+  {
+    "id": "shot06",
+    "duration_s": 107.962,
+    "file": "shot06.wav"
+  },
+  {
+    "id": "shot07",
+    "duration_s": 41.835,
+    "file": "shot07.wav"
+  },
+  {
+    "id": "shot08",
+    "duration_s": 38.016,
+    "file": "shot08.wav"
+  },
+  {
+    "id": "shot09",
+    "duration_s": 54.535,
+    "file": "shot09.wav"
+  },
+  {
+    "id": "shot10",
+    "duration_s": 30.363,
+    "file": "shot10.wav"
+  }
+]

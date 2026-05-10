@@ -1,0 +1,65 @@
+{
+  "title": "KNN 第 4 期 · sklearn 分类 API + lazy learner 兑现",
+  "description": "把 KNN 从手算落到代码：3 行 sklearn 替代 9 行公式。重点兑现 lazy learner——fit 几乎不做事，所有计算推迟到 predict。三件套（构造 / fit / predict）是 sklearn 全家桶通用模板。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 720,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "接住 E03 + lazy learner 兑现预告",
+      "text": "上一期最后我们留了两个问题：第一，KNN 的 5 步流程其实不用自己写，调一个工具就能搞定。第二，让 KNN 学新数据这一步——专业说法叫训练——其实几乎什么都没做，整个数据集本身就是模型。这一期一次性回答这两个问题。我们会用 sklearn 这个工具库，3 行代码把上一期的 5 步流程跑起来；然后看 sklearn 的训练和预测两步内部，亲眼看看到底做了什么。",
+      "notes": "~155字。\n[src: 02-api/01-分类API.md]\n\ntitle \"sklearn 分类 API + lazy learner 兑现\"\nbody \"E03 留的两个钩子：3 行代替 5 步 / KNN 没有训练阶段\"\nfigure \"标题卡：第 4 期 · sklearn 分类 API + lazy learner 兑现\""
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "sklearn 是什么 + 三件套总览",
+      "text": "先介绍工具。sklearn 全名 scikit-learn，是 Python 里 ML 的标准工具库。简单说，它把主流算法都打包好了——KNN、决策树、SVM、逻辑回归这些后面要学的算法，都在里面。这些算法的用法在 sklearn 里高度一致，统一遵守一个模板，叫三件套。第一件，构造：写一行代码把算法装进一个对象，同时把超参数填进去——比如 KNN 就是把 K 填进去。第二件，训练，英文叫 fit，意思是把数据喂给这个对象。第三件，预测，英文叫 predict，给一个新样本，让对象给出预测结果。三步走完，整个流程就闭环了。我们上一期讲的 5 步——算距离、排序、取前 K、投票、输出——全都被 sklearn 藏在 fit 和 predict 这两件事里。我们不用再自己写。",
+      "notes": "~290字。\n[src: 02-api/01-分类API.md \"关于 sklearn\" + \"直觉：sklearn 三件套\"]\n\ntitle \"sklearn = ML 标准工具库\"[术语]\nbody \"主流算法都打包好：KNN / 决策树 / SVM / 逻辑回归 ...\"\nfigure \"sklearn 三件套示意图：构造 → fit → predict\"\nformula \"三件套：\\n  model = Algorithm(超参数)   # 构造\\n  model.fit(X, y)             # 训练\\n  model.predict(X_new)        # 预测\"[模板]\nquote \"上一期 5 步全藏在 fit 和 predict 里\"[衔接E03]\n\n注：暂不展开 \"sklearn 包名 ≠ 导入名\" 工程坑点，与 ML 主题无关。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "Jupyter 录屏 · 3 行 sklearn 跑通分类",
+      "text": "我们打开 Jupyter，把第 1 期那 9 部电影直接搬过来。第一个 Cell 准备数据：X 是一个二维列表，9 行 2 列——9 部电影、每部电影 2 个数字，评分和主演吸引度。y 是对应的 9 个标签，喜欢或者不喜欢。注意 sklearn 对输入有个硬性约定：X 必须是二维结构，每行一个样本；y 是一维结构。即便只有一个特征，X 也得是二维的。然后是关键的第二个 Cell，三件套登场。第一行，从 sklearn 导入 KNeighborsClassifier 这个类——名字直译就是 K 邻居分类器。第二行，构造一个对象，K 填 5。第三行，调 fit，把 X 和 y 喂进去。第四行，调 predict，传入流浪地球 3 的坐标 8.5 和 9.5，得到预测结果。运行——输出喜欢。注意一个细节：predict 接收的也必须是二维结构，所以坐标外面要套两层方括号，代表一个样本里两个特征。这就是 sklearn 分类的全部，去掉数据准备部分，核心就这 3 行：构造、fit、predict。",
+      "notes": "~370字。\nB 录屏段（Jupyter）。\n[src: 02-api/01-分类API.md L86-L121]\n\nstates: cells_intro → run_3lines\nexpect (cells_intro): Notebook 显示 Cell1 数据 + Cell2 三件套，未执行\nexpect (run_3lines):  执行 Cell 2，输出区显示 ['喜欢']\n\ncue 词:\n  \"我们打开 Jupyter\"                   → state cells_intro\n  \"运行——输出喜欢\"                    → state run_3lines\n\nbody \"X = 二维列表（9 行 2 列）/ y = 一维标签\"\nfigure \"Notebook Cell 1 截图 · X 和 y 高亮\"\nformula \"硬性约定：X 必须 2D / y 必须 1D / predict 输入也是 2D\"[输入约束]\nfigure \"Notebook Cell 2 截图 · 3 行核心高亮 · 红框圈 [[8.5, 9.5]] 与 X 外层方括号视觉对齐，强调二维结构\"\nquote \"去掉数据准备，核心就这 3 行\"[关键]"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "对照 E01：9 行手算 vs 3 行 sklearn",
+      "text": "现在做个对比。第 1 期我们手算同一个题目——流浪地球 3 是不是会喜欢。当时我们写下 9 部电影坐标，对每一部算一次欧氏距离，9 行公式：差的平方加平方再开方。然后排序、取前 5、数标签、投票。这个过程我们在动画里推演了完整的一遍。这一期同一个题目，3 行 sklearn 跑出同一个答案——喜欢。两个版本结果完全一致，不是巧合：sklearn 内部就是按上一期的 5 步在跑，只是把这 5 步全封装进了 fit 和 predict 这两个对外的零件里——封装的意思就是把这 5 步合成一个对外只露 fit 和 predict 的函数包。手算让我们看清原理，sklearn 让我们用得上工程。每个 ML 学习者都要走过这一步：先手算几遍弄懂，再用工具批量跑。",
+      "notes": "~270字。\n\n回扣 E01 视觉锚：手算 9 行公式 → 3 行 sklearn。\n\ntitle \"E01 9 行手算 vs E04 3 行 sklearn\"[对照]\nfigure \"分屏对比：左 = E01 手算公式逐行 / 右 = Jupyter 3 行核心\"\nquote \"两个版本结果一致：流浪地球 3 = 喜欢\"[一致性]\nbody \"封装 = 把 5 步打包成黑盒\"\nquote \"先手算几遍弄懂，再用工具批量跑\"[学习方法]"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "lazy learner 兑现 · fit 几乎不做事",
+      "text": "现在我们看 sklearn 内部，看一个反直觉的事实。一般我们提到训练，会想到模型在做大量计算——读数据、调参数、迭代很多轮。KNN 是不是这样？我们给 fit 和 predict 分别计时看看。第三个 Cell 跑完，输出大致是这样的：fit 不到 1 毫秒，predict 几十倍于 fit，差不多一个数量级。也就是说，predict 明显比 fit 慢——这跟一般直觉完全相反。为什么？因为 KNN 的 fit 几乎什么都没干，它只是把 X 和 y 原样存了起来。我们再跑第四个 Cell 验证一下，直接看模型对象内部存了什么。fit 之后，模型里多了一个属性叫下划线 fit X，形状是 9 行 2 列——就是我们刚才喂进去的 X 原封不动。",
+      "notes": "~270字。\nB 录屏段。本期高潮的实证部分，留概念定名给 seg 6。\n\nstates: timing → peek_inside\nexpect (timing):     输出 fit < 1ms / predict 比 fit 慢明显几倍至一个数量级（首跑数字会浮动，方向稳定）\nexpect (peek_inside): 输出 model._fit_X.shape == (9, 2) · model.classes_ 显示两个类别\n\ncue 词:\n  \"我们给 fit 和 predict 分别计时看看\"  → state timing\n  \"再跑第四个 Cell 验证一下\"            → state peek_inside\n\n录屏注意：Notebook 录制时 restart kernel 后只跑首次，确保 timing 数字稳定；剪辑按首跑数字截图即可，不追求精确数字而追求方向反差。如果想要更稳的数字，可改用 timeit 跑 1000 次累计平均（备选）。\n\ntitle \"反直觉：KNN 的 fit 几乎什么都没干\"[反直觉]\nfigure \"Jupyter 输出：fit < 1ms / predict 数量级反差柱状对比\"\nquote \"predict 明显比 fit 慢\"[关键]\nfigure \"model._fit_X 截图：(9, 2) 就是原 X\""
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "lazy learner 概念定名 + 对照 eager learner",
+      "text": "这就引出 KNN 一个重要性质：它属于懒学习算法，英文叫 lazy learner。懒在哪？训练阶段啥也不学，所有计算都推迟到 predict 那一刻——来一个新样本，临时算它跟全部 9 个老样本的距离、排序、投票。换句话说，整个训练集本身就是模型——上一期我们承诺过的这个性质，就是这个意思。和它对应的概念叫积极学习算法，英文叫 eager learner。下一章我们就要学的线性回归就是积极学习的典型代表，神经网络也是。这类算法训练时拼命算，把规律压缩进一组参数里，预测时直接套参数、很快。两边的代价正好相反：懒学习训练快预测慢，积极学习训练慢预测快。",
+      "notes": "~210字。\nA 概念段。从 seg 5 拆出，独立给 lazy/eager 一个概念定名段。\n\ntitle \"懒学习算法 lazy learner\"[术语]\nbody \"训练啥也不学，全部计算推迟到 predict\"\nquote \"整个训练集本身就是模型\"[金句兑现E03]\ntitle \"对照：积极学习 eager learner\"[术语]\nfigure \"对照表：懒学习 训练快预测慢 / 积极学习 训练慢预测快（代表：线性回归 / 神经网络）\"\nbody \"两种代价正好相反\"\n\n注：兑现 E03 cta \"KNN 没有训练阶段、整个数据集就是模型\" 推迟到 sklearn 章。"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "三件套是 sklearn 全家桶通用模板",
+      "text": "学完 KNN 三件套，有一个意外的红利。sklearn 里所有监督学习算法——决策树、随机森林、SVM、逻辑回归这些后面会学到的——都遵守同一套三件套模板。换算法只需要换第一行：构造时改一下类的名字。比如把 KNeighborsClassifier 换成 DecisionTreeClassifier，剩下两行 fit 和 predict 不用改，决策树就跑起来了。这种统一让 sklearn 的学习曲线很平。学会 KNN 三件套相当于把 sklearn 的入门门槛跨过去了——后面学新算法，主要精力放在算法本身的特点上，API 不再是负担。",
+      "notes": "~210字。\n[src: 02-api/01-分类API.md \"三件套 = sklearn 全家桶通用模板\"]\n\ntitle \"三件套 = sklearn 全家桶通用模板\"[复用]\nformula \"换算法只需换第一行：\\n  model = DecisionTreeClassifier()  # 决策树\\n  model = SVC()                     # SVM\\n  model = LogisticRegression()      # 逻辑回归\\n  ...\\n  model.fit(X, y)        # 一字不动\\n  model.predict(X_new)   # 一字不动\"[通用模板]\nquote \"学会 KNN 三件套 = sklearn 入门门槛跨过去\"[红利]"
+    },
+    {
+      "id": 8,
+      "type": "cta",
+      "topic": "概念地图 + E05 伏笔",
+      "text": "这一期到这。我们讲清楚了三件事。第一，sklearn 三件套——构造、fit、predict——3 行代码替代上一期的 5 步流程，是 sklearn 全家桶通用模板。第二，输入约束——X 必须二维，y 必须一维，predict 输入也得二维。第三，KNN 是懒学习算法，fit 几乎什么都没干，整个训练集本身就是模型。这一期点到没展开的有几个：sklearn 里其他算法的细节，留到各自专题；numpy 和 pandas 这两个数据准备的常用工具，遇到具体问题再就地讲；从 pandas 表格转换成 sklearn 要的二维 X，也是后面真实数据集出现时再演示。下一期是分类的对偶——预测一个连续数字。还记得上一期我们说的吗——分类切到回归，流水线只换一个零件。下期我们就把这个零件换给你看，3 行代码里只换 1 个名字。如果讲得有不对的地方，欢迎在评论区指正。下期见。",
+      "notes": "~360字。\n\nseg 7 完整概念地图（../../_script-guide.md 第 4 节）：\n1. 整期核心论点：sklearn 把 5 步封装成 3 行 + KNN 是 lazy learner\n2. 讲清楚的 3 项：三件套 / 输入约束 / lazy learner（vs eager learner）\n3. 提到没展开的 + 推迟点：\n   - sklearn 全家桶其他算法 → 各自专题（决策树 / SVM / LR）\n   - numpy / pandas 数据准备细节 → 遇到就地讲（CLAUDE.md 第 5 节方针）\n   - pandas DataFrame → sklearn 2D X 转换 → 后续真实数据集章（如 04c-iris）\n4. E05 伏笔：呼应 E03 \"分类切回归只换一个零件\"，预告 \"3 行里只动 1 个字\"\n5. cta 末句固定（不读英文术语）\n\ntitle \"整期概念地图 + 边界声明\"[收敛]\nfigure \"两栏思维导图：左=讲清楚的 3 个 / 右=没展开的 3 个（带箭头指向章节）\"\nquote \"3 行代码里只换 1 个名字 — 下期见\"[E05钩]\nquote \"如果讲得有不对的地方，欢迎在评论区指正\"[结尾]\n\n注：cta 故意不重复 E01/E02/E03 已列推迟项（embedding / 其他距离 / 过拟合 / bias-variance / CV / RMSE / R²），保持跨集互不重复。"
+    }
+  ]
+}

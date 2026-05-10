@@ -1,0 +1,58 @@
+{
+  "title": "DecisionTree 第 9 期 · 回归树实践 · 直线和阶梯怎么选",
+  "description": "用 DecisionTreeRegressor 对比线性回归、浅层回归树和深层回归树，理解阶梯预测和过拟合刹车参数。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 540,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "直线 vs 阶梯",
+      "text": "上一期我们手算了回归树。现在看它和线性回归放在同一组数据上，会画出什么形状。线性回归只能画一条直线，适合整体趋势接近直线的任务。回归树画的是一串阶梯，每片叶子输出一个均值，适合分段跳变的任务。比如房屋面积到某个区间以后价格突然上一个台阶，线性回归会斜着穿过去，回归树可以直接用一刀切出两个价格段。 这期要解决的不是哪个模型永远更好，而是看数据形状。关系平滑时直线省事，关系分段时阶梯更贴合。",
+      "notes": "~250字。\n[src: 06-regression-tree/02-实践.md]\n\nfigure \"线性回归直线 vs 回归树阶梯\""
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "DecisionTreeRegressor API",
+      "text": "sklearn 里，回归树用 DecisionTreeRegressor。它和分类树的参数很像，也有 max_depth、min_samples_split、min_samples_leaf、random_state。不同的是 criterion 不再选 gini 或 entropy，而是选回归损失，比如 squared_error。默认思路就是上一期讲的平方误差最小化。fit 的输入仍然是 X 和 y，predict 输出的不是类别 0 或 1，而是连续数值预测。 如果从分类树切过来，最需要换脑子的就是 predict 的含义。分类输出类别标签，回归输出叶子里的平均数。",
+      "notes": "~260字。\n[src: 06-regression-tree/02-实践.md]\n\n术语：DecisionTreeRegressor / squared_error。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "三模型对比",
+      "text": "代码里可以同时训练 3 个模型。第一个是线性回归，它输出一条平滑直线。第二个是浅层回归树，比如 max_depth 等于 1 或 2，它只能切一两刀，所以阶梯很少，容易欠拟合，但稳定。第三个是深层回归树，如果不加限制，它可以切到每个叶子只剩很少样本，训练集上几乎贴着每个点走。这看起来很准，但新数据一来就容易崩。回归树的弹性很强，强到必须加刹车。 录屏时可以让三条曲线同时出现：直线负责给基线，浅树负责给可解释台阶，深树负责展示过拟合风险。 录屏时要把训练曲线和测试表现一起看，避免观众只被深树在训练点上的贴合程度吸引。",
+      "notes": "~300字。\n[src: 06-regression-tree/02-实践.md]\n\nmarimo demo: 01-ML/04-DecisionTree/06-regression-tree/demos/01-regression-tree.py\nstates: A linear / B shallow tree / C deep tree / D compare。\n说明: demo 使用 `代码/02-CART回归树.py` 同一组 10 个样本和同类模型。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "阶梯曲线适用场景",
+      "text": "什么时候回归树比直线更合适？关键看业务是不是分段。电费按阶梯计价，超过某个用电量后单价跳变；房租可能过一条街就换一个价格带；用户消费金额也可能按等级出现台阶。这些场景里，一条直线会把跳变抹平，而回归树的阶梯正好能表达“这个区间一个均值，那个区间另一个均值”。但如果真实关系本来就是平滑线性，回归树反而可能切出多余台阶。 因此选择回归树前，先问业务有没有明显阈值。只要规则天然分段，树就容易讲清；如果没有阈值，线性或平滑模型可能更稳。 录屏时要把训练曲线和测试表现一起看，避免观众只被深树在训练点上的贴合程度吸引。",
+      "notes": "~290字。\n[src: 06-regression-tree/02-实践.md]\n\nfigure \"分段跳变场景：电费 / 房租 / 消费等级\""
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "三把刹车",
+      "text": "回归树最常用的刹车仍然是三把。max_depth 限制树最多长几层，直接控制模型复杂度。min_samples_split 限制一个节点至少有多少样本才允许继续切。min_samples_leaf 限制每片叶子至少留下多少样本，防止叶子只记住一两个点。三个参数里，min_samples_leaf 很直观：每个预测均值至少要由一小群样本支撑，而不是由单个样本决定。调回归树时，别只追训练误差，要看测试集或交叉验证表现。 三个参数经常一起用。只限制深度可能仍有很小叶子，只限制叶子样本数又可能树很深，组合起来才更稳。",
+      "notes": "~310字。\n[src: 06-regression-tree/02-实践.md]\n\nfigure \"max_depth / min_samples_split / min_samples_leaf 三把刹车\""
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "收尾 + 下期预告",
+      "text": "这一期我们把回归树落到 sklearn。线性回归画直线，回归树画阶梯；浅树稳定但可能欠拟合，深树灵活但容易过拟合。参数上，max_depth、min_samples_split、min_samples_leaf 都是在给树踩刹车。到这里你应该已经反复听到过拟合这个词了。下一期我们正式讲决策树的正则化手段：剪枝。 这条线和分类树完全一致：树越深，表达能力越强；表达能力太强，就需要剪枝或预剪枝把复杂度压回来。 录屏时要把训练曲线和测试表现一起看，避免观众只被深树在训练点上的贴合程度吸引。 真正上线前，还要用交叉验证确认这些刹车参数，而不是只看某一次划分的测试分数。",
+      "notes": "~240字。\n\n衔接钩：e10 剪枝。"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用"
+    }
+  ]
+}

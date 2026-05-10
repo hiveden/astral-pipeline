@@ -1,0 +1,17 @@
+{
+  "episode_id": "mldtree01",
+  "source_episode": "e01-决策树直觉",
+  "synced_at": "2026-05-08T06:58:00Z",
+  "shots": {
+    "shot03": {
+      "file": "shot03.mp4",
+      "duration_s": 59.267,
+      "video": {"width": 1280, "height": 720, "fps": 30}
+    },
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 60.333,
+      "video": {"width": 1280, "height": 720, "fps": 30}
+    }
+  }
+}

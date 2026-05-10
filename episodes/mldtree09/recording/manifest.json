@@ -1,0 +1,12 @@
+{
+  "episode_id": "mldtree09",
+  "source_episode": "e09-回归树实践",
+  "synced_at": "2026-05-08T06:58:01Z",
+  "shots": {
+    "shot03": {
+      "file": "shot03.mp4",
+      "duration_s": 45.500,
+      "video": {"width": 1280, "height": 720, "fps": 30}
+    }
+  }
+}

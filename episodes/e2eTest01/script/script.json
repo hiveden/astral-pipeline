@@ -1,0 +1,30 @@
+{
+  "title": "E2E Test Episode",
+  "description": "Fixture for full-cycle e2e test.",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 30,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "E2E shot 01",
+      "text": "This is shot one for testing.",
+      "notes": "~10s"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "E2E shot 02",
+      "text": "This is shot two for testing.",
+      "notes": "~10s"
+    },
+    {
+      "id": 3,
+      "type": "cta",
+      "topic": "E2E shot 03",
+      "text": "This is shot three for testing.",
+      "notes": "~10s"
+    }
+  ]
+}

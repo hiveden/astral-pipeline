@@ -1,0 +1,73 @@
+{
+  "title": "LogReg 第 7 期 · 电信客户流失 · 从概率模型到业务闭环",
+  "description": "用合成 Telco 客户流失 demo 串起逻辑回归完整流程：数据准备、one-hot、标准化、训练、AUC/recall/F1 评估，以及标准化系数的业务解释。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 960,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "评估工具齐了，进入真实业务问题",
+      "text": "前面几期，我们已经把逻辑回归的核心工具凑齐了：sigmoid 把线性分数变成概率，log loss 负责训练，predict_proba 输出风险分数，混淆矩阵、P/R/F1 和 AUC 负责评估。现在把它们放到一个业务问题里：电信客户流失预测。业务方真正关心的不是模型能不能算出一个 0 或 1，而是能不能提前找出高风险客户，让运营有机会做挽留。",
+      "notes": "~190字。章末实战开场。",
+      "text_tts": "前面几期，我们已经把逻辑回归的核心工具凑齐了：sigmoid 把线性分数变成概率，log loss 负责训练，predict proba 输出风险分数，混淆矩阵、P、R、F1 和 A-U-C 负责评估。现在把它们放到一个业务问题里：电信客户流失预测。业务方真正关心的不是模型能不能算出一个 0 或 1，而是能不能提前找出高风险客户，让运营有机会做挽留。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "数据集和业务目标：预测谁会走",
+      "text": "这一期的 demo 使用合成 Telco 分布，不依赖外部真实 CSV。数据规模是 7000 个客户，每个客户有在网月数、月费、是否老年用户、合约类型、网络服务、支付方式、是否无纸化账单、是否有伴侣或家属、是否开通在线安全和技术支持等特征。目标列是 Churn，也就是客户是否流失。当前合成数据里，流失客户是 1307 个，流失率约百分之十八点七。注意这已经是不平衡分类：大多数客户没有流失，少数客户才是业务正例。模型的目标不是把所有客户都判成留存，而是把真正可能流失的人排到风险列表前面。",
+      "notes": "~340字。demo: 05-客户流失/demos/01-churn-pipeline.py。实跑: n=7000，positive=1307，rate=18.7%，one-hot 后 17 特征。",
+      "text_tts": "这一期的 demo 使用合成 Telco 分布，不依赖外部真实 CSV。数据规模是 7000 个客户，每个客户有在网月数、月费、是否老年用户、合约类型、网络服务、支付方式、是否无纸化账单、是否有伴侣或家属、是否开通在线安全和技术支持等特征。目标列是 Churn，也就是客户是否流失。当前合成数据里，流失客户是 1307 个，流失率约百分之十八点七。注意这已经是不平衡分类：大多数客户没有流失，少数客户才是业务正例。模型的目标不是把所有客户都判成留存，而是把真正可能流失的人排到风险列表前面。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "处理流程：清洗、one-hot、标准化、训练、评估",
+      "text": "完整流程可以拆成六步。第一步导入 pandas、numpy、sklearn 里的模型、切分、标准化和指标函数。第二步加载并理解数据，确认目标列、样本量和流失率。第三步做特征处理：客户 ID 只是标识符，要 drop 掉；Churn 转成 0/1；合约、网络服务、支付方式这些类别字段要做 one-hot。第四步切分训练集和测试集，并对数值特征做标准化。标准化器只在训练集 fit，再 transform 训练集和测试集，避免信息泄露。第五步训练 LogisticRegression，这里使用 class_weight balanced，让少数类流失客户得到更高权重。第六步用 predict_proba 取正类概率，再计算 accuracy、precision、recall、F1 和 AUC。",
+      "notes": "~400字。pipeline 主流程段。",
+      "text_tts": "完整流程可以拆成六步。第一步导入 pandas、numpy、sklearn 里的模型、切分、标准化和指标函数。第二步加载并理解数据，确认目标列、样本量和流失率。第三步做特征处理：客户 I-D 只是标识符，要 drop 掉；Churn 转成零一标签；合约、网络服务、支付方式这些类别字段要做 one-hot。第四步切分训练集和测试集，并对数值特征做标准化。标准化器只在训练集 fit，再 transform 训练集和测试集，避免信息泄露。第五步训练 Logistic Regression，这里使用 class weight balanced，让少数类流失客户得到更高权重。第六步用 predict proba 取正类概率，再计算 accuracy、precision、recall、F1 和 A-U-C。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "Demo 录屏 · 6 步 churn pipeline",
+      "text": "打开客户流失 pipeline demo。这个页面的核心是左侧代码块和右侧图表联动。切到 step 1，只看导入代码，先把依赖交代清楚。切到 step 2，主图显示 tenure 和 Churn 的散点，右侧面板显示 7000 个客户、流失和留存数量，以及当前流失率。切到 step 3，类别特征 one-hot 后，特征矩阵变成 17 维。切到 step 4，横轴从原始 tenure 变成 z-score，说明标准化已经发生。切到 step 5，逻辑回归训练完成，图上出现单维近似的 sigmoid 决策曲线，右下角出现 top-10 系数排行。最后切到 step 6，评估指标柱图出现：当前实跑 accuracy 约 0.763，precision 约 0.428，recall 约 0.792，F1 约 0.556，AUC 约 0.862。",
+      "notes": "~430字。demo states 1-6。实跑指标: Acc=0.763 P=0.428 R=0.792 F1=0.556 AUC=0.862。",
+      "text_tts": "打开客户流失 pipeline demo。这个页面的核心是左侧代码块和右侧图表联动。切到 step 1，只看导入代码，先把依赖交代清楚。切到 step 2，主图显示 tenure 和 Churn 的散点，右侧面板显示 7000 个客户、流失和留存数量，以及当前流失率。切到 step 3，类别特征 one-hot 后，特征矩阵变成 17 维。切到 step 4，横轴从原始 tenure 变成 z-score，说明标准化已经发生。切到 step 5，逻辑回归训练完成，图上出现单维近似的 sigmoid 决策曲线，右下角出现 top 10 系数排行。最后切到 step 6，评估指标柱图出现：当前实跑 accuracy 约 0.763，precision 约 0.428，recall 约 0.792，F1 约 0.556，A-U-C 约 0.862。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "类别不平衡：accuracy 的陷阱，AUC/recall 的价值",
+      "text": "为什么这里不能只看 accuracy？因为流失客户是少数类。如果一个模型什么都不做，只把所有人都判成留存，也能拿到一个看起来不低的准确率，但它对业务没有价值：真正会流失的人一个都没抓到。流失场景里，FN 的代价通常很高。真要走的客户没被识别，就错过挽留窗口；FP 的代价是给本来不会流失的人多发一次权益或多做一次触达。两者都要管，但很多业务会更重视 recall 和 AUC。Recall 告诉我们抓回了多少真流失客户，AUC 告诉我们风险排序是否可靠。最后要不要调阈值，则取决于挽留成本和客户生命周期价值。",
+      "notes": "~340字。类别不平衡与业务代价段。",
+      "text_tts": "为什么这里不能只看 accuracy？因为流失客户是少数类。如果一个模型什么都不做，只把所有人都判成留存，也能拿到一个看起来不低的准确率，但它对业务没有价值：真正会流失的人一个都没抓到。流失场景里，F-N 的代价通常很高。真要走的客户没被识别，就错过挽留窗口；F-P 的代价是给本来不会流失的人多发一次权益或多做一次触达。两者都要管，但很多业务会更重视 recall 和 A-U-C。Recall 告诉我们抓回了多少真流失客户，A-U-C 告诉我们风险排序是否可靠。最后要不要调阈值，则取决于挽留成本和客户生命周期价值。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "系数解释：哪些因素推高或降低流失概率",
+      "text": "逻辑回归还有一个实用优点：系数可以回到业务解释。因为我们做了标准化，系数大小更适合横向比较。当前 demo 的 top 系数里，Contract_Two year 和 tenure 是明显负系数，表示两年合约和在网时间更长，会把客户推向留存。Contract_One year 也是负向。InternetService_Fiber optic、MonthlyCharges、PaymentMethod_Electronic check 是正系数，表示它们会把流失风险往上推。OnlineSecurity_Yes、TechSupport_Yes、Dependents_Yes、Partner_Yes 是负系数，说明服务绑定和关系绑定可能有留存作用。更严谨地说，系数比较的是当前编码、标准化、正则化和其他变量固定下，对 log-odds 的边际影响；相关特征之间的排名要谨慎读。这里不要把系数解释成因果结论，它只是模型在当前数据分布里学到的相关方向。但它已经足够帮助业务提出下一步问题：哪些客户要优先挽留，哪些服务可能是留存杠杆。",
+      "notes": "~470字。实跑 top coef: Contract_Two year -1.213；tenure -1.179；Contract_One year -0.582；InternetService_Fiber optic 0.386；MonthlyCharges 0.3；PaymentMethod_Electronic check 0.23；OnlineSecurity_Yes -0.21；TechSupport_Yes -0.207；Dependents_Yes -0.203；Partner_Yes -0.109。补充：标准化后系数仍是 log-odds 边际影响，受编码、相关性、正则化影响。",
+      "text_tts": "逻辑回归还有一个实用优点：系数可以回到业务解释。因为我们做了标准化，系数大小更适合横向比较。当前 demo 的 top 系数里，Contract Two year 和 tenure 是明显负系数，表示两年合约和在网时间更长，会把客户推向留存。Contract One year 也是负向。InternetService Fiber optic、MonthlyCharges、PaymentMethod Electronic check 是正系数，表示它们会把流失风险往上推。OnlineSecurity Yes、TechSupport Yes、Dependents Yes、Partner Yes 是负系数，说明服务绑定和关系绑定可能有留存作用。更严谨地说，系数比较的是当前编码、标准化、正则化和其他变量固定下，对 log odds 的边际影响；相关特征之间的排名要谨慎读。这里不要把系数解释成因果结论，它只是模型在当前数据分布里学到的相关方向。但它已经足够帮助业务提出下一步问题：哪些客户要优先挽留，哪些服务可能是留存杠杆。"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "整章收尾：LogReg 从概率到业务闭环",
+      "text": "到这里，逻辑回归这一章就闭环了。我们从一个线性分数 z 开始，用 sigmoid 把它变成概率；用最大似然和 log loss 解释为什么模型会这样训练；用 sklearn API 把训练、预测概率、正则化和标准化串起来；再用混淆矩阵、precision、recall、F1、ROC 和 AUC 看模型到底好在哪里、错在哪里。最后回到客户流失，把概率分数变成风险排序，把阈值选择交给业务代价，把系数解释变成可讨论的业务线索。逻辑回归看起来简单，但它给了分类问题一套非常完整的基线方法。",
+      "notes": "~300字。章末总结。",
+      "text_tts": "到这里，逻辑回归这一章就闭环了。我们从一个线性分数 z 开始，用 sigmoid 把它变成概率；用最大似然和 log loss 解释为什么模型会这样训练；用 sklearn A-P-I 把训练、预测概率、正则化和标准化串起来；再用混淆矩阵、precision、recall、F1、R-O-C 和 A-U-C 看模型到底好在哪里、错在哪里。最后回到客户流失，把概率分数变成风险排序，把阈值选择交给业务代价，把系数解释变成可讨论的业务线索。逻辑回归看起来简单，但它给了分类问题一套非常完整的基线方法。"
+    },
+    {
+      "id": 8,
+      "type": "cta",
+      "topic": "章末 cta（拆独立 shot · 下游复用）",
+      "text": "下章见，欢迎评论区留言讨论。",
+      "notes": "章末 cta 模板 · 14 字 ≈ 3.8s。",
+      "text_tts": "下章见，欢迎评论区留言讨论。"
+    }
+  ]
+}

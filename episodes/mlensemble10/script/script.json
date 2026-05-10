@@ -1,0 +1,65 @@
+{
+  "title": "Ensemble 第 10 期 · GBDT 泰坦尼克分类 · 把负梯度机制放进分类 pipeline",
+  "description": "GradientBoostingClassifier 实战：用泰坦尼克数据讲清分类 GBDT 的损失封装、关键参数、基础 pipeline、GridSearchCV 调参，以及 RF、AdaBoost、GBDT 的工程差异。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 960,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "同样是泰坦尼克，换成 boosting 接力",
+      "text": "随机森林那期，我们用泰坦尼克数据做过生存预测。随机森林的路线是 bagging：很多棵树独立训练，最后投票。现在换成 GBDT，它仍然可以处理泰坦尼克二分类，但训练方式完全变了。GBDT 是 boosting，每一棵新树都依赖上一轮模型的错误方向。分类任务里，这个错误方向不再是简单的真实值减预测值，而是对数损失下的负梯度。好消息是，用 sklearn 的 GradientBoostingClassifier 时，我们不需要手写这些梯度。只要准备好特征和标签，模型会把对数损失、负梯度、树的累加都封装起来。这期重点是把概念落到 pipeline：数据怎么处理，参数怎么理解，GridSearchCV 怎么调，以及它和 RF、AdaBoost 的工程差异。",
+      "notes": "~420字。\n[src: 04-gbdt/04-泰坦尼克案例.md]\n\nfigure \"Titanic features → GradientBoostingClassifier → survive probability/class\"\nbody \"Pclass / Age / Sex；loss=log_loss；GBDT vs RF/AdaBoost\"",
+      "text_tts": "随机森林那期，我们用泰坦尼克数据做过生存预测。随机森林的路线是 bagging：很多棵树独立训练，最后投票。现在换成 G-B-D-T，它仍然可以处理泰坦尼克二分类，但训练方式完全变了。G-B-D-T 是 boosting，每一棵新树都依赖上一轮模型的错误方向。分类任务里，这个错误方向不再是简单的真实值减预测值，而是对数损失下的负梯度。好消息是，用 S-K-learn 的 Gradient Boosting Classifier 时，我们不需要手写这些梯度。只要准备好特征和标签，模型会把对数损失、负梯度、树的累加都封装起来。这期重点是把概念落到 pipeline：数据怎么处理，参数怎么理解，Grid Search C-V 怎么调，以及它和 R-F、AdaBoost 的工程差异。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "数据处理保持简单",
+      "text": "泰坦尼克案例的特征保持简洁，只取 Pclass、Age、Sex 三列，目标是 Survived。Age 有缺失值，示例里用均值填充。Sex 是类别特征，Pclass 虽然是数字，但本质上也可以当成离散等级，所以用 get_dummies 做 one hot 编码。处理完后，用 train_test_split 划分训练集和测试集，并固定 random_state。这个流程和随机森林案例很像，因为模型不同不代表数据处理可以随便变。要比较模型，最好让它们使用同一份特征、同一套切分和同一评价指标。这样最后看到的差异，才主要来自模型机制，而不是来自预处理不一致。",
+      "notes": "~340字。\n[src: 04-gbdt/04-泰坦尼克案例.md]\n\nfigure \"Pclass + Age + Sex → Age mean fill → get_dummies → split\"\nbody \"Survived: 0/1；固定 random_state=22\"",
+      "text_tts": "泰坦尼克案例的特征保持简洁，只取 Pclass、Age、Sex 三列，目标是 Survived。Age 有缺失值，示例里用均值填充。Sex 是类别特征，Pclass 虽然是数字，但本质上也可以当成离散等级，所以用 get dummies 做 one hot 编码。处理完后，用 train test split 划分训练集和测试集，并固定 random state。这个流程和随机森林案例很像，因为模型不同不代表数据处理可以随便变。要比较模型，最好让它们使用同一份特征、同一套切分和同一评价指标。这样最后看到的差异，才主要来自模型机制，而不是来自预处理不一致。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "GradientBoostingClassifier 参数",
+      "text": "GradientBoostingClassifier 的核心参数和前面概念一一对应。n_estimators 是树的数量，默认常见起点是 100。learning_rate 是每棵树修正量的缩放，通常和 n_estimators 联动：学习率小，树要更多；学习率大，树可以少一些，但过拟合风险更高。max_depth 控制每棵树的深度。GBDT 里的单棵树通常不用太深，深度 2 到 4 就能作为常见搜索范围。subsample 是每轮抽取多少比例样本，小于 1 时会引入随机性，变成随机梯度提升，有时能提升泛化。分类默认使用 log_loss，也就是对数损失。使用者传 0 和 1 标签即可，不需要手动把概率差、负梯度和 sigmoid 写出来。",
+      "notes": "~420字。\n[src: 04-gbdt/04-泰坦尼克案例.md]\n\nfigure \"参数表：n_estimators / learning_rate / max_depth / subsample / loss\"\nbody \"loss='log_loss' 当前口径；旧 binary deviance 不在口播展开\"",
+      "text_tts": "Gradient Boosting Classifier 的核心参数和前面概念一一对应。n estimators 是树的数量，默认常见起点是 100。learning rate 是每棵树修正量的缩放，通常和 n estimators 联动：学习率小，树要更多；学习率大，树可以少一些，但过拟合风险更高。max depth 控制每棵树的深度。G-B-D-T 里的单棵树通常不用太深，深度 2 到 4 就能作为常见搜索范围。subsample 是每轮抽取多少比例样本，小于 1 时会引入随机性，变成随机梯度提升，有时能提升泛化。分类默认使用 log loss，也就是对数损失。使用者传 0 和 1 标签即可，不需要手动把概率差、负梯度和 sigmoid 写出来。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "基础训练与调参",
+      "text": "基础训练很直接：实例化 GradientBoostingClassifier，fit 训练集，再用 score 或 classification_report 评估测试集。这里不要把某个准确率当成固定结论，除非数据文件、随机种子和库版本都一致。讲解重点放在流程和判断方式。调参时，用 GridSearchCV 搜索 n_estimators 和 max_depth 是一个入门组合。更完整的做法是把 learning_rate 也纳入联调，比如学习率 0.05、0.1、0.2，树数量 80、120、200，树深 2、3、4。交叉验证 cv 可以先设 3，数据更稳定时再加大。每次调参都固定 random_state，否则模型之间的小差异会混入随机波动，影响判断。",
+      "notes": "~410字。\n[src: 04-gbdt/04-泰坦尼克案例.md]\n\nfigure \"GridSearchCV：参数网格 → 3 折交叉验证 → best_estimator\"\n\n3.5 复核：不写未实跑准确率；录屏阶段再填真实输出。",
+      "text_tts": "基础训练很直接：实例化 Gradient Boosting Classifier，fit 训练集，再用 score 或 classification report 评估测试集。这里不要把某个准确率当成固定结论，除非数据文件、随机种子和库版本都一致。讲解重点放在流程和判断方式。调参时，用 Grid Search C-V 搜索 n estimators 和 max depth 是一个入门组合。更完整的做法是把 learning rate 也纳入联调，比如学习率 0.05、0.1、0.2，树数量 80、120、200，树深 2、3、4。交叉验证 c-v 可以先设 3，数据更稳定时再加大。每次调参都固定 random state，否则模型之间的小差异会混入随机波动，影响判断。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "RF、AdaBoost、GBDT 怎么选",
+      "text": "到这里，本章已经有三个能跑泰坦尼克分类的集成模型。随机森林是并行训练，各树独立，训练速度快，调参压力小，适合作为强基线。AdaBoost 是串行训练，主要通过样本权重强调错样本，基学习器常用决策桩，对离群点和噪声会比较敏感，因为错样本会被反复放大。GBDT 也是串行训练，但传递的是负梯度，通常准确率上限更高，参数也更多，训练速度比随机森林慢。实践里不要默认某个模型一定赢。先用随机森林拿稳健基线，再试 GBDT 看是否有明显收益。如果 GBDT 精度更好但训练太慢，或者需要更强正则和更快构树，就自然进入下一章的 XGBoost。",
+      "notes": "~410字。\n[src: 04-gbdt/04-泰坦尼克案例.md]\n\nfigure \"RF / AdaBoost / GBDT 三列表：训练方式、信息传递、速度、调参难度\"\nquote \"RF 求稳，GBDT 追精度，XGBoost 做工程化升级\"",
+      "text_tts": "到这里，本章已经有三个能跑泰坦尼克分类的集成模型。随机森林是并行训练，各树独立，训练速度快，调参压力小，适合作为强基线。AdaBoost 是串行训练，主要通过样本权重强调错样本，基学习器常用决策桩，对离群点和噪声会比较敏感，因为错样本会被反复放大。G-B-D-T 也是串行训练，但传递的是负梯度，通常准确率上限更高，参数也更多，训练速度比随机森林慢。实践里不要默认某个模型一定赢。先用随机森林拿稳健基线，再试 G-B-D-T 看是否有明显收益。如果 G-B-D-T 精度更好但训练太慢，或者需要更强正则和更快构树，就自然进入下一章的 XGBoost。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "本期收束",
+      "text": "这一期把 GBDT 从回归手算带到了分类实战。核心变化只有一个：损失函数从平方损失换成对数损失，负梯度的具体数值变了，但串行修正框架不变。工程上，我们用 Pclass、Age、Sex 做特征，Age 均值填充，类别变量 one hot 编码，然后用 GradientBoostingClassifier 训练和调参。模型参数里，n_estimators 决定树的数量，learning_rate 控制步长，max_depth 控制单棵树复杂度，subsample 增加随机性。GBDT 已经是很强的结构化数据模型，但它仍有两个不足：正则化没有 XGBoost 那么系统，训练速度也不够工业化。下一期我们看 XGBoost 怎样把 GBDT 升级成带二阶导、正则项和工程优化的版本。",
+      "notes": "~420字。\n[src: 04-gbdt/04-泰坦尼克案例.md]\n\nfigure \"GBDT → XGBoost 升级预告：二阶导 / 正则 / 工程优化\"",
+      "text_tts": "这一期把 G-B-D-T 从回归手算带到了分类实战。核心变化只有一个：损失函数从平方损失换成对数损失，负梯度的具体数值变了，但串行修正框架不变。工程上，我们用 Pclass、Age、Sex 做特征，Age 均值填充，类别变量 one hot 编码，然后用 Gradient Boosting Classifier 训练和调参。模型参数里，n estimators 决定树的数量，learning rate 控制步长，max depth 控制单棵树复杂度，subsample 增加随机性。G-B-D-T 已经是很强的结构化数据模型，但它仍有两个不足：正则化没有 XGBoost 那么系统，训练速度也不够工业化。下一期我们看 XGBoost 怎样把 G-B-D-T 升级成带二阶导、正则项和工程优化的版本。"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用。",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

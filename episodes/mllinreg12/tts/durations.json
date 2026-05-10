@@ -1,0 +1,37 @@
+[
+  {
+    "id": "shot01",
+    "duration_s": 47.14,
+    "file": "shot01.wav"
+  },
+  {
+    "id": "shot02",
+    "duration_s": 48.551,
+    "file": "shot02.wav"
+  },
+  {
+    "id": "shot03",
+    "duration_s": 58.512,
+    "file": "shot03.wav"
+  },
+  {
+    "id": "shot04",
+    "duration_s": 66.342,
+    "file": "shot04.wav"
+  },
+  {
+    "id": "shot05",
+    "duration_s": 127.204,
+    "file": "shot05.wav"
+  },
+  {
+    "id": "shot06",
+    "duration_s": 86.315,
+    "file": "shot06.wav"
+  },
+  {
+    "id": "shot07",
+    "duration_s": 2.601,
+    "file": "shot07.wav"
+  }
+]

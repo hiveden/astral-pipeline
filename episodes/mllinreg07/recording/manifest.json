@@ -1,0 +1,29 @@
+{
+  "episode_id": "mllinreg07",
+  "source_episode": "e06-梯度下降思想",
+  "synced_at": "2026-05-07T09:19:43Z",
+  "shots": {
+    "shot06": {
+      "duration_s": 52.633,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 52.664,
+      "duration_diff_ms": 31.0,
+      "file": "shot06.mp4"
+    },
+    "shot07": {
+      "duration_s": 68.0,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 68.029,
+      "duration_diff_ms": 29.0,
+      "file": "shot07.mp4"
+    }
+  }
+}

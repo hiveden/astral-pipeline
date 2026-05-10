@@ -1,0 +1,34 @@
+{
+  "episode_id": "mllinreg05",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 78.282,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "states": [
+        {
+          "id": "s1",
+          "shot": "A",
+          "cue": "先看镜头 A 向量",
+          "start_s": 6.248
+        },
+        {
+          "id": "s2",
+          "shot": "B",
+          "cue": "切到镜头 B 矩阵乘",
+          "start_s": 35.111
+        },
+        {
+          "id": "s3",
+          "shot": "C",
+          "cue": "最后切到镜头 C LR 预演",
+          "start_s": 61.555
+        }
+      ]
+    }
+  }
+}

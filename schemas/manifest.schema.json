@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://astral-pipeline/schemas/manifest.schema.json",
+  "title": "episodes/<id>/manifest.json",
+  "description": "Per-episode authoritative manifest. Each writer (script-harness, tts-harness, ai-engineer-roadmap) updates only its own raw.<sub> segment using read-modify-write + atomic rename. consistency segment is computed by .bin/recompute-consistency.",
+  "type": "object",
+  "required": ["schema_version", "episode", "raw", "consistency"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": {
+      "type": "string",
+      "enum": ["1"],
+      "description": "Bumped on breaking schema changes."
+    },
+    "episode": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Episode id (e.g. mldtree03)."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "raw": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "script": { "$ref": "#/$defs/scriptSeg" },
+        "tts": { "$ref": "#/$defs/ttsSeg" },
+        "recording": { "$ref": "#/$defs/recordingSeg" }
+      }
+    },
+    "consistency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tts_stale": {
+          "type": "boolean",
+          "description": "true when tts.based_on_script_sha != raw.script.sha256."
+        },
+        "tts_stale_reason": { "type": "string" },
+        "recording_stale": { "type": "boolean" },
+        "recording_stale_reason": { "type": "string" },
+        "actionable": {
+          "type": "string",
+          "description": "Human-readable suggested action when any *_stale flag is true."
+        },
+        "computed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pending_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Cross-party action that should happen but hasn't, e.g. 'script-harness:create'."
+      }
+    },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "scriptSeg": {
+      "type": "object",
+      "required": ["version", "sha256"],
+      "properties": {
+        "version": { "type": "string", "format": "date-time" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "exported_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "ttsSeg": {
+      "type": "object",
+      "required": ["version", "sha256", "based_on_script_sha"],
+      "properties": {
+        "version": { "type": "string", "format": "date-time" },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Aggregate sha (e.g. of subtitles.json + durations.json contents)."
+        },
+        "based_on_script_sha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "raw.script.sha256 at the moment tts was generated."
+        }
+      },
+      "additionalProperties": false
+    },
+    "recordingSeg": {
+      "type": "object",
+      "required": ["version", "sha256"],
+      "properties": {
+        "version": { "type": "string", "format": "date-time" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "based_on_script_sha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

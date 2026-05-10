@@ -1,0 +1,72 @@
+{
+  "title": "KNN 第 11b 期 · 网格搜索 + 手写数字识别 + KNN 章总结",
+  "description": "把 CV 套外层循环就是网格搜索：穷举所有超参组合，每组用 CV 评分挑最高。sklearn GridSearchCV 三件套 + Pipeline 防数据泄漏 + 维度爆炸成本。综合实战手写数字识别。整章 KNN 收束：核心一个找邻居、变种两个分类投票回归平均、三大问题、三件套、缩放、超参搜索。下一站逻辑回归。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 1320,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "接 e11a：CV 评分 + 外层循环自动化",
+      "text": "上一期我们解决了评分可信问题——交叉验证给一组超参打一个稳定分数。但选最优 k 还需要再走一步：让 k 跑过候选清单，每个 k 跑一次 CV，挑得分最高的那个。这一步如果 sklearn 自动化，我们写两行代码就能搞定。这一期讲的就是网格搜索 GridSearchCV，CV 嵌套到外层超参循环里，一行调用拿最优组合。讲完工具就上综合实战：手写数字识别——这一期也是 KNN 章节最后一期，我们会做整章总结。",
+      "notes": "~165字。\n[src: 05-hyperparameter/02-网格搜索.md]\n\ntitle \"网格搜索 GridSearchCV：CV 套外层循环自动化\"\nbody \"e11a 给评分 → e11b 自动挑最优\"\nfigure \"标题卡：第 11b 期 · 网格搜索 + 手写数字 + KNN 章总结\"\nbody \"本期也是 KNN 最后一期 → 整章收束\""
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "网格搜索本质：穷举 + 网格表",
+      "text": "先说网格搜索的思想，名字唬人本质就是穷举。类比试衣服：一件件试，每件再各角度照镜子定夺。每件衣服等于一组超参，照镜子等于这组超参的 CV 评分。网格这个名字的来历也很直接：把多个超参的候选值摆成表格，每个格子是一组组合。一维网格最简单，比如 k 取 1、3、5、7、9、11，6 个格子排成一行。二维网格再加一维，比如距离度量 metric 取 euclidean 和 manhattan 两个值，6 乘 2 等于 12 个格子排成一张二维表。每加一个超参就多一个维度，格子数线性维度但乘起来——这就是网格的几何来源。每个格子要跑一次完整 CV——所以总训练次数等于格子数乘以 CV 折数。前面单超参 1 维 6 格 cv=5，总训练次数就是 6 乘 5 等于 30 次。",
+      "notes": "~290字。\n[src: 05-hyperparameter/02-网格搜索.md 直觉段]\n\ntitle \"网格搜索 = 穷举 + 表格化\"[本质]\nquote \"试衣服：一件件试，每件再照镜子\"[类比]\nfigure \"1 维网格：6 个格子横排\"\nfigure \"2 维网格：6×2=12 个格子方阵\"\nformula \"总训练次数 = 格子数 × CV 折数\"[公式]\nbody \"6 格 × cv=5 = 30 次训练\""
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "维度爆炸 + 训练次数公式",
+      "text": "网格搜索看上去很美，但有一个工程上必须警惕的代价叫维度爆炸。来看几个数字。单超参 k 取 6 个值乘以 cv=4，总训练 24 次。加一维 metric 取 2 个值，6 乘 2 乘 4 等于 48 次。再加一维 weights 取 uniform 和 distance，6 乘 2 乘 2 乘 4 等于 96 次。如果你贪心一点，3 个超参各取 10 个值再用 cv=10——10 乘 10 乘 10 乘 10 等于 10000 次训练。线性加超参带来指数级增长——超参数一多，网格搜索就跑不动。鸢尾花数据集小训练快，每次几毫秒，跑 180 次 1 秒搞定；换成大数据集像 MNIST 60000 张图片训练 1 折要数分钟，180 次跑半天。所以工程上有几个替代方案这里点名不展开：粗调加细调两段策略，先在大跨度稀疏值上找区域、再在该区域密集采样；RandomizedSearchCV 随机采样而非穷举；贝叶斯优化用历史评分指导下一次采哪里。这些后续优化章节会展开，本期记住名字就行。",
+      "notes": "~340字。\n[src: 05-hyperparameter/02-网格搜索.md 维度爆炸段]\n\ntitle \"维度爆炸：线性加超参 → 指数级训练\"[警示]\nfigure \"4 行表格：1 维 24 / 2 维 48 / 3 维 96 / 三维 10×cv10 → 10000\"\nformula \"总训练次数 = n_folds × ∏ cᵢ（每个超参的候选数相乘）\"\nbody \"小数据 ms 级 / MNIST 数分钟级 / 线性变指数\"\nbody \"替代方案点名（不展开）：粗细两段 / RandomizedSearchCV / 贝叶斯优化\"[术语]"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "sklearn GridSearchCV 三件套 + Pipeline 双下划线",
+      "text": "工具上 sklearn 把网格搜索封装成 GridSearchCV，3 个核心参数：估计器对象、参数搜索字典、cv 折数。fit 一下就跑完整个网格。结果有 3 个属性最常用，俗称三件套：best_score 是最优 CV 得分，best_params 是最优超参组合一个字典，best_estimator 是已经用全训练集重训过的最优模型，可以直接调 predict。这里要讲一个 sklearn 的命名机制叫 Pipeline 双下划线。前面 e10 标准化和训练分两步写，到了网格搜索这里推荐用 Pipeline 把这些步骤串成一个对象。比如 Pipeline 里第 1 步起名 std 装 StandardScaler、第 2 步起名 knn2 装 KNeighborsClassifier。要在网格里调 KNN 的 n_neighbors，参数字典写成 knn2 双下划线 n_neighbors。这个机制告诉 sklearn 我要调的是 knn2 这一步的 n_neighbors——一个 Pipeline 可能多步骤同名，双下划线消除歧义。",
+      "notes": "~365字。\n[src: 05-hyperparameter/02-网格搜索.md 代码落地段]\n\ntitle \"GridSearchCV 三件套：最优分 / 最优参 / 最优模型\"[API]\nfigure \"代码片段：GridSearchCV(pipe, param_dict, cv=5).fit(X_train, y_train)\"\nformula \"三件套：gs.best_score_ / gs.best_params_ / gs.best_estimator_\"[属性]\ntitle \"Pipeline 双下划线命名\"[机制]\nbody \"Pipeline([('std', StandardScaler()), ('knn2', KNeighborsClassifier())])\"\nformula \"param_dict = {'knn2__n_neighbors': [1,3,5,7,9,11]}  # knn2 + __ + 参数名\"[语法]\nquote \"双下划线：精确告诉 sklearn 调哪一步的哪个参数\"[关键]"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "Pipeline 防数据泄漏",
+      "text": "为什么标准化必须包进 Pipeline，不能在 CV 之前手动 fit_transform？这是一个常见的工程错误，叫数据泄漏 data leakage 的一种。看错误做法：先在整个训练集上 fit_transform 算出均值和方差，然后把标准化后的数据丢给 cross_val_score。表面上没毛病——CV 切出来的训练折和验证折数据都已经是标准化的了。但仔细想：那一组均值方差是用整个训练集算的，验证折的数据在算 fit 时也参与了——CV 评分会偏乐观，因为验证折和训练折共享了一组统计量。正确做法是把 StandardScaler 包进 Pipeline。这样网格搜索每跑一折，Pipeline 自动只在该折的训练折 fit_transform 算均值方差，再用同一组参数 transform 验证折——干净、无泄漏，每折独立。这条规则适用于所有有 fit transform 区分的预处理步骤，不只是标准化。",
+      "notes": "~340字。\n[src: 05-hyperparameter/02-网格搜索.md Pipeline 防泄漏段]\n\ntitle \"数据泄漏 data leakage：CV 前 fit_transform 是隐蔽 bug\"[警示]\nfigure \"对比图：错=整个训练集 fit → 验证折偷看 vs 对=Pipeline 每折独立 fit\"\nbody \"错：CV 前 fit_transform → CV 评分偏乐观\"\nbody \"对：Pipeline 包起来 → 每折训练折 fit + 验证折 transform，独立\"\nquote \"规则适用于所有 fit/transform 预处理，不只标准化\"[扩展]"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "Demo · GridSearchCV 热力图",
+      "text": "回到 demo 切到第 2 个 tab。这是 GridSearchCV 在鸢尾花上跑完的结果热力图。3 个维度：n_neighbors 从 1 到 29 取 9 个值，weights 取 uniform 和 distance，p 取 1 和 2——p=1 曼哈顿、p=2 欧氏。一共 36 组超参。CV 折数 5——总训练 180 次。图上 4 行 9 列，行是 weights 加 p 的 4 种组合，列是 k 值，每格颜色对应 5 折 CV 准确率，色深越深越准。横向看：k=1 波动大容易被噪声影响；k 适中 5 到 15 是平台期；k 太大比如 29 开始下降。纵向看：distance 加权一般略好或持平 uniform；p=1 和 p=2 在 iris 上差距很小。最优组合在 distance 加权、p=2、k=9，CV 准确率 0.967。代码读出来就是 best_params 字典告诉你最优超参，best_score 告诉你这组得分，best_estimator 给你已经用全训练集重训过的模型直接 predict。",
+      "notes": "~395字。\nB demo 录屏段。\n[src: 05-hyperparameter/demos/01-cv-gridsearch.py · Tab 2]\n\ndemo: 05-hyperparameter/demos/01-cv-gridsearch.py · Tab 2\nstates: tab2-intro → tab2-best\nexpect (tab2-intro): 4 行 × 9 列热力图渲染完成 · 右下方有 best_params 文字\nexpect (tab2-best):  hover 最优格子（distance·p=2, k=9）· tooltip 显示 0.967\n\n录屏注意：seg 7 → seg 8 切 tab 时建议留 1-2s 静帧停顿，让观众消化数字识别结尾再进章末总结。\n\ncue 词:\n  \"切到第 2 个 tab\"   → 进入 state tab2-intro\n  \"最优组合在 distance 加权\"  → hover 最优格 → state tab2-best\n\ntitle \"36 组热力图：横看 k / 纵看 weights·p\"[实测]\nfigure \"热力图：4 行（uniform·p=1 / uniform·p=2 / distance·p=1 / distance·p=2）× 9 列 k\"\nbody \"36 组 × cv=5 = 180 次训练\"\nbody \"最优 = distance, p=2, k=9 · CV 准确率 0.967\"\nbody \"三件套：best_score_ / best_params_ / best_estimator_\""
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "Demo · 手写数字识别",
+      "text": "切到第 3 个 tab 是综合实战手写数字识别。数据用 sklearn 自带 load_digits，1797 张 8 乘 8 像素灰度图，每张是 0 到 9 中的一个数字。8 乘 8 是简化版，原始 MNIST 是 28 乘 28 共 784 像素。喂给 KNN 很直接：8 乘 8 展平成 64 维向量，每个像素灰度值就是一个特征。整张图就是 64 维特征空间里的一个点。距离用欧氏，KNN 找最近 3 个邻居加权投票。看 UI：拖样本编号，左边是测试样本 8 乘 8 灰度图，标题写真实标签和预测标签。右边 predict_proba 概率柱状图 10 个类，绿色那根是真实类。下方 top 3 邻居训练集里最近 3 张缩略图，每张写标签和距离。挑预测对的：proba 集中在一根，top 3 邻居标签全和真实一致。再挑预测错的，比如把样本编号拖到 310 号——这是测试集里一张真实标签为 8 但被预测成 1 的图：proba 出现明显双峰，1 占 0.69、8 占 0.31，top 3 邻居里既有 1 也有 8——前两近的训练样本都是 1，第 3 近才是 8，加权投票被前两个 1 拉过去了。肉眼看这张 8 写得偏瘦、上下两圈没拉开，难怪 KNN 看混了。1797 张图切出 1347 张训练 450 张测试，最后整个测试集准确率 0.9844——450 张里只错 7 张。KNN 没学任何深度特征，单凭像素欧氏距离能到这个程度——接近 98%。深度学习时代之前，KNN 一直是 MNIST 的强基线。",
+      "notes": "~450字。\nB demo 录屏段。\n[src: 05-hyperparameter/demos/01-cv-gridsearch.py · Tab 3]\n\nseg 7 字数 ~450 偏长，注意 TTS 时段落断点：\"挑一个预测对的看\" 处可设为自然停顿。\n\ndemo: 05-hyperparameter/demos/01-cv-gridsearch.py · Tab 3\nstates: tab3-intro → tab3-correct → tab3-wrong\nexpect (tab3-intro):   pick=0 · 主图显示 8×8 数字 · 真实=Y / 预测=Y ✓ · proba 单峰\nexpect (tab3-correct): pick=2 或其他 · 仍然预测对\nexpect (tab3-wrong):   pick=310（真=8 预=1，proba {1:0.689, 8:0.311} 双峰）· 预测 ✗ · top-3 邻居标签 [1, 1, 8]（前两近=1 拉走加权投票，第 3 近才=8）\n                       全部 7 个错分编号备查（实测 random_state=42）：25 / 194 / 239 / 240 / 242 / 255 / 310；测试集大小 450，训练集 1347，最终 acc = 0.9844\n                       注：pick=25 虽也错（真=8 预=1）但 top-3 全是 1、proba 单峰 1.000，不适合演示\"多峰\"；pick=310 才是真双峰\n\n录屏注意：seg 7 → seg 8 切场建议留 1-2s 静帧停顿。\n\ncue 词:\n  \"切到第 3 个 tab\"            → 进入 state tab3-intro\n  \"挑一个预测对的看\"             → 切换到 state tab3-correct\n  \"再挑预测错的，比如把样本编号拖到 310 号\"  → 切换到 state tab3-wrong\n\ntitle \"手写数字识别：64 维 KNN 0.9844\"[实战]\nbody \"load_digits 8×8 简化版（原 MNIST 28×28 = 784 维）\"\nbody \"图展平成 64 维向量 → 欧氏距离 → top-3 邻居加权投票\"\nfigure \"主图（8×8 灰度）+ proba 柱状图 + top-3 邻居缩略图\"\nquote \"KNN 没学任何深度特征，单凭像素距离 ~98% — 低维清晰任务的强基线\"[金句]"
+    },
+    {
+      "id": 8,
+      "type": "content",
+      "topic": "整章 KNN 收束",
+      "text": "工具讲完，做整章 KNN 的总结。从第 1 期到这一期，全部内容浓缩成一张图。核心算法只有一个：找 K 个最近邻。变种两个：分类投票预测离散类别，回归平均预测连续数字。围绕这个算法有三大问题。第一距离怎么算，欧氏距离公式族——一维数字差、二维勾股、N 维平方和开方；第 6 期展开了曼哈顿、切比雪夫、闵可夫斯基整个距离家族。第二 K 取多少，K 太小独裁过拟合贴噪声、K 太大全民投票绑架欠拟合，中段平台期任意挑，经验值约根号 N。第三决策边界长啥样，全平面预测地图——K=1 扭成噪声孤岛、K 适中平滑分界、K=N 整张图退化成多数类。sklearn 三大组件：KNeighborsClassifier 分类、KNeighborsRegressor 回归、GridSearchCV 调超参——这三个叫 sklearn 提供的工具，区别于 e04 / e05 学的 fit、predict、score 那三个动作。预处理纪律：归一化和标准化让量纲悬殊的特征对齐，标准化在训练集 fit 测试集 transform 防数据泄漏。超参搜索完整方案：CV 给可信评分加网格搜索做完整组合搜索。一句话整章：KNN 看 K 个最近邻——核心一个找邻居，变种两个分类投票回归平均，调参靠 CV 加网格搜索。",
+      "notes": "~440字。\n\nseg 8 是整个 KNN 章节最重的一段，A 段动画密度要高。注意 ~440 字偏长，TTS 时段落断点设在三大问题三个分号处。\n\ntitle \"整章 KNN 收束：一张图\"[终章]\nfigure \"思维导图分 6 区：核心 1 / 变种 2 / 三大问题（距离/K/边界）/ sklearn 三件套 / 缩放预处理 / 超参搜索\"\nbody \"核心：找 K 个最近邻\"\nbody \"变种：分类投票 / 回归平均\"\nbody \"问题 1：距离 = 欧氏 + 曼哈顿 + 切比雪夫 + 闵可夫斯基\"\nbody \"问题 2：K 取多少 = 避两端 / 平台期 / 约 √N\"\nbody \"问题 3：决策边界 = K=1 噪声孤岛 / K 适中平滑 / K=N 多数类\"\nbody \"sklearn 三大组件（区别于 e04/e05 的 fit/predict/score API 三件套）：KNeighborsClassifier / KNeighborsRegressor / GridSearchCV\"\nbody \"缩放：归一化 + 标准化（量纲对齐 + 防泄漏）\"\nbody \"超参搜索：CV + 网格搜索\"\nquote \"KNN 看 K 个最近邻 — 核心一个找邻居，变种两个分类投票回归平均，调参靠 CV 加网格搜索\"[金句]"
+    },
+    {
+      "id": 9,
+      "type": "cta",
+      "topic": "下一站第 2 章 LR 预告 + 章节告别",
+      "text": "这一期到这。这一期讲清楚的：网格搜索本质是穷举加 CV 评分、维度爆炸的训练次数公式、GridSearchCV 三件套、Pipeline 双下划线、Pipeline 防数据泄漏，加上手写数字综合实战。这一期点到没展开的：RandomizedSearchCV 和贝叶斯优化作为替代方案，留给后续模型优化章节；嵌套交叉验证 nested CV，复杂调参场景用，本章不需要。KNN 章节到这一期就完整了。下一站第 2 章逻辑回归 logistic regression 简称 LR。从 KNN 到 LR 思路有一个明显变化：KNN 没有训练阶段，整个数据集就是模型本身，预测时算距离遍历找邻居；LR 是真正学一个数学模型，训练阶段把数据浓缩成几个权重参数，预测时只做一次点积。KNN 把整个数据集当模型，LR 把数据浓缩成几个权重参数——后面学的算法基本都是后一种。02 章会展开过拟合、欠拟合、偏差方差权衡这一组前面提到没展开的几个概念，也会引入梯度下降、损失函数——KNN 时代的直觉描述会被严格定义替换。如果讲得有不对的地方，欢迎在评论区指正。下期见。",
+      "notes": "~400字。\n\nseg 9 是 KNN 章节最后一段口播，结构：\n1. 这一期讲清楚的（5 件 + 实战）\n2. 这一期点到没展开的：\n   - RandomizedSearchCV / 贝叶斯优化 → 后续模型优化章\n   - nested CV → 不需要\n3. KNN 章告别 + 下一站预告（第 2 章 LR）\n4. KNN → LR 范式转变：惰性学习 → 参数化模型（这是兑现 e02 lazy learner 推迟，第 1 章末已经在 e03 cta 提过 \"sklearn API 章节\"，这里再次明确兑现）\n5. 02 章会展开 e02 留下的过拟合 / bias-variance / 学习曲线 / 损失函数 / 梯度下降\n6. cta（欢迎指正）\n\n避免重复前期 cta 已列的推迟项。\n\ntitle \"E11b 概念地图 + KNN 章告别\"[收敛]\nfigure \"双栏图：左=讲清楚的 / 右=没展开的（RandomizedSearchCV / nested CV）\"\nfigure \"KNN → LR 范式转变图：惰性学习（数据集本身就是模型） vs 参数化模型（数据 → 权重）\"\nbody \"02 章预告：过拟合 / 欠拟合 / 偏差方差权衡 / 梯度下降 / 损失函数 / 决策面严格定义\"\nquote \"KNN 章告别：核心一个找邻居，变种两个分类投票回归平均，调参靠 CV 加网格搜索\"[整章]\nquote \"如果讲得有不对的地方，欢迎在评论区指正\"[结尾]"
+    }
+  ]
+}

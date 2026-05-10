@@ -1,0 +1,123 @@
+#!/usr/bin/env node
+// Create a new episode skeleton in astral-pipeline/episodes/<id>/
+// and (unless --offline) register it in script-agent-harness via POST /api/episodes.
+
+const fs = require('node:fs');
+const path = require('node:path');
+const { PIPELINE_ROOT, loadSeries, validateEpisodeId } = require('./_lib/episode-id.js');
+
+const TEMPLATE_DIR = path.join(PIPELINE_ROOT, '.templates', 'empty-episode');
+const EPISODES_DIR = path.join(PIPELINE_ROOT, 'episodes');
+const SCRIPT_HARNESS_URL = process.env.SCRIPT_HARNESS_URL || 'http://localhost:3000';
+
+function parseArgs(argv) {
+  const args = { id: null, offline: false, scriptHarnessUrl: SCRIPT_HARNESS_URL };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--offline') args.offline = true;
+    else if (a === '--script-harness-url') args.scriptHarnessUrl = argv[++i];
+    else if (a === '-h' || a === '--help') {
+      printHelp();
+      process.exit(0);
+    } else if (!a.startsWith('-') && !args.id) args.id = a;
+    else die(`unknown arg: ${a}`);
+  }
+  return args;
+}
+
+function printHelp() {
+  console.log(`Usage: new-episode <id> [--offline] [--script-harness-url URL]
+
+Create episodes/<id>/ from .templates/empty-episode/, fill manifest.episode,
+and (unless --offline) POST {id} to <script-harness-url>/api/episodes.
+
+env: SCRIPT_HARNESS_URL (default ${SCRIPT_HARNESS_URL})`);
+}
+
+function die(msg, code = 1) {
+  console.error(`new-episode: ${msg}`);
+  process.exit(code);
+}
+
+function copyDirSync(src, dst) {
+  fs.mkdirSync(dst, { recursive: true });
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const s = path.join(src, entry.name);
+    const d = path.join(dst, entry.name);
+    if (entry.isDirectory()) copyDirSync(s, d);
+    else if (entry.isFile()) fs.copyFileSync(s, d);
+  }
+}
+
+function atomicWriteJson(file, obj) {
+  const tmp = `${file}.tmp`;
+  fs.writeFileSync(tmp, `${JSON.stringify(obj, null, 2)}\n`);
+  fs.renameSync(tmp, file);
+}
+
+async function postToScriptHarness(url, id) {
+  const res = await fetch(`${url}/api/episodes`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`HTTP ${res.status}: ${body.slice(0, 200)}`);
+  }
+}
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+  if (!args.id) die('missing <id> (try --help)');
+
+  const registry = loadSeries();
+  const v = validateEpisodeId(args.id, registry);
+  if (!v.ok) die(`invalid id: ${v.reason}`);
+
+  const targetDir = path.join(EPISODES_DIR, args.id);
+  if (fs.existsSync(targetDir)) die(`already exists: ${path.relative(PIPELINE_ROOT, targetDir)}`);
+
+  // Refuse if same id already exists in legacy root location.
+  const legacyDir = path.join(PIPELINE_ROOT, args.id);
+  if (fs.existsSync(legacyDir)) {
+    die(`legacy episode already exists at root: ${args.id}/ (move it into episodes/ first)`);
+  }
+
+  copyDirSync(TEMPLATE_DIR, targetDir);
+
+  const manifestPath = path.join(targetDir, 'manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.episode = args.id;
+  manifest.created_at = new Date().toISOString();
+  if (args.offline) {
+    manifest.pending_actions = [...(manifest.pending_actions || []), 'script-harness:create'];
+  }
+  atomicWriteJson(manifestPath, manifest);
+
+  const summary = {
+    id: args.id,
+    series: v.kind === 'legacy_outlier' ? 'legacy_outlier' : v.series.name,
+    kind: v.kind,
+    path: path.relative(PIPELINE_ROOT, targetDir),
+    script_harness: args.offline ? 'skipped (--offline)' : 'pending',
+  };
+
+  if (!args.offline) {
+    try {
+      await postToScriptHarness(args.scriptHarnessUrl, args.id);
+      summary.script_harness = 'created';
+    } catch (err) {
+      const m = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      m.pending_actions = [...(m.pending_actions || []), 'script-harness:create'];
+      m.notes = `script-harness POST failed: ${err.message}`;
+      atomicWriteJson(manifestPath, m);
+      summary.script_harness = `FAILED (${err.message}) — recorded in pending_actions`;
+    }
+  }
+
+  console.log('created');
+  for (const [k, v2] of Object.entries(summary)) console.log(`  ${k.padEnd(16)} ${v2}`);
+}
+
+main().catch((err) => die(err.stack || err.message || String(err)));

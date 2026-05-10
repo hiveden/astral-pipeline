@@ -1,0 +1,93 @@
+{
+  "$schema": "./series.schema.json",
+  "version": "1",
+  "series": [
+    {
+      "name": "meta",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Meta-content episodes (overview/foundations)"
+    },
+    {
+      "name": "flash",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Short-form flash insights"
+    },
+    {
+      "name": "brief",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Brief topical episodes"
+    },
+    {
+      "name": "show",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Showcase / demo episodes"
+    },
+    {
+      "name": "run",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Hands-on run-throughs"
+    },
+    {
+      "name": "core",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Core concept deep-dives"
+    },
+    {
+      "name": "report",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Research / industry reports"
+    },
+    {
+      "name": "agui",
+      "naming": "single",
+      "writers": ["script-agent-harness", "tts-agent-harness"],
+      "enabled": true,
+      "description": "Agent UI / interaction episodes"
+    },
+    {
+      "name": "ml",
+      "naming": "series-algo",
+      "writers": ["script-agent-harness", "tts-agent-harness", "ai-engineer-roadmap"],
+      "enabled": true,
+      "description": "Machine learning algorithm episodes (e.g. mldtree03, mlbayes01)"
+    },
+    {
+      "name": "dl",
+      "naming": "series-algo",
+      "writers": ["script-agent-harness", "tts-agent-harness", "ai-engineer-roadmap"],
+      "enabled": true,
+      "description": "Deep learning algorithm episodes"
+    },
+    {
+      "name": "llm",
+      "naming": "series-algo",
+      "writers": ["script-agent-harness", "tts-agent-harness", "ai-engineer-roadmap"],
+      "enabled": true,
+      "description": "Large language model episodes"
+    }
+  ],
+  "legacy_outliers": [
+    {
+      "id": "e2eTest01",
+      "reason": "End-to-end test fixture predating series whitelist; do not delete"
+    },
+    {
+      "id": "pronunciation-test",
+      "reason": "TTS pronunciation calibration fixture; do not delete"
+    }
+  ]
+}

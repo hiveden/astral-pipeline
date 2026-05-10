@@ -1,0 +1,105 @@
+#!/usr/bin/env node
+// Validate astral-pipeline/schemas/series.json against schemas/series.schema.json.
+// Zero npm deps: handwritten subset of JSON Schema sufficient for this file.
+
+const fs = require('node:fs');
+const path = require('node:path');
+const { PIPELINE_ROOT, validateEpisodeId } = require('./_lib/episode-id.js');
+
+const ROOT = PIPELINE_ROOT;
+const DATA_PATH = path.join(ROOT, 'schemas', 'series.json');
+const SCHEMA_PATH = path.join(ROOT, 'schemas', 'series.schema.json');
+
+const errors = [];
+const fail = (msg) => errors.push(msg);
+
+function readJson(p) {
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch (err) {
+    fail(`cannot read/parse ${path.relative(ROOT, p)}: ${err.message}`);
+    return null;
+  }
+}
+
+const data = readJson(DATA_PATH);
+const schema = readJson(SCHEMA_PATH);
+if (!data || !schema) finish();
+
+const ALLOWED_WRITERS = new Set(
+  schema.$defs.seriesEntry.properties.writers.items.enum,
+);
+const ALLOWED_NAMING = new Set(
+  schema.$defs.seriesEntry.properties.naming.enum,
+);
+const NAME_RE = /^[a-z][a-z0-9]*$/;
+
+if (typeof data.version !== 'string' || data.version.length === 0) {
+  fail('top-level "version" must be a non-empty string');
+}
+
+if (!Array.isArray(data.series) || data.series.length === 0) {
+  fail('top-level "series" must be a non-empty array');
+} else {
+  const seenNames = new Set();
+  data.series.forEach((entry, i) => {
+    const where = `series[${i}]`;
+    if (!entry || typeof entry !== 'object') {
+      fail(`${where}: must be object`);
+      return;
+    }
+    if (typeof entry.name !== 'string' || !NAME_RE.test(entry.name)) {
+      fail(`${where}.name invalid (got ${JSON.stringify(entry.name)})`);
+    } else if (seenNames.has(entry.name)) {
+      fail(`${where}.name duplicated: ${entry.name}`);
+    } else {
+      seenNames.add(entry.name);
+    }
+    if (!ALLOWED_NAMING.has(entry.naming)) {
+      fail(`${where}.naming must be one of ${[...ALLOWED_NAMING].join('|')}`);
+    }
+    if (!Array.isArray(entry.writers) || entry.writers.length === 0) {
+      fail(`${where}.writers must be a non-empty array`);
+    } else {
+      entry.writers.forEach((w, j) => {
+        if (!ALLOWED_WRITERS.has(w)) {
+          fail(`${where}.writers[${j}] not allowed: ${w}`);
+        }
+      });
+      if (entry.writers.includes('astral-video')) {
+        fail(`${where}.writers MUST NOT include astral-video (consumer only)`);
+      }
+    }
+    if (typeof entry.enabled !== 'boolean') {
+      fail(`${where}.enabled must be boolean`);
+    }
+  });
+}
+
+if (data.legacy_outliers !== undefined) {
+  if (!Array.isArray(data.legacy_outliers)) {
+    fail('legacy_outliers must be array if present');
+  } else {
+    data.legacy_outliers.forEach((entry, i) => {
+      const where = `legacy_outliers[${i}]`;
+      if (!entry || typeof entry.id !== 'string' || !entry.id) {
+        fail(`${where}.id must be non-empty string`);
+      }
+      if (typeof entry.reason !== 'string' || !entry.reason) {
+        fail(`${where}.reason must be non-empty string`);
+      }
+    });
+  }
+}
+
+finish();
+
+function finish() {
+  if (errors.length === 0) {
+    console.log(`OK: schemas/series.json valid (${data.series.length} series, ${data.legacy_outliers?.length ?? 0} outliers)`);
+    process.exit(0);
+  }
+  console.error(`FAIL: schemas/series.json has ${errors.length} issue(s):`);
+  for (const e of errors) console.error(`  - ${e}`);
+  process.exit(1);
+}

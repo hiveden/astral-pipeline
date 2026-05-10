@@ -1,0 +1,46 @@
+{
+  "episode_id": "mllinreg11",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 84.363,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "states": [
+        {
+          "id": "s1",
+          "shot": "A",
+          "cue": "先看预设 A 欠拟合 degree 等于1",
+          "start_s": 16.08
+        },
+        {
+          "id": "s2",
+          "shot": "B",
+          "cue": "切到预设 B 刚好 degree 等于2",
+          "start_s": 25.527
+        },
+        {
+          "id": "s3",
+          "shot": "C",
+          "cue": "切到预设 C 微过拟合 degree 等于 5",
+          "start_s": 35.97
+        },
+        {
+          "id": "s4",
+          "shot": "D",
+          "cue": "再切预设 D 严重过拟合 degree 等于 12",
+          "start_s": 45.013
+        },
+        {
+          "id": "s5",
+          "shot": "E",
+          "cue": "最后切到 E 自定义模式",
+          "start_s": 66.215
+        }
+      ]
+    }
+  }
+}

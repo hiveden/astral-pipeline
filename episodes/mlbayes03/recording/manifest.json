@@ -1,0 +1,18 @@
+{
+  "episode_id": "mlbayes03",
+  "source_episode": "e03-情感分析实战",
+  "synced_at": "2026-05-08T07:34:50Z",
+  "shots": {
+    "shot07": {
+      "duration_s": 39.233,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 39.266,
+      "duration_diff_ms": 33.0,
+      "file": "shot07.mp4"
+    }
+  }
+}

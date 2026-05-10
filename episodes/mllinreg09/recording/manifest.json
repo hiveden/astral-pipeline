@@ -1,0 +1,59 @@
+{
+  "episode_id": "mllinreg09",
+  "source_episode": "e08-MAE-MSE-RMSE",
+  "synced_at": "2026-05-07T09:00:00Z",
+  "shots": {
+    "shot05": {
+      "file": "shot05.mp4",
+      "source_file": "/Users/xuelin/projects/ai-engineer-roadmap/01-ML/02-LR/scripts/_recording/output/e08_shot05.mp4",
+      "script": "/Users/xuelin/projects/ai-engineer-roadmap/01-ML/02-LR/scripts/_recording/e08_shot05.py",
+      "demo": "/Users/xuelin/projects/ai-engineer-roadmap/01-ML/02-LR/05-metrics/demos/metric-vs-outlier.py",
+      "tts": "/Users/xuelin/projects/astral-pipeline/mllinreg09/tts/shot05.wav",
+      "duration_s": 78.033333,
+      "target_duration_s": 78.043,
+      "duration_diff_ms": 9.7,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": "30/1",
+        "codec": "h264"
+      },
+      "audio": {
+        "codec": "aac"
+      },
+      "crop": "1280:720:320:0",
+      "cue_alignment": [
+        {
+          "name": "s1_no_outlier",
+          "subtitles": "shot05[10].start",
+          "time_s": 20.969,
+          "text": "先看预设无异常"
+        },
+        {
+          "name": "s2_mild_outlier",
+          "subtitles": "shot05[13].start",
+          "time_s": 26.364,
+          "text": "加入一个温和异常点"
+        },
+        {
+          "name": "s3_residual_table",
+          "subtitles": "shot05[17].start",
+          "time_s": 35.004,
+          "text": "我们切到残差表"
+        },
+        {
+          "name": "s4_ratio_panel",
+          "subtitles": "shot05[23].start",
+          "time_s": 47.895,
+          "text": "再把异常点推得更远"
+        },
+        {
+          "name": "s5_attribution",
+          "subtitles": "shot05[30].start",
+          "time_s": 63.1,
+          "text": "最后看归因"
+        }
+      ]
+    }
+  }
+}

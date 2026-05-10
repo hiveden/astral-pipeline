@@ -1,0 +1,25 @@
+{
+  "episode_id": "mlkmeans02",
+  "source_episode": "e02-KMeans-API",
+  "synced_at": "2026-05-08T07:45:18Z",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 44.733,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0
+      }
+    },
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 40.533,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0
+      }
+    }
+  }
+}

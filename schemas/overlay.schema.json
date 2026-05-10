@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://astral-pipeline/schemas/overlay.schema.json",
+  "title": "episodes/<id>/overlay/*.json",
+  "description": "Last-mile downstream patches (written by astral-video). Render = merge(raw, overlay). Overlay MUST NEVER trigger raw regeneration (especially tts re-run).",
+  "oneOf": [
+    { "$ref": "#/$defs/subtitlesPatch" },
+    { "$ref": "#/$defs/timingTweaks" }
+  ],
+  "$defs": {
+    "subtitlesPatch": {
+      "title": "subtitles.patch.json",
+      "type": "object",
+      "required": ["kind", "schema_version", "patches"],
+      "properties": {
+        "kind": { "const": "subtitles.patch" },
+        "schema_version": { "type": "string", "enum": ["1"] },
+        "patches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["segment_id", "field", "value"],
+            "properties": {
+              "segment_id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "References script.json segments[].id."
+              },
+              "field": {
+                "type": "string",
+                "enum": ["text", "start_ms", "end_ms"],
+                "description": "Which subtitle field to override."
+              },
+              "value": {
+                "description": "Replacement value. Type depends on field: string for text, integer milliseconds for start_ms/end_ms.",
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "integer", "minimum": 0 }
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "description": "Optional human note for why this patch was applied."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "timingTweaks": {
+      "title": "timing.tweaks.json",
+      "type": "object",
+      "required": ["kind", "schema_version", "tweaks"],
+      "properties": {
+        "kind": { "const": "timing.tweaks" },
+        "schema_version": { "type": "string", "enum": ["1"] },
+        "tweaks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["segment_id", "shift_ms"],
+            "properties": {
+              "segment_id": { "type": "string", "minLength": 1 },
+              "shift_ms": {
+                "type": "integer",
+                "description": "Milliseconds to shift this segment's subtitle display (positive = later, negative = earlier). Does not affect wav playback."
+              },
+              "reason": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

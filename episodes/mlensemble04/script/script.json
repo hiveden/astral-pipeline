@@ -1,0 +1,65 @@
+{
+  "title": "Ensemble 第 4 期 · RF API 与泰坦尼克 · 把两层随机跑进代码",
+  "description": "随机森林实战：讲 RandomForestClassifier 的 n_estimators、max_features、max_depth、bootstrap、oob_score 等关键参数，并用泰坦尼克生存预测串起清洗、训练、GridSearchCV 和特征重要性。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 1200,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "RF 思想变成 sklearn 参数",
+      "text": "上一期我们讲随机森林的两层随机：每棵树看不同样本，每个节点看部分特征。这一期把思想落到代码。sklearn 里对应的类叫 RandomForestClassifier。它看起来参数很多，但不用被吓到。真正需要先抓住的只有几类：森林里有多少棵树，分裂时看多少特征，单棵树要不要设深度刹车，是否开启 bootstrap，以及随机种子怎么固定。然后我们用泰坦尼克生存预测把流程跑通：处理缺失值和类别特征，训练随机森林，做网格搜索，再看特征重要性。注意，所有准确率都要以同一环境的真实结果为准；这里不写固定成绩。",
+      "notes": "~330字。\n[src: 02-rf/02-API.md; 02-rf/03-泰坦尼克实践.md]\n\ntitle \"RandomForestClassifier：两层随机的代码入口\"\nfigure \"思想 → 参数：样本随机 bootstrap；特征随机 max_features；树数量 n_estimators\"\nquote \"先抓住 3 个森林旋钮，再看树的刹车\"",
+      "text_tts": "上一期我们讲随机森林的两层随机：每棵树看不同样本，每个节点看部分特征。这一期把思想落到代码。S-K-learn 里对应的类叫 Random Forest Classifier。它看起来参数很多，但不用被吓到。真正需要先抓住的只有几类：森林里有多少棵树，分裂时看多少特征，单棵树要不要设深度刹车，是否开启 bootstrap，以及随机种子怎么固定。然后我们用泰坦尼克生存预测把流程跑通：处理缺失值和类别特征，训练随机森林，做网格搜索，再看特征重要性。注意，所有准确率都要以同一环境的真实结果为准；这里不写固定成绩。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "API 参数地图",
+      "text": "RandomForestClassifier 可以按 4 组理解。第一组是规模，n_estimators 决定森林里有多少棵树。树越多，投票越稳，但训练越慢，收益也会逐渐变小。第二组是随机性，bootstrap 控制是否有放回抽样，max_features 控制每个节点最多看多少候选特征。第三组是单棵树的刹车，比如 max_depth、min_samples_split、min_samples_leaf，它们和决策树里的含义一样，用来防止树长得过细。第四组是复现，random_state 固定随机过程，方便我们比较实验结果。起手配置可以很朴素：n_estimators 先用 100，分类任务 max_features 用 sqrt，bootstrap 保持 True，random_state 写固定值。",
+      "notes": "~390字。\n[src: 02-rf/02-API.md]\n\nfigure \"参数地图：规模 / 随机 / 刹车 / 复现\"\nbody \"n_estimators；max_features；bootstrap；max_depth；random_state\"\nquote \"RF 多出来的是森林旋钮，其余刹车沿用决策树\"",
+      "text_tts": "Random Forest Classifier 可以按 4 组理解。第一组是规模，n estimators 决定森林里有多少棵树。树越多，投票越稳，但训练越慢，收益也会逐渐变小。第二组是随机性，bootstrap 控制是否有放回抽样，max features 控制每个节点最多看多少候选特征。第三组是单棵树的刹车，比如 max depth、min samples split、min samples leaf，它们和决策树里的含义一样，用来防止树长得过细。第四组是复现，random state 固定随机过程，方便我们比较实验结果。起手配置可以很朴素：n estimators 先用 100，分类任务 max features 用 sqrt，bootstrap 保持 True，random state 写固定值。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "调参优先级",
+      "text": "调随机森林，不要一上来把所有参数塞进搜索表。先按优先级来。第一优先是 n_estimators，树太少时投票不稳，先拉到计算能接受的数量。第二优先是 max_features，它直接控制树之间差异。分类任务常用 sqrt，如果模型过拟合，可以适当减少候选特征，让树更不一样。第三优先才是 max_depth。随机森林本身靠集成降低方差，所以单棵树可以比普通决策树放得更开；但样本量大、特征多、训练很慢时，限制深度仍然有价值。最后才看 min_samples_split 和 min_samples_leaf 这种细刹车。还有一个版本坑：旧资料里常见 max_features 等于 auto，新版本 sklearn 已经不推荐，分类任务直接写 sqrt 更稳。",
+      "notes": "~400字。\n[src: 02-rf/02-API.md]\n\nfigure \"调参阶梯：n_estimators → max_features → max_depth → min_samples_*\"\nbody \"旧 auto 口径提示：分类写 sqrt，回归写 1.0\"\nquote \"先树数，再特征数，最后动深度\"",
+      "text_tts": "调随机森林，不要一上来把所有参数塞进搜索表。先按优先级来。第一优先是 n estimators，树太少时投票不稳，先拉到计算能接受的数量。第二优先是 max features，它直接控制树之间差异。分类任务常用 sqrt，如果模型过拟合，可以适当减少候选特征，让树更不一样。第三优先才是 max depth。随机森林本身靠集成降低方差，所以单棵树可以比普通决策树放得更开；但样本量大、特征多、训练很慢时，限制深度仍然有价值。最后才看 min samples split 和 min samples leaf 这种细刹车。还有一个版本坑：旧资料里常见 max features 等于 auto，新版本 S-K-learn 已经不推荐，分类任务直接写 sqrt 更稳。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "泰坦尼克流程",
+      "text": "接着看泰坦尼克生存预测。这个案例的任务是根据乘客信息预测是否生还。数据里既有数值特征，也有类别特征，还有缺失值。流程可以拆成 6 步：读入数据，删除明显无用或泄漏风险高的列，填补年龄和登船港口的缺失值，把性别和登船港口做编码，划分训练集和测试集，然后训练 RandomForestClassifier。这里随机森林的好处是，不需要像线性模型那样强依赖特征缩放，也能处理非线性特征组合。比如性别、船舱等级、票价、年龄之间可能有复杂交互，树模型能自然切出这些规则。这里先讲流程，不承诺具体准确率；真正运行时再用 score 和报告里的数字做评估。",
+      "notes": "~390字。\n[src: 02-rf/03-泰坦尼克实践.md]\n\nfigure \"泰坦尼克流程：读数据 → 清洗 → 编码 → 切分 → 训练 → 评估\"\nbody \"Sex / Embarked 编码；Age 缺失填补；RandomForestClassifier fit / score\"\nquote \"树模型天然适合处理非线性切分\"",
+      "text_tts": "接着看泰坦尼克生存预测。这个案例的任务是根据乘客信息预测是否生还。数据里既有数值特征，也有类别特征，还有缺失值。流程可以拆成 6 步：读入数据，删除明显无用或泄漏风险高的列，填补年龄和登船港口的缺失值，把性别和登船港口做编码，划分训练集和测试集，然后训练 Random Forest Classifier。这里随机森林的好处是，不需要像线性模型那样强依赖特征缩放，也能处理非线性特征组合。比如性别、船舱等级、票价、年龄之间可能有复杂交互，树模型能自然切出这些规则。这里先讲流程，不承诺具体准确率；真正运行时再用 score 和报告里的数字做评估。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "GridSearchCV 与特征重要性",
+      "text": "基础模型跑通后，再做两件事。第一件是 GridSearchCV。它会把我们给出的参数组合逐个试一遍，再用交叉验证比较表现。随机森林里最适合先搜的，是树的数量和最大深度，再加上 max_features。搜索空间不要太大，否则训练时间会膨胀。第二件是看特征重要性。随机森林训练完以后，会给出每个特征在分裂中贡献了多少不纯度下降。泰坦尼克里常见的强信号是性别、船舱等级、票价、年龄这类特征。注意，特征重要性不是因果解释。它只能说模型在这份数据和这组特征下，经常借助哪些列做切分。真正下业务结论时，还要结合数据采集过程和领域知识。",
+      "notes": "~360字。\n[src: 02-rf/03-泰坦尼克实践.md]\n\nfigure \"GridSearchCV 参数网格 + feature_importances_ 条形图\"\nbody \"n_estimators / max_depth / max_features；特征重要性不是因果解释\"\nquote \"调参找更稳的组合，重要性看模型常用哪些线索\"",
+      "text_tts": "基础模型跑通后，再做两件事。第一件是 Grid Search C-V。它会把我们给出的参数组合逐个试一遍，再用交叉验证比较表现。随机森林里最适合先搜的，是树的数量和最大深度，再加上 max features。搜索空间不要太大，否则训练时间会膨胀。第二件是看特征重要性。随机森林训练完以后，会给出每个特征在分裂中贡献了多少不纯度下降。泰坦尼克里常见的强信号是性别、船舱等级、票价、年龄这类特征。注意，特征重要性不是因果解释。它只能说模型在这份数据和这组特征下，经常借助哪些列做切分。真正下业务结论时，还要结合数据采集过程和领域知识。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "本期收束 + 进入 AdaBoost",
+      "text": "这一期把随机森林从思想落到了代码。我们先把 RandomForestClassifier 拆成几组参数：树的数量，候选特征数，bootstrap 开关，单树刹车，以及随机种子。然后用泰坦尼克案例串起数据清洗、类别编码、训练评估、网格搜索和特征重要性。随机森林这条线到这里基本完整了：它用并行的树、两层随机和平权投票，把高方差的决策树变成稳健基线。下一期开始，我们换到 boosting 路线。和随机森林的平权投票不同，AdaBoost 会让错样本变得更重要，也会让表现好的弱学习器话语权更大。也就是说，下一期开始，模型之间不再并行投票，而是串行接力。",
+      "notes": "~360字。\n[src: 02-rf/02-API.md; 02-rf/03-泰坦尼克实践.md]\n\nfigure \"RF 收束：parallel trees + two randomness + vote → AdaBoost：sequential reweighting\"\nquote \"bagging 线收束，boosting 线开始\"",
+      "text_tts": "这一期把随机森林从思想落到了代码。我们先把 Random Forest Classifier 拆成几组参数：树的数量，候选特征数，bootstrap 开关，单树刹车，以及随机种子。然后用泰坦尼克案例串起数据清洗、类别编码、训练评估、网格搜索和特征重要性。随机森林这条线到这里基本完整了：它用并行的树、两层随机和平权投票，把高方差的决策树变成稳健基线。下一期开始，我们换到 boosting 路线。和随机森林的平权投票不同，AdaBoost 会让错样本变得更重要，也会让表现好的弱学习器话语权更大。也就是说，下一期开始，模型之间不再并行投票，而是串行接力。"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用。",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

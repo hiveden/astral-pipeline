@@ -1,0 +1,25 @@
+{
+  "episode_id": "mlkmeans04",
+  "source_episode": "e04-SSE与肘部法",
+  "synced_at": "2026-05-08T07:45:18Z",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 38.567,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0
+      }
+    },
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 35.0,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0
+      }
+    }
+  }
+}

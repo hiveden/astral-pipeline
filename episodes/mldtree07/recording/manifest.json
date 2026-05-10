@@ -1,0 +1,12 @@
+{
+  "episode_id": "mldtree07",
+  "source_episode": "e07-Titanic工程实战",
+  "synced_at": "2026-05-08T06:58:01Z",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 42.567,
+      "video": {"width": 1280, "height": 720, "fps": 30}
+    }
+  }
+}

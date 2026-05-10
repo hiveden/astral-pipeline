@@ -1,0 +1,81 @@
+{
+  "title": "Ensemble 第 13 期 · XGBoost API 与红酒预测 · 多分类和不均衡收官",
+  "description": "XGBoost 工程实战：讲清安装、原生 API 与 sklearn 兼容 API、关键参数、早停、GPU 口径，并用红酒品质多分类处理类别不均衡。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 1320,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "公式里的旋钮，落到 XGBClassifier",
+      "text": "上一期我们推到了 XGBoost 的叶子值和分裂 Gain。现在把公式落到工程。γ 会变成 gamma，λ 会变成 reg_lambda，学习率会变成 learning_rate，树的数量会变成 n_estimators。和随机森林、GBDT 不同，XGBoost 不在 sklearn 里，需要单独安装 xgboost 包。装好以后，它既有自己的原生 API，也有 sklearn 兼容的 XGBClassifier。最后一期我们用红酒品质预测收官：3269 条数据，11 个特征，6 个品质类别，而且类别明显不均衡。这个任务比单纯调一个准确率更贴近真实项目，因为模型不只要会分中间档，还要照顾样本很少的好酒和差酒。",
+      "notes": "~390字。\n[src: 05-xgboost/03-API.md; 05-xgboost/04-红酒预测.md]\n\ntitle \"XGBClassifier 红酒多分类\"\nfigure \"公式参数 → API 参数 → 不均衡多分类 pipeline\"",
+      "text_tts": "上一期我们推到了 XGBoost 的叶子值和分裂 Gain。现在把公式落到工程。γ 会变成 gamma，λ 会变成 reg lambda，学习率会变成 learning rate，树的数量会变成 n estimators。和随机森林、G-B-D-T 不同，XGBoost 不在 S-K-learn 里，需要单独安装 xgboost 包。装好以后，它既有自己的原生 A-P-I，也有 S-K-learn 兼容的 XGB Classifier。最后一期我们用红酒品质预测收官：3269 条数据，11 个特征，6 个品质类别，而且类别明显不均衡。这个任务比单纯调一个准确率更贴近真实项目，因为模型不只要会分中间档，还要照顾样本很少的好酒和差酒。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "安装与两套 API",
+      "text": "第一件事是安装。XGBoost 是独立库，不在 sklearn.ensemble 里面，所以要先 pip install xgboost。使用时有两套接口。原生接口是 xgb.train 加 DMatrix，适合生产训练、大数据和更细的早停控制。sklearn 兼容接口是 XGBClassifier 和 XGBRegressor，fit、predict、score 的风格和 sklearn 模型一致，可以直接接 Pipeline、GridSearchCV 和交叉验证。教学和快速实验里，优先用 XGBClassifier，因为它和前面 RandomForestClassifier、AdaBoostClassifier、GradientBoostingClassifier 的调用方式保持一致。需要注意参数别名：原生接口常用 eta，sklearn 兼容接口常用 learning_rate；原生接口里的 lambda，在 sklearn 兼容接口里写 reg_lambda。",
+      "notes": "~430字。\n[src: 05-xgboost/03-API.md]\n\nfigure \"xgb.train + DMatrix vs XGBClassifier\"\nbody \"eta ↔ learning_rate；lambda ↔ reg_lambda\"",
+      "text_tts": "第一件事是安装。XGBoost 是独立库，不在 sklearn ensemble 里面，所以要先 pip install xgboost。使用时有两套接口。原生接口是 xgb train 加 DMatrix，适合生产训练、大数据和更细的早停控制。S-K-learn 兼容接口是 XGB Classifier 和 XGB Regressor，fit、predict、score 的风格和 S-K-learn 模型一致，可以直接接 Pipeline、Grid Search C-V 和交叉验证。教学和快速实验里，优先用 XGB Classifier，因为它和前面 Random Forest Classifier、AdaBoost Classifier、Gradient Boosting Classifier 的调用方式保持一致。需要注意参数别名：原生接口常用 eta，S-K-learn 兼容接口常用 learning rate；原生接口里的 lambda，在 S-K-learn 兼容接口里写 reg lambda。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "关键参数对应理论",
+      "text": "XGBClassifier 的核心参数可以按理论分组。n_estimators 是最多建多少棵树，通常配合早停，不一定全部用完。learning_rate 是每棵树输出的缩放，也就是前面说的步长。max_depth 控制单棵树最多分几层，过拟合时先考虑降深度。gamma 是分裂 Gain 里的叶子成本，越大，节点越不容易继续分裂。reg_lambda 是 L2 正则，控制叶子值不要太极端。subsample 是行采样比例，colsample_bytree 是列采样比例，用来防过拟合和提速。objective 指定任务类型，二分类常用 binary logistic，多分类可以用 multi softmax，回归可以用 reg squarederror。eval_metric 则决定验证集上看什么指标。",
+      "notes": "~420字。\n[src: 05-xgboost/03-API.md]\n\nfigure \"参数面板：n_estimators / learning_rate / max_depth / gamma / reg_lambda / subsample / colsample_bytree\"\nbody \"objective: binary:logistic / multi:softmax / reg:squarederror\"",
+      "text_tts": "XGB Classifier 的核心参数可以按理论分组。n estimators 是最多建多少棵树，通常配合早停，不一定全部用完。learning rate 是每棵树输出的缩放，也就是前面说的步长。max depth 控制单棵树最多分几层，过拟合时先考虑降深度。gamma 是分裂 Gain 里的叶子成本，越大，节点越不容易继续分裂。reg lambda 是 L2 正则，控制叶子值不要太极端。subsample 是行采样比例，colsample bytree 是列采样比例，用来防过拟合和提速。objective 指定任务类型，二分类常用 binary logistic，多分类可以用 multi softmax，回归可以用 reg squarederror。eval metric 则决定验证集上看什么指标。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "早停和 GPU 当前口径",
+      "text": "XGBoost 调参时，不建议死盯 n_estimators。常见做法是把 n_estimators 设大一点，比如 1000，再用 early_stopping_rounds 配合验证集。只要连续若干轮验证指标没有提升，训练就停止，预测时使用验证表现最好的轮次。这样比拍脑袋决定树数量更稳。GPU 口径也要按当前写法讲。旧资料里常见 tree_method 等于 gpu_hist，新版本更推荐 tree_method 等于 hist，再加 device 等于 cuda。没有 GPU 时，tree_method 等于 hist 也能用 CPU 直方图加速。注意，GPU 和早停都不是为了改变算法思想，而是为了更快、更稳地找到合适的树数量和分裂结构。",
+      "notes": "~390字。\n[src: 05-xgboost/03-API.md]\n\nfigure \"n_estimators=1000 → eval_set → early stopping → best_iteration\"\nbody \"GPU: tree_method='hist' + device='cuda'\"",
+      "text_tts": "XGBoost 调参时，不建议死盯 n estimators。常见做法是把 n estimators 设大一点，比如 1000，再用 early stopping rounds 配合验证集。只要连续若干轮验证指标没有提升，训练就停止，预测时使用验证表现最好的轮次。这样比拍脑袋决定树数量更稳。G-P-U 口径也要按当前写法讲。旧资料里常见 tree method 等于 gpu hist，新版本更推荐 tree method 等于 hist，再加 device 等于 cuda。没有 G-P-U 时，tree method 等于 hist 也能用 C-P-U 直方图加速。注意，G-P-U 和早停都不是为了改变算法思想，而是为了更快、更稳地找到合适的树数量和分裂结构。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "红酒数据：多分类与标签变换",
+      "text": "红酒品质案例有 3269 条数据，11 个特征，目标是品质等级。原始品质常见是 3 到 8 分，代码里会减 3，变成 0 到 5。这样做是为了符合多分类标签从 0 开始的习惯。模型使用 XGBClassifier，objective 设为 multi softmax，num_class 设为 6，eval_metric 可以用 merror。划分训练集和测试集时，一定要加 stratify 等于 y。原因是红酒品质类别不均衡，中间档样本多，极端好酒和差酒样本少。普通随机切分可能让某些少数类在测试集里比例异常，甚至数量太少，评估结果不稳定。分层切分能让训练集和测试集尽量保持相同类别比例。",
+      "notes": "~410字。\n[src: 05-xgboost/04-红酒预测.md]\n\nfigure \"3269 samples / 11 features / label 3-8 → 0-5 / stratified split\"\nbody \"objective='multi:softmax'；num_class=6；eval_metric='merror'\"",
+      "text_tts": "红酒品质案例有 3269 条数据，11 个特征，目标是品质等级。原始品质常见是 3 到 8 分，代码里会减 3，变成 0 到 5。这样做是为了符合多分类标签从 0 开始的习惯。模型使用 XGB Classifier，objective 设为 multi softmax，num class 设为 6，eval metric 可以用 merror。划分训练集和测试集时，一定要加 stratify 等于 y。原因是红酒品质类别不均衡，中间档样本多，极端好酒和差酒样本少。普通随机切分可能让某些少数类在测试集里比例异常，甚至数量太少，评估结果不稳定。分层切分能让训练集和测试集尽量保持相同类别比例。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "不均衡三板斧",
+      "text": "这个案例的重点不是只看 accuracy，而是处理不均衡。第一板斧是 sample_weight。用 compute_sample_weight 的 balanced 模式给训练样本分配权重，少数类样本权重大，多数类样本权重小，然后在 fit 时传 sample_weight。这样模型计算损失时会更重视少数类。第二板斧是 StratifiedKFold。做 GridSearchCV 时，用分层 K 折，保证每一折的类别比例更稳定。第三板斧是 scoring 选 f1_macro。accuracy 会被多数类主导，模型全猜中间档也可能看起来不错；macro F1 会对每个类别的 F1 做简单平均，少数类表现差会直接拉低总分。红酒品质这种任务，f1_macro 比 accuracy 更诚实。",
+      "notes": "~420字。\n[src: 05-xgboost/04-红酒预测.md]\n\nfigure \"sample_weight + StratifiedKFold + f1_macro\"\nquote \"不均衡任务里，accuracy 会掩盖少数类失败\"",
+      "text_tts": "这个案例的重点不是只看 accuracy，而是处理不均衡。第一板斧是 sample weight。用 compute sample weight 的 balanced 模式给训练样本分配权重，少数类样本权重大，多数类样本权重小，然后在 fit 时传 sample weight。这样模型计算损失时会更重视少数类。第二板斧是 Stratified K Fold。做 Grid Search C-V 时，用分层 K 折，保证每一折的类别比例更稳定。第三板斧是 scoring 选 f1 macro。accuracy 会被多数类主导，模型全猜中间档也可能看起来不错；macro F1 会对每个类别的 F1 做简单平均，少数类表现差会直接拉低总分。红酒品质这种任务，f1 macro 比 accuracy 更诚实。"
+    },
+    {
+      "id": 7,
+      "type": "content",
+      "topic": "调参与评估闭环",
+      "text": "完整训练可以分三步。第一步，先跑一个基础 XGBClassifier，拿到 classification_report，观察哪些类别 precision 和 recall 很低。第二步，加 sample_weight 重新训练，重点看少数类召回是否改善，而不是只看整体准确率。第三步，用 GridSearchCV 搜索 n_estimators、max_depth、learning_rate 等参数，交叉验证用 StratifiedKFold，评分用 f1_macro。这里同样不要提前写死一个最优分数。不同 xgboost 版本、数据文件、随机种子都会影响结果。判断原则是：如果 macro F1 上升，同时少数类召回变好，模型才是真的更适合这个任务。",
+      "notes": "~410字。\n[src: 05-xgboost/04-红酒预测.md]\n\nfigure \"baseline report → weighted fit → GridSearchCV → best model report\"\n\n3.5 复核：不写未实跑分类报告数字，录屏阶段再填充真实输出。",
+      "text_tts": "完整训练可以分三步。第一步，先跑一个基础 XGB Classifier，拿到 classification report，观察哪些类别 precision 和 recall 很低。第二步，加 sample weight 重新训练，重点看少数类召回是否改善，而不是只看整体准确率。第三步，用 Grid Search C-V 搜索 n estimators、max depth、learning rate 等参数，交叉验证用 Stratified K Fold，评分用 f1 macro。这里同样不要提前写死一个最优分数。不同 xgboost 版本、数据文件、随机种子都会影响结果。判断原则是：如果 macro F1 上升，同时少数类召回变好，模型才是真的更适合这个任务。"
+    },
+    {
+      "id": 8,
+      "type": "content",
+      "topic": "全章收束",
+      "text": "到这里，集成学习这一章就串完整了。第一条路线是 bagging，代表是随机森林：并行训练很多棵不同的树，通过投票或平均求稳。第二条路线是 boosting，先从 AdaBoost 开始：错样本权重变大，弱学习器按表现加权。再到 GBDT：不再传样本权重，而是传损失函数的负梯度，让下一棵树补上一轮的差。最后到 XGBoost：在 GBDT 上加入二阶导、正则项、分裂 Gain 和工程优化。实战上，先用随机森林拿基线，再根据精度、速度、可调性选择 GBDT 或 XGBoost。不要只背模型名字，要记住每条路线传递的信息是什么：随机森林传差异性，AdaBoost 传样本权重，GBDT 和 XGBoost 传梯度信息。",
+      "notes": "~430字。\n[src: 01-intro; 02-rf; 03-adaboost; 04-gbdt; 05-xgboost]\n\nfigure \"Ensemble map：Bagging → RF；Boosting → AdaBoost → GBDT → XGBoost\"\nquote \"看信息流，就能看懂集成模型的家族关系\"",
+      "text_tts": "到这里，集成学习这一章就串完整了。第一条路线是 bagging，代表是随机森林：并行训练很多棵不同的树，通过投票或平均求稳。第二条路线是 boosting，先从 AdaBoost 开始：错样本权重变大，弱学习器按表现加权。再到 G-B-D-T：不再传样本权重，而是传损失函数的负梯度，让下一棵树补上一轮的差。最后到 XGBoost：在 G-B-D-T 上加入二阶导、正则项、分裂 Gain 和工程优化。实战上，先用随机森林拿基线，再根据精度、速度、可调性选择 G-B-D-T 或 XGBoost。不要只背模型名字，要记住每条路线传递的信息是什么：随机森林传差异性，AdaBoost 传样本权重，G-B-D-T 和 XGBoost 传梯度信息。"
+    },
+    {
+      "id": 9,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用。",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

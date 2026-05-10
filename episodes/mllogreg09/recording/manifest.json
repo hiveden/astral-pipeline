@@ -1,0 +1,18 @@
+{
+  "episode_id": "mllogreg09",
+  "source_episode": "e06-ROC-AUC",
+  "synced_at": "2026-05-08T08:07:44Z",
+  "shots": {
+    "shot04": {
+      "duration_s": 53.967,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 53.993,
+      "duration_diff_ms": 26.0,
+      "file": "shot04.mp4"
+    }
+  }
+}

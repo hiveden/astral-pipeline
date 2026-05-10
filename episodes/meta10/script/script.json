@@ -1,0 +1,57 @@
+{
+  "title": "ThoughtWorks 技术雷达 Vol.34 速览",
+  "description": "第三十四期技术雷达四个主题速览：评估困难与语义扩散、工程纪律回归与认知债务、agent 安全、harness engineering。",
+  "style": "meta",
+  "target_duration_s": 223,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "开场",
+      "text": "ThoughtWorks 在四月十五日发布了第三十四期技术雷达。[pause]这份报告每半年一次，由全球高级技术顾问基于一线项目经验整理，不是市场分析，是实战总结。[long pause]这一期一共四个主题，全部围绕一个核心命题：[pause]在 AI 加速一切的当下，工程团队该坚持什么、放下什么。",
+      "notes": "~100字 实测 21.5s。\n[src: ^1 ^2 ^3]\n\n按语义分 4 段，整段作 excerpt（下游负责字符级时间对齐）：\n\n截图A：Radar 首页全貌，https://www.thoughtworks.com/radar\n  title \"ThoughtWorks 在四月十五日发布了第三十四期技术雷达。\"\n  body \"这份报告每半年一次，由全球高级技术顾问基于一线项目经验整理，不是市场分析，是实战总结。\"\n  body \"这一期一共四个主题，全部围绕一个核心命题：\"\n  body \"在 AI 加速一切的当下，工程团队该坚持什么、放下什么。\""
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "评估技术本身变难了",
+      "text": "雷达原话：在 agentic 时代评估技术，越来越困难。[long pause]一个原因是语义扩散——新概念冒出的速度，已经超过它们定义稳定的速度。[pause]spec-driven development、harness engineering，这些词大家都在用，但每个人用的意思不一样。没有共享定义，就很难判断我们看到的是真正不同的方法，还是同一件事的不同标签。[long pause]另一个原因是工具寿命太短。[pause]AI 把造工具的门槛拉到地板，雷达里有些工具上线还不到一个月，单人维护，刚火就死。如果让工具有时间成熟，建议会过时；动作太快，又在追风口。这本身就是 AI 时代的新困境。",
+      "notes": "~210字 实测 41.5s。\n[src: ^4 ^5 ^6]\n\n按语义分段，每段一条 region：\n\n截图A：themes 页 'The challenge of evaluating technology'，https://www.thoughtworks.com/radar\n  title \"雷达原话：在 agentic 时代评估技术，越来越困难。\"\n  body \"一个原因是语义扩散——新概念冒出的速度，已经超过它们定义稳定的速度。\"\n  body \"spec-driven development、harness engineering，这些词大家都在用，但每个人用的意思不一样。\"\n  body \"没有共享定义，就很难判断我们看到的是真正不同的方法，还是同一件事的不同标签。\"\n  body \"另一个原因是工具寿命太短。\"\n  body \"AI 把造工具的门槛拉到地板，雷达里有些工具上线还不到一个月，单人维护，刚火就死。\"\n  body \"如果让工具有时间成熟，建议会过时；动作太快，又在追风口。\"\n  body \"这本身就是 AI 时代的新困境。\""
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "守住原则，放下模式",
+      "text": "这是最反直觉的一个主题：AI 越快，老派工程纪律反而越值钱。[long pause]这一期雷达大量回归老东西——零信任架构、DORA 指标、变异测试、结对编程、clean code、可测试性。甚至连命令行都回潮了，agentic 工具把开发者重新拉回了终端。[long pause]但雷达明确说这不是怀旧，而是对 AI 速度的必要对冲。同时也要扔掉一些假设：团队怎么组织、反馈循环怎么设计，都得重新想。他们提了一个新词叫 agent 拓扑，跟团队拓扑并列。[long pause]这一切的根本焦虑是认知债务：[pause]AI 写的代码越来越多，人对系统的理解却在掉队。代码可能没问题，但你不知道你的系统里到底跑的是什么。[long pause]雷达原文那句金句值得抄下来——[pause]speed without discipline compounds cost。",
+      "notes": "~280字 实测 50.0s。\n[src: ^7 ^8 ^9 ^10 ^11 ^12]\n\n按语义分段，每段一条 region：\n\n截图A：themes 页 'Retaining principles, relinquishing patterns'，https://www.thoughtworks.com/radar\n  title \"这是最反直觉的一个主题：AI 越快，老派工程纪律反而越值钱。\"\n  body \"这一期雷达大量回归老东西——零信任架构、DORA 指标、变异测试、结对编程、clean code、可测试性。\"\n  body \"甚至连命令行都回潮了，agentic 工具把开发者重新拉回了终端。\"\n  body \"但雷达明确说这不是怀旧，而是对 AI 速度的必要对冲。\"\n  body \"同时也要扔掉一些假设：团队怎么组织、反馈循环怎么设计，都得重新想。\"\n  body \"他们提了一个新词叫 agent 拓扑，跟团队拓扑并列。\"\n  body \"这一切的根本焦虑是认知债务：\"\n  body \"AI 写的代码越来越多，人对系统的理解却在掉队。\"\n  body \"代码可能没问题，但你不知道你的系统里到底跑的是什么。\"\n  body \"雷达原文那句金句值得抄下来——\"\n  quote \"speed without discipline compounds cost。\""
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "给权限饥渴的 agent 套上安全带",
+      "text": "第三个主题，是 agent 的安全问题。[long pause]雷达用了一个很形象的说法：permission-hungry——权限饥渴。[pause]越是值得做的 agent，越想要访问一切：私有数据、外部通信、真实操作权限。每一项都振振有词。[long pause]但护栏没跟上。Prompt injection 还没解决，模型行为不稳定，agent 会找出各种意料之外的越界路径——没有恶意，纯粹是它就是这么干了。[pause]Simon Willison 那个致命三件套——私有数据加不可信内容加外部行动——现在描述的是大多数有用的 agent，而不是少数配置错误的 agent。[long pause]ThoughtWorks 的判断很明确：未来安全的 agent 系统，不是单体 agent，而是受约束 agent 的流水线，配合强监控。零信任、最小权限、纵深防御是底线，但没有银弹。",
+      "notes": "~280字 实测 50.9s。\n[src: ^13 ^14 ^15 ^16]\n\n按语义分段，每段一条 region：\n\n截图A：themes 页 'Securing permission-hungry agents'，https://www.thoughtworks.com/radar\n  title \"第三个主题，是 agent 的安全问题。\"\n  body \"雷达用了一个很形象的说法：\"\n  body \"permission-hungry——权限饥渴。\"\n  body \"越是值得做的 agent，越想要访问一切：\"\n  body \"私有数据、外部通信、真实操作权限。\"\n  body \"每一项都振振有词。\"\n  body \"但护栏没跟上。\"\n  body \"Prompt injection 还没解决，模型行为不稳定，agent 会找出各种意料之外的越界路径——没有恶意，纯粹是它就是这么干了。\"\n  body \"Simon Willison 那个致命三件套——私有数据加不可信内容加外部行动——现在描述的是大多数有用的 agent，而不是少数配置错误的 agent。\"\n  body \"ThoughtWorks 的判断很明确：\"\n  body \"未来安全的 agent 系统，不是单体 agent，而是受约束 agent 的流水线，配合强监控。\"\n  body \"零信任、最小权限、纵深防御是底线，但没有银弹。\""
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "给 coding agent 拴上工程缰绳",
+      "text": "最后一个主题是工程层的具体解法：怎么管住 coding agent。[long pause]Agent 越能干，人越想撒手不管。这个方向叫 harness engineering——给 agent 套上工程缰绳，分前馈和反馈两层。[long pause]前馈控制：动手前框定行为。Agent Skills 把指令模块化、按需加载；spec-driven development——GitHub Spec-Kit、OpenSpec——用规格驱动 agent 的规划和实现。[long pause]反馈控制：动手后让 agent 自己纠错。把编译器、linter、type checker、测试套件做成确定性的质量门，失败自动触发重试，人工 review 之前就完成大部分自纠。[long pause]cargo-mutants、WuppieFuzz、CodeScene 都是这个方向上的具体工具。",
+      "notes": "~290字 实测 43.4s。\n[src: ^17 ^18 ^19 ^20]\n\n按语义分段，每段一条 region：\n\n截图A：themes 页 'Putting coding agents on a leash'，https://www.thoughtworks.com/radar\n  title \"最后一个主题是工程层的具体解法：\"\n  body \"怎么管住 coding agent。\"\n  body \"Agent 越能干，人越想撒手不管。\"\n  body \"这个方向叫 harness engineering——给 agent 套上工程缰绳，分前馈和反馈两层。\"\n  body \"前馈控制：\"\n  body \"动手前框定行为。\"\n  body \"Agent Skills 把指令模块化、按需加载；spec-driven development——GitHub Spec-Kit、OpenSpec——用规格驱动 agent 的规划和实现。\"\n  body \"反馈控制：\"\n  body \"动手后让 agent 自己纠错。\"\n  body \"把编译器、linter、type checker、测试套件做成确定性的质量门，失败自动触发重试，人工 review 之前就完成大部分自纠。\"\n  body \"cargo-mutants、WuppieFuzz、CodeScene 都是这个方向上的具体工具。\""
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "一句话总结",
+      "text": "如果只能记一件事：[pause]这一期雷达不在告诉你新工具，而在提醒你 AI 时代的工程纪律没有过时，反而更贵了。",
+      "notes": "~50字 实测 9.4s。呼应开场，回到 radar 全貌。\n\n按语义分段，每段一条 region：\n\n复用截图A\n\n// title \"如果只能记一件事：\" → TODO 动画描述\n\n// quote \"这一期雷达不在告诉你新工具，而在提醒你 AI 时代的工程纪律没有过时，反而更贵了。\" → TODO 动画描述"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "收束",
+      "text": "完整版 PDF 五十多页，强烈建议自己翻一遍。[long pause]关注工具人研究所，我们下期见。",
+      "notes": "~35字 实测 6.5s。使用默认收尾模板，无需 region 标注。"
+    }
+  ]
+}

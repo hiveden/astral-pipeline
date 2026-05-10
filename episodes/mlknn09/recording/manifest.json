@@ -1,0 +1,17 @@
+{
+  "episode_id": "ml09",
+  "source_episode": "e09-标准化高斯",
+  "synced_at": "2026-05-04T13:28:36Z",
+  "shots": {
+    "shot07": {
+      "file": "shot07.mp4",
+      "duration_s": 79.800,
+      "video": {"width": 1280, "height": 720, "fps": 25}
+    },
+    "shot08": {
+      "file": "shot08.mp4",
+      "duration_s": 45.640,
+      "video": {"width": 1280, "height": 720, "fps": 25}
+    }
+  }
+}

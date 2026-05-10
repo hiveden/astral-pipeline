@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schemas/manifest.schema.json",
+  "schema_version": "1",
+  "episode": "__REPLACE_ON_CREATE__",
+  "raw": {},
+  "consistency": {},
+  "pending_actions": []
+}

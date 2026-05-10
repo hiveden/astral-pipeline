@@ -1,0 +1,63 @@
+{
+  "episode_id": "mllinreg04",
+  "shots": {
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 62.629,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "states": [
+        {
+          "id": "s1",
+          "shot": "A",
+          "cue": "打开 demo",
+          "start_s": 0.0
+        },
+        {
+          "id": "s2",
+          "shot": "A-origin",
+          "cue": "把 x 拉到 0、y 拉到 0",
+          "start_s": 32.74
+        },
+        {
+          "id": "s3",
+          "shot": "B",
+          "cue": "切到镜头 B 看对偶切片",
+          "start_s": 38.827
+        }
+      ]
+    },
+    "shot06": {
+      "file": "shot06.mp4",
+      "duration_s": 55.492,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "states": [
+        {
+          "id": "s4",
+          "shot": "C",
+          "cue": "再切镜头 C 看全景",
+          "start_s": 0.0
+        },
+        {
+          "id": "s5",
+          "shot": "C-bowl",
+          "cue": "最后切到碗函数试一下",
+          "start_s": 26.834
+        },
+        {
+          "id": "s6",
+          "shot": "D",
+          "cue": "镜头 D 把切片和等高线对应起来",
+          "start_s": 35.436
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "episode_id": "mllogreg05",
+  "source_episode": "e03b-损失函数",
+  "synced_at": "2026-05-08T08:07:44Z",
+  "shots": {
+    "shot04": {
+      "duration_s": 48.167,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 48.188,
+      "duration_diff_ms": 21.0,
+      "file": "shot04.mp4"
+    },
+    "shot05": {
+      "duration_s": 35.433,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 35.46,
+      "duration_diff_ms": 27.0,
+      "file": "shot05.mp4"
+    }
+  }
+}

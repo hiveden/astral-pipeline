@@ -1,0 +1,11 @@
+{
+  "shot01": [
+    { "id": "shot01-0", "text": "This is shot one.", "start": 0.0, "end": 5.0 }
+  ],
+  "shot02": [
+    { "id": "shot02-0", "text": "This is shot two.", "start": 0.0, "end": 5.0 }
+  ],
+  "shot03": [
+    { "id": "shot03-0", "text": "This is shot three.", "start": 0.0, "end": 5.0 }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "episode_id": "mlkmeans03",
+  "source_episode": "e03-迭代流程",
+  "synced_at": "2026-05-08T07:45:18Z",
+  "shots": {
+    "shot02": {
+      "file": "shot02.mp4",
+      "duration_s": 37.0,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0
+      }
+    },
+    "shot03": {
+      "file": "shot03.mp4",
+      "duration_s": 35.167,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0
+      }
+    },
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 41.133,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0
+      }
+    }
+  }
+}

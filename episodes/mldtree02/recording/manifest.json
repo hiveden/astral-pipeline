@@ -1,0 +1,12 @@
+{
+  "episode_id": "mldtree02",
+  "source_episode": "e02-信息熵与信息增益",
+  "synced_at": "2026-05-08T06:58:00Z",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 53.000,
+      "video": {"width": 1280, "height": 720, "fps": 30}
+    }
+  }
+}

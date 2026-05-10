@@ -1,0 +1,18 @@
+{
+  "episode_id": "mllinreg08",
+  "source_episode": "e07-BGD-SGD-MBGD-vs正规方程",
+  "synced_at": "2026-05-07T09:19:48Z",
+  "shots": {
+    "shot05": {
+      "duration_s": 65.6,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "duration_target_s": 65.602,
+      "duration_diff_ms": 2.0,
+      "file": "shot05.mp4"
+    }
+  }
+}

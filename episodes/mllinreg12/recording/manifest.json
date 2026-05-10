@@ -1,0 +1,46 @@
+{
+  "episode_id": "mllinreg12",
+  "shots": {
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 127.204,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "states": [
+        {
+          "id": "s1",
+          "shot": "geometry",
+          "cue": "先看几何直觉",
+          "start_s": 3.927
+        },
+        {
+          "id": "s2",
+          "shot": "A",
+          "cue": "先看镜头 A 弱正则 α 接近 0 时",
+          "start_s": 62.324
+        },
+        {
+          "id": "s3",
+          "shot": "A-strong",
+          "cue": "把 α 调强",
+          "start_s": 70.562
+        },
+        {
+          "id": "s4",
+          "shot": "B",
+          "cue": "切到镜头 B 权重对比",
+          "start_s": 78.734
+        },
+        {
+          "id": "s5",
+          "shot": "C",
+          "cue": "最后切到镜头 C α-MSE 路径",
+          "start_s": 93.707
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Ensemble 第 7 期 · AdaBoost 葡萄酒实战 · 决策桩交给 API 接力",
+  "description": "AdaBoostClassifier 实战：用葡萄酒数据做二分类，讲清数据筛选、标签编码、单棵决策桩基线，以及 estimator、n_estimators、learning_rate 三个关键参数。",
+  "style": "tutorial",
+  "form": "tutorial",
+  "target_duration_s": 960,
+  "segments": [
+    {
+      "id": 1,
+      "type": "hook",
+      "topic": "从 10 个样本手算，到 178 瓶酒自动接力",
+      "text": "上一期我们手算了 AdaBoost 的 3 轮循环：找当前权重下最好的决策桩，计算学习器权重，放大分错样本，缩小分对样本。10 个样本还能摊开算，换成葡萄酒数据就不该手算了。原始数据有 178 瓶酒，每瓶有酒精含量、色泽等特征，类别来自不同产区。我们要把手算流程交给 sklearn 的 AdaBoostClassifier，让它自动训练很多棵决策桩，再把它们按权重组合起来。这期的重点不是追一个固定分数，而是跑通一条工程线：怎么把 3 类葡萄酒改成二分类，怎么做标签编码，怎么拿单棵决策桩做基线，以及 estimator、n_estimators、learning_rate 这三个旋钮到底控制什么。",
+      "notes": "~390字。\n[src: 03-adaboost/04-葡萄酒实战.md]\n\ntitle \"AdaBoostClassifier 葡萄酒二分类\"\nfigure \"手算 3 轮 → API 500 棵决策桩 → 测试集对比\"\nbody \"目标：数据处理 / 单树基线 / AdaBoost 参数 / 常见坑\"",
+      "text_tts": "上一期我们手算了 AdaBoost 的 3 轮循环：找当前权重下最好的决策桩，计算学习器权重，放大分错样本，缩小分对样本。10 个样本还能摊开算，换成葡萄酒数据就不该手算了。原始数据有 178 瓶酒，每瓶有酒精含量、色泽等特征，类别来自不同产区。我们要把手算流程交给 S-K-learn 的 AdaBoost Classifier，让它自动训练很多棵决策桩，再把它们按权重组合起来。这期的重点不是追一个固定分数，而是跑通一条工程线：怎么把 3 类葡萄酒改成二分类，怎么做标签编码，怎么拿单棵决策桩做基线，以及 estimator、n estimators、learning rate 这三个旋钮到底控制什么。"
+    },
+    {
+      "id": 2,
+      "type": "content",
+      "topic": "数据处理：三分类改成二分类",
+      "text": "先看数据。葡萄酒原始标签是 Class label，取值 1、2、3。这个案例为了贴合 AdaBoost 的二分类讲法，先去掉类别 1，只保留类别 2 和 3。特征也只取两列：Alcohol 表示酒精含量，Hue 表示色泽。为什么不用全部特征？因为教学演示里两个特征可以画在二维平面上，后面比较单棵树和 AdaBoost 的决策边界会更直观。接着用 LabelEncoder 把类别 2 和 3 转成 0 和 1。这里注意，sklearn 可以接受 0 和 1 标签，也可以接受负 1 和正 1 的标签；我们按代码习惯用 0 和 1。最后用 train_test_split 划分训练集和测试集，固定 random_state，避免每次运行结果漂移。",
+      "notes": "~380字。\n[src: 03-adaboost/04-葡萄酒实战.md]\n\nfigure \"原始数据 → 去掉类别 1 → Alcohol/Hue → LabelEncoder → train_test_split\"\nbody \"Class label: 1/2/3 → 2/3 → 0/1；features: Alcohol + Hue\"",
+      "text_tts": "先看数据。葡萄酒原始标签是 Class label，取值 1、2、3。这个案例为了贴合 AdaBoost 的二分类讲法，先去掉类别 1，只保留类别 2 和 3。特征也只取两列：Alcohol 表示酒精含量，Hue 表示色泽。为什么不用全部特征？因为教学演示里两个特征可以画在二维平面上，后面比较单棵树和 AdaBoost 的决策边界会更直观。接着用 Label Encoder 把类别 2 和 3 转成 0 和 1。这里注意，S-K-learn 可以接受 0 和 1 标签，也可以接受负 1 和正 1 的标签；我们按代码习惯用 0 和 1。最后用 train test split 划分训练集和测试集，固定 random state，避免每次运行结果漂移。"
+    },
+    {
+      "id": 3,
+      "type": "content",
+      "topic": "单棵决策桩：先做基线",
+      "text": "集成模型上场前，先训练一棵单独的决策树作为基线。这里用 DecisionTreeClassifier，criterion 设为 entropy，max_depth 设为 1。max_depth 等于 1 的树就是决策桩，它只能问一个问题，比如酒精含量是否超过某个阈值，或者色泽是否超过某个阈值。这个基线很重要，因为 AdaBoost 的效果要和它对比，而不是孤零零看一个分数。单棵决策桩通常会欠拟合：它边界简单，训练集和测试集都不会特别高。但这正适合 AdaBoost。AdaBoost 不指望每棵树都很强，而是希望每棵树只抓住一小段规律，再通过很多轮加权接力，把简单边界组合成更复杂的边界。",
+      "notes": "~350字。\n[src: 03-adaboost/04-葡萄酒实战.md]\n\nfigure \"单棵决策桩：二维平面上一条切分线\"\nbody \"DecisionTreeClassifier criterion=entropy max_depth=1 random_state=0\"\nquote \"先有弱基线，才看得出集成增益\"",
+      "text_tts": "集成模型上场前，先训练一棵单独的决策树作为基线。这里用 Decision Tree Classifier，criterion 设为 entropy，max depth 设为 1。max depth 等于 1 的树就是决策桩，它只能问一个问题，比如酒精含量是否超过某个阈值，或者色泽是否超过某个阈值。这个基线很重要，因为 AdaBoost 的效果要和它对比，而不是孤零零看一个分数。单棵决策桩通常会欠拟合：它边界简单，训练集和测试集都不会特别高。但这正适合 AdaBoost。AdaBoost 不指望每棵树都很强，而是希望每棵树只抓住一小段规律，再通过很多轮加权接力，把简单边界组合成更复杂的边界。"
+    },
+    {
+      "id": 4,
+      "type": "content",
+      "topic": "AdaBoostClassifier 三个核心参数",
+      "text": "接着实例化 AdaBoostClassifier。第一个参数是 estimator，也就是基学习器。这里传入刚才那棵深度为 1 的决策树。老版本 sklearn 里这个参数叫 base_estimator，新版本统一叫 estimator。第二个参数是 n_estimators，表示最多训练多少个弱学习器。案例里设 500，意思是允许 500 棵决策桩接力。第三个参数是 learning_rate，案例里设 0.1。它会缩放每轮学习器的话语权，也会间接影响样本权重更新速度。learning_rate 小，步子稳，但通常需要更多 n_estimators 配合；learning_rate 大，前几轮推进快，但更容易被噪声带偏。工程上不要单独拧一个旋钮，要把轮数和学习率一起看。",
+      "notes": "~390字。\n[src: 03-adaboost/04-葡萄酒实战.md]\n\nfigure \"三个旋钮：estimator / n_estimators / learning_rate\"\nbody \"sklearn >=1.2 使用 estimator；旧资料 base_estimator 只作兼容提醒\"",
+      "text_tts": "接着实例化 AdaBoost Classifier。第一个参数是 estimator，也就是基学习器。这里传入刚才那棵深度为 1 的决策树。老版本 S-K-learn 里这个参数叫 base estimator，新版本统一叫 estimator。第二个参数是 n estimators，表示最多训练多少个弱学习器。案例里设 500，意思是允许 500 棵决策桩接力。第三个参数是 learning rate，案例里设 0.1。它会缩放每轮学习器的话语权，也会间接影响样本权重更新速度。learning rate 小，步子稳，但通常需要更多 n estimators 配合；learning rate 大，前几轮推进快，但更容易被噪声带偏。工程上不要单独拧一个旋钮，要把轮数和学习率一起看。"
+    },
+    {
+      "id": 5,
+      "type": "content",
+      "topic": "对比结果怎么看",
+      "text": "训练和评估时，流程很朴素：先 fit 单棵决策桩，再在测试集 score；再 fit AdaBoost，也在同一份测试集 score。注意，不要提前写死一个漂亮准确率，除非已经用当前环境真实跑过，并且记录了数据文件、随机种子和库版本。这里更重要的是解释差异来源。单棵决策桩只能画一条简单分界线，AdaBoost 是很多条简单分界线的加权组合，所以边界会更灵活。它通常能比单棵决策桩更好，但不保证永远胜过所有模型。随机森林、AdaBoost、GBDT 在小数据上分数差距可能只有几个百分点。评价模型不是背结论，而是在同一切分、同一指标、同一随机种子下做公平对比。",
+      "notes": "~400字。\n[src: 03-adaboost/04-葡萄酒实战.md]\n\nfigure \"单树 score vs AdaBoost score；数值留给实跑录屏填充\"\nquote \"同一数据切分下比较，结果才有意义\"\n\n3.5 复核：不写未实跑准确率，避免把虚构示意误当实验结果。",
+      "text_tts": "训练和评估时，流程很朴素：先 fit 单棵决策桩，再在测试集 score；再 fit AdaBoost，也在同一份测试集 score。注意，不要提前写死一个漂亮准确率，除非已经用当前环境真实跑过，并且记录了数据文件、随机种子和库版本。这里更重要的是解释差异来源。单棵决策桩只能画一条简单分界线，AdaBoost 是很多条简单分界线的加权组合，所以边界会更灵活。它通常能比单棵决策桩更好，但不保证永远胜过所有模型。随机森林、AdaBoost、G-B-D-T 在小数据上分数差距可能只有几个百分点。评价模型不是背结论，而是在同一切分、同一指标、同一随机种子下做公平对比。"
+    },
+    {
+      "id": 6,
+      "type": "content",
+      "topic": "常见坑：基学习器太强",
+      "text": "最后收三个坑。第一，基学习器不是越强越好。把 max_depth 从 1 改到 5，单棵树自己就可能把训练集学得很满，AdaBoost 的接力纠错空间反而变小，测试集还可能因为方差变大而下降。第二，learning_rate 和 n_estimators 要联调。学习率降到 0.01，却仍然只训练几十棵树，模型很可能欠拟合；学习率很大又训练很多棵，可能追着噪声跑。第三，注意 API 名称。旧资料里常见 base_estimator，新版本应该写 estimator。到这里，AdaBoost 的机制、手算和 API 实战就串起来了：它用样本权重传递上一轮的错误。下一条路线会换一种通信方式，不再说哪条样本更重要，而是直接告诉下一棵树还差多少。",
+      "notes": "~410字。\n[src: 03-adaboost/04-葡萄酒实战.md]\n\nfigure \"三个坑：强基学习器 / 学习率轮数联调 / 新旧 API\"\nquote \"AdaBoost 传递的是样本权重，GBDT 传递的是残差方向\"",
+      "text_tts": "最后收三个坑。第一，基学习器不是越强越好。把 max depth 从 1 改到 5，单棵树自己就可能把训练集学得很满，AdaBoost 的接力纠错空间反而变小，测试集还可能因为方差变大而下降。第二，learning rate 和 n estimators 要联调。学习率降到 0.01，却仍然只训练几十棵树，模型很可能欠拟合；学习率很大又训练很多棵，可能追着噪声跑。第三，注意 A-P-I 名称。旧资料里常见 base estimator，新版本应该写 estimator。到这里，AdaBoost 的机制、手算和 A-P-I 实战就串起来了：它用样本权重传递上一轮的错误。下一条路线会换一种通信方式，不再说哪条样本更重要，而是直接告诉下一棵树还差多少。"
+    },
+    {
+      "id": 7,
+      "type": "cta",
+      "topic": "通用 cta（拆独立 shot · 下游复用）",
+      "text": "下期见，欢迎评论区留言讨论。",
+      "notes": "通用 cta 模板 · 14 字 ≈ 3.8s · 所有期复用。",
+      "text_tts": "下期见，欢迎评论区留言讨论。"
+    }
+  ]
+}

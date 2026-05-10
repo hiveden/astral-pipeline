@@ -1,0 +1,15 @@
+{
+  "$schema": "../../schemas/manifest.schema.json",
+  "schema_version": "1",
+  "episode": "mllinreg10",
+  "created_at": "2026-05-10T08:24:20.741Z",
+  "raw": {
+    "script": {
+      "version": "2026-05-10T08:44:54.042Z",
+      "sha256": "886b16a5ff93d7f1a23d7aaf1d4d38b5aa8630bfc2182ced5d5d511f770efb03",
+      "exported_at": "2026-05-10T08:44:54.042Z"
+    }
+  },
+  "consistency": {},
+  "pending_actions": []
+}

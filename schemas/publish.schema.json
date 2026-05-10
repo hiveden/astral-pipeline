@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://astral-pipeline/schemas/publish.schema.json",
+  "title": "episodes/<id>/publish/* bundle",
+  "description": "Schemas for files inside <id>/publish/. Single source of truth for cross-platform publishing metadata. Written by script-agent-harness (via export-to-pipeline.js); consumed by astral-video build-publish.sh and future upload tools.",
+  "$defs": {
+    "platform": {
+      "title": "publish/platforms/<platform>.json",
+      "type": "object",
+      "required": ["title", "description", "tags"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Platform-specific title (typically <= 80 chars; per-platform limits enforced by uploader)."
+        },
+        "description": {
+          "type": "string",
+          "description": "Platform-specific description. May contain Markdown / hashtags depending on platform."
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "category": {
+          "type": "string",
+          "description": "Platform-specific category (e.g. youtube category id, bilibili partition)."
+        },
+        "thumbnail_path": {
+          "type": "string",
+          "description": "Optional override for cover thumbnail (relative to <id>/publish/ or absolute)."
+        },
+        "extra": {
+          "type": "object",
+          "description": "Free-form platform-specific extras (e.g. youtube playlist id, bilibili dynamic text)."
+        }
+      },
+      "additionalProperties": true
+    },
+    "cover": {
+      "title": "publish/cover.json",
+      "type": "object",
+      "required": ["main_title"],
+      "properties": {
+        "main_title": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string" },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "value"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "value": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "control": {
+      "title": "publish/control.json",
+      "type": "object",
+      "properties": {
+        "do_not_publish": {
+          "type": "boolean",
+          "description": "When true, downstream publishing tools MUST refuse to upload this episode and exit non-zero."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Optional human note for why publishing is blocked."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

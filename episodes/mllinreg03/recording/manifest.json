@@ -1,0 +1,103 @@
+{
+  "episode_id": "mllinreg03",
+  "source_episode": "e03-损失函数MSE",
+  "synced_at": "2026-05-07T16:30:00Z",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 70.966667,
+      "duration_target_s": 70.993,
+      "duration_diff_ms": 26.3,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "demo": "01-ML/02-LR/03b-math/demos/mse-residual-squares.py",
+      "crop": "1280:720:320:0",
+      "states": [
+        {
+          "id": "s1_baseline",
+          "cue_t": 37.778,
+          "action": "shot=A, k=0.5, b=-2.0",
+          "expect": {
+            "mse": 9.372
+          }
+        },
+        {
+          "id": "s2_optimal",
+          "cue_t": 47.996,
+          "action": "set k=0.8, b=0.8",
+          "expect": {
+            "mse": 1.118
+          }
+        },
+        {
+          "id": "s3_k_too_big",
+          "cue_t": 57.015,
+          "action": "set k=3.0, b=1.0",
+          "expect": {
+            "mse": 22.913
+          }
+        }
+      ],
+      "audio": {
+        "codec": "aac",
+        "source": "tts/shot04.wav"
+      },
+      "highlight": "state-level overlays only; cache-busted preview v=20260507-1622"
+    },
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 51.855011,
+      "duration_target_s": 51.855,
+      "duration_diff_ms": 0.011,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": 30
+      },
+      "demo": "01-ML/02-LR/03b-math/demos/mse-residual-squares.py",
+      "crop": "1280:720:320:0",
+      "states": [
+        {
+          "id": "s5_b_optimal",
+          "cue_t": 0.0,
+          "action": "SETUP preselect dropdown→B, k=0.8, b=0.8",
+          "expect": {
+            "mse": 1.118
+          }
+        },
+        {
+          "id": "s6_b_k_far",
+          "cue_t": 15.627,
+          "action": "set k=3.0, b=1.0",
+          "expect": {
+            "mse": 22.913
+          }
+        },
+        {
+          "id": "s7_c_optimal",
+          "cue_t": 31.998,
+          "action": "dropdown→C at 31.798s, k=0.8, b=0.8",
+          "expect": {
+            "mse": 1.118
+          }
+        },
+        {
+          "id": "s8_d_dual",
+          "cue_t": 36.864,
+          "action": "dropdown→D at 36.664s, k=0.8, b=0.8",
+          "expect": {
+            "mse": 1.118
+          }
+        }
+      ],
+      "audio": {
+        "codec": "aac",
+        "source": "tts/shot05.wav"
+      },
+      "highlight": "state-level overlays only; cache-busted preview v=20260507-1622"
+    }
+  }
+}

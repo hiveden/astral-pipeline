@@ -1,0 +1,65 @@
+{
+  "episode_id": "mllinreg10",
+  "source_episode": "e09-加州房价pipeline",
+  "synced_at": "2026-05-07T09:00:00Z",
+  "shots": {
+    "shot06": {
+      "file": "shot06.mp4",
+      "source_file": "/Users/xuelin/projects/ai-engineer-roadmap/01-ML/02-LR/scripts/_recording/output/e09_shot06.mp4",
+      "script": "/Users/xuelin/projects/ai-engineer-roadmap/01-ML/02-LR/scripts/_recording/e09_shot06.py",
+      "demo": "/Users/xuelin/projects/ai-engineer-roadmap/01-ML/02-LR/06-boston/demos/california-pipeline.py",
+      "tts": "/Users/xuelin/projects/astral-pipeline/mllinreg10/tts/shot06.wav",
+      "duration_s": 70.433008,
+      "target_duration_s": 70.47,
+      "duration_diff_ms": 37.0,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps": "30/1",
+        "codec": "h264"
+      },
+      "audio": {
+        "codec": "aac"
+      },
+      "crop": "1280:720:320:0",
+      "cue_alignment": [
+        {
+          "name": "step_1",
+          "subtitles": "shot06[5].start",
+          "time_s": 12.551,
+          "text": "第一步"
+        },
+        {
+          "name": "step_2",
+          "subtitles": "shot06[8].start",
+          "time_s": 18.753,
+          "text": "第二步"
+        },
+        {
+          "name": "step_3",
+          "subtitles": "shot06[10].start",
+          "time_s": 24.42,
+          "text": "第三步"
+        },
+        {
+          "name": "step_4",
+          "subtitles": "shot06[14].start",
+          "time_s": 30.749,
+          "text": "第四步"
+        },
+        {
+          "name": "step_5",
+          "subtitles": "shot06[20].start",
+          "time_s": 40.308,
+          "text": "第五步"
+        },
+        {
+          "name": "step_6",
+          "subtitles": "shot06[24].start",
+          "time_s": 48.689,
+          "text": "第六步"
+        }
+      ]
+    }
+  }
+}

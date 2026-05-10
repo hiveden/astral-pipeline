@@ -1,0 +1,22 @@
+{
+  "episode_id": "ml10",
+  "source_episode": "e10-鸢尾花实战",
+  "synced_at": "2026-05-04T13:13:16Z",
+  "shots": {
+    "shot04": {
+      "file": "shot04.mp4",
+      "duration_s": 79.320,
+      "video": {"width": 1238, "height": 720, "fps": 25}
+    },
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 68.200,
+      "video": {"width": 1238, "height": 720, "fps": 25}
+    },
+    "shot06": {
+      "file": "shot06.mp4",
+      "duration_s": 99.760,
+      "video": {"width": 1238, "height": 720, "fps": 25}
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "episode_id": "ml01",
+  "source_episode": "e01-概念距离",
+  "synced_at": "2026-05-03T23:38:43Z",
+  "shots": {
+    "shot05": {
+      "file": "shot05.mp4",
+      "duration_s": 78.000,
+      "video": {"width": 1198, "height": 600, "fps": 25}
+    }
+  }
+}

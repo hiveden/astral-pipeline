@@ -1,0 +1,119 @@
+#!/usr/bin/env node
+// Recompute the consistency segment of an episode's manifest.json.
+// Usage: recompute-consistency <id> [--all]
+//
+// Reads raw.script.sha256, raw.tts.based_on_script_sha, raw.recording.based_on_script_sha,
+// determines staleness, writes consistency.{tts_stale, tts_stale_reason, recording_stale,
+// recording_stale_reason, actionable, computed_at}.
+
+const fs = require('node:fs');
+const path = require('node:path');
+const { PIPELINE_ROOT } = require('./_lib/episode-id.js');
+
+function resolveEpisodeDir(id) {
+  const candidates = [
+    path.join(PIPELINE_ROOT, 'episodes', id),
+    path.join(PIPELINE_ROOT, id),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c) && fs.statSync(c).isDirectory()) return c;
+  }
+  return null;
+}
+
+function listAllEpisodes() {
+  const ids = new Set();
+  const epRoot = path.join(PIPELINE_ROOT, 'episodes');
+  if (fs.existsSync(epRoot)) {
+    for (const e of fs.readdirSync(epRoot)) {
+      const f = path.join(epRoot, e);
+      if (fs.statSync(f).isDirectory() && !e.startsWith('.')) ids.add(e);
+    }
+  }
+  for (const e of fs.readdirSync(PIPELINE_ROOT)) {
+    if (e.startsWith('.') || e === 'episodes' || e === 'schemas' || e === 'openspec' || e === 'node_modules') continue;
+    const f = path.join(PIPELINE_ROOT, e);
+    if (fs.statSync(f).isDirectory() && fs.existsSync(path.join(f, 'manifest.json'))) ids.add(e);
+  }
+  return [...ids].sort();
+}
+
+function atomicWriteJson(file, obj) {
+  const tmp = `${file}.tmp`;
+  fs.writeFileSync(tmp, `${JSON.stringify(obj, null, 2)}\n`);
+  fs.renameSync(tmp, file);
+}
+
+function recompute(id) {
+  const dir = resolveEpisodeDir(id);
+  if (!dir) return { id, ok: false, reason: 'episode dir not found' };
+  const manifestPath = path.join(dir, 'manifest.json');
+  if (!fs.existsSync(manifestPath)) return { id, ok: false, reason: 'manifest.json missing' };
+
+  const m = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const c = {};
+  const issues = [];
+
+  const scriptSha = m?.raw?.script?.sha256;
+  const ttsBased = m?.raw?.tts?.based_on_script_sha;
+  const recBased = m?.raw?.recording?.based_on_script_sha;
+
+  if (scriptSha && ttsBased) {
+    if (ttsBased !== scriptSha) {
+      c.tts_stale = true;
+      c.tts_stale_reason = `tts.based_on_script_sha (${ttsBased.slice(0, 8)}…) != raw.script.sha256 (${scriptSha.slice(0, 8)}…)`;
+      issues.push('tts');
+    } else {
+      c.tts_stale = false;
+    }
+  }
+  if (scriptSha && recBased) {
+    if (recBased !== scriptSha) {
+      c.recording_stale = true;
+      c.recording_stale_reason = `recording.based_on_script_sha (${recBased.slice(0, 8)}…) != raw.script.sha256 (${scriptSha.slice(0, 8)}…)`;
+      issues.push('recording');
+    } else {
+      c.recording_stale = false;
+    }
+  }
+
+  if (issues.length) {
+    if (issues.includes('tts')) {
+      c.actionable = '下游可用 overlay/subtitles.patch.json 微调字幕，无需重跑 tts。仅当需要新音色/新台词时才回上游重跑。';
+    } else if (issues.includes('recording')) {
+      c.actionable = '若录屏与最新 script 时序对不齐，考虑用 overlay/timing.tweaks.json 微调，或回 ai-engineer-roadmap 重录。';
+    }
+  }
+
+  c.computed_at = new Date().toISOString();
+  m.consistency = c;
+  atomicWriteJson(manifestPath, m);
+
+  return { id, ok: true, stale: issues };
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
+    console.log('Usage: recompute-consistency <id> | --all');
+    process.exit(args.length === 0 ? 1 : 0);
+  }
+
+  const targets = args.includes('--all') ? listAllEpisodes() : [args[0]];
+  let okCount = 0;
+  let skipCount = 0;
+  for (const id of targets) {
+    const r = recompute(id);
+    if (r.ok) {
+      okCount++;
+      const flag = r.stale.length ? `STALE(${r.stale.join(',')})` : 'fresh';
+      console.log(`  ${flag.padEnd(20)} ${id}`);
+    } else {
+      skipCount++;
+      console.log(`  ${'SKIP'.padEnd(20)} ${id} (${r.reason})`);
+    }
+  }
+  console.log(`\nrecomputed ${okCount}, skipped ${skipCount}`);
+}
+
+main();

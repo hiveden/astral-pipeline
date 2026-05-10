@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://astral-pipeline/schemas/output.schema.json",
+  "title": "episodes/<id>/output.json",
+  "description": "Reference to the rendered video output. Binary itself stays in astral-video repo (or object storage); only the reference lives here.",
+  "type": "object",
+  "required": ["schema_version", "video", "rendered_at", "renderer_version"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": {
+      "type": "string",
+      "enum": ["1"]
+    },
+    "video": {
+      "type": "object",
+      "required": ["path", "sha256", "duration_s"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Absolute filesystem path or object-storage URL of the rendered video."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Content hash of the video file. Consumers SHOULD verify before publishing."
+        },
+        "duration_s": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Video duration in seconds."
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "format": {
+          "type": "string",
+          "description": "Container format (e.g. 'mp4')."
+        }
+      },
+      "additionalProperties": false
+    },
+    "rendered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "renderer_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "astral-video version identifier (git short sha or semver)."
+    },
+    "based_on": {
+      "type": "object",
+      "description": "Optional: which raw/overlay snapshot this render is based on.",
+      "properties": {
+        "manifest_sha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "overlay_files": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
