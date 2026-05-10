@@ -1,7 +1,11 @@
 # astral-pipeline
 
+> **🔄 restructure-staging 变更已落地**（2026-05-10，root commit `52e217a`）
+> 本仓从"四方契约共享文件夹"升级为 **astral 系列的 data + control plane**。
+> 完整变更记录：`openspec/changes/archive/2026-05-10-restructure-staging/{proposal,design,specs,tasks}.md`
+
 > **本仓不再维护文字协议；契约由 `schemas/` 机器可读 + 各端 export 脚本承载。**
-> 历史协议 `HANDSHAKE.md` 快照见 `openspec/changes/restructure-staging/legacy-HANDSHAKE.md`。
+> 历史协议 `HANDSHAKE.md` 快照见 `openspec/changes/archive/2026-05-10-restructure-staging/legacy-HANDSHAKE.md`。
 
 astral 系列项目的 **data + control plane**：事实中心（episode 产物 + 元信息）+ 治理入口（统一创建 / 状态查询 / 跨方协调）。
 
@@ -65,5 +69,5 @@ astral-pipeline/
 
 ## 历史溯源
 
-- 旧 `HANDSHAKE.md`（1435 行四方协议 + 附录 A-O 历史决策）已快照到 `openspec/changes/restructure-staging/legacy-HANDSHAKE.md`
-- 当前生效的契约决策见 `openspec/changes/restructure-staging/{proposal,design,specs}.md`
+- 旧 `HANDSHAKE.md`（1435 行四方协议 + 附录 A-O 历史决策）已快照到 `openspec/changes/archive/2026-05-10-restructure-staging/legacy-HANDSHAKE.md`
+- 当前生效的契约决策见 `openspec/changes/archive/2026-05-10-restructure-staging/{proposal,design,specs}.md`
